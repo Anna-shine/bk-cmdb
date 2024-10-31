@@ -187,7 +187,7 @@ func (c *Client) getEventDetailFromMongo(kit *rest.Kit, node *watch.ChainNode, f
 				blog.Errorf("%s delete event chain node has no sub resource, oid: %s", key.Collection(), node.Oid)
 				return nil, false, nil
 			}
-			filter["coll"] = key.ShardingCollection(node.SubResource[0], node.SupplierAccount)
+			filter["coll"] = key.ShardingCollection(node.SubResource[0], node.TenantID)
 		} else {
 			filter["coll"] = key.Collection()
 		}
@@ -269,7 +269,7 @@ func (c *Client) getEventDetailFromMongo(kit *rest.Kit, node *watch.ChainNode, f
 			blog.Errorf("%s event chain node has no sub resource, oid: %s", key.Collection(), node.Oid)
 			return nil, false, nil
 		}
-		collection = key.ShardingCollection(node.SubResource[0], node.SupplierAccount)
+		collection = key.ShardingCollection(node.SubResource[0], node.TenantID)
 	}
 
 	if err := c.db.Table(collection).Find(filter).Fields(fields...).One(kit.Ctx, detailMap); err != nil {
