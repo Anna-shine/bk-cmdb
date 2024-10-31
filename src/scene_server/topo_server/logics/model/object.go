@@ -516,9 +516,9 @@ func (o *object) FindObjectTopo(kit *rest.Kit, cond mapstr.MapStr) ([]metadata.O
 		tmp.From.ObjID = objMap[assoc.ObjectID].ObjectID
 		tmp.From.ClassificationID = objMap[assoc.ObjectID].ObjCls
 		tmp.From.Position = objMap[assoc.ObjectID].Position
-		tmp.From.OwnerID = objMap[assoc.ObjectID].OwnerID
+		tmp.From.TenantID = objMap[assoc.ObjectID].OwnerID
 		tmp.From.ObjName = objMap[assoc.ObjectID].ObjectName
-		tmp.To.OwnerID = asstObjMap[assoc.AsstObjID].OwnerID
+		tmp.To.TenantID = asstObjMap[assoc.AsstObjID].OwnerID
 		tmp.To.ObjID = asstObjMap[assoc.AsstObjID].ObjectID
 		tmp.To.ClassificationID = asstObjMap[assoc.AsstObjID].ObjCls
 		tmp.To.Position = asstObjMap[assoc.AsstObjID].Position

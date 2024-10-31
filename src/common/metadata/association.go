@@ -462,8 +462,8 @@ const (
 
 // Association defines the association between two objects.
 type Association struct {
-	ID      int64  `field:"id" json:"id" bson:"id"`
-	OwnerID string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	ID       int64  `field:"id" json:"id" bson:"id"`
+	TenantID string `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 
 	// the unique id belongs to  this association, should be generated with rules as follows:
 	// "$ObjectID"_"$AsstID"_"$AsstObjID"
@@ -494,7 +494,7 @@ func (a *Association) CanUpdate() (field string, can bool) {
 		return "id", false
 	}
 
-	if len(a.OwnerID) != 0 {
+	if len(a.TenantID) != 0 {
 		return "bk_supplier_account", false
 	}
 

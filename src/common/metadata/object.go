@@ -249,7 +249,7 @@ type TopoItem struct {
 	ClassificationID string `json:"bk_classification_id"`
 	Position         string `json:"position"`
 	ObjID            string `json:"bk_obj_id"`
-	OwnerID          string `json:"bk_supplier_account"`
+	TenantID         string `json:"tenant_id"`
 	ObjName          string `json:"bk_obj_name"`
 }
 

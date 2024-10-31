@@ -49,7 +49,7 @@ func (m *associationModel) createModelAssociation(kit *rest.Kit, inputParam meta
 	// when enableMainlineAssociationType enabled, only bk_mainline type could be create
 	// when enableMainlineAssociationType disabled, all type except bk_mainline could be create
 
-	inputParam.Spec.OwnerID = kit.SupplierAccount
+	inputParam.Spec.TenantID = kit.SupplierAccount
 	if err := m.isValid(kit, inputParam); nil != err {
 		return &metadata.CreateOneDataResult{}, err
 	}
