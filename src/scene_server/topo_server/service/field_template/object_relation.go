@@ -495,7 +495,7 @@ func (s *service) tmplUniqueConvertObjUnique(kit *rest.Kit, objID string,
 	// the corresponding (same propertyID) template attribute
 	unique.TemplateID = tmplUnique.ID
 	unique.ObjID = objID
-	unique.OwnerID = kit.SupplierAccount
+	unique.TenantID = kit.SupplierAccount
 	return unique, nil
 }
 

@@ -198,19 +198,20 @@ func addObjectUnique(ctx context.Context, db dal.RDB, conf *upgrader.Config) err
 			Kind: metadata.UniqueKeyKindProperty,
 			ID:   uint64(attr.ID),
 		})
-		unique := metadata.ObjectUnique{
-			ObjID:    common.BKInnerObjIDBizSet,
-			Keys:     keys,
-			Ispre:    true,
-			OwnerID:  conf.OwnerID,
-			LastTime: metadata.Now(),
+
+		unique := map[string]interface{}{
+			"bk_obj_id":           common.BKInnerObjIDBizSet,
+			"keys":                keys,
+			"ispre":               true,
+			"bk_supplier_account": conf.OwnerID,
+			"last_time":           metadata.Now(),
 		}
 
 		uid, err := db.NextSequence(ctx, common.BKTableNameObjUnique)
 		if err != nil {
 			return err
 		}
-		unique.ID = uid
+		unique["id"] = uid
 
 		if err := db.Table(common.BKTableNameObjUnique).Insert(ctx, unique); err != nil {
 			return err

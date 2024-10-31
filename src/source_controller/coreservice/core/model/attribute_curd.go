@@ -181,7 +181,7 @@ func (m *modelAttribute) save(kit *rest.Kit, attribute metadata.Attribute) (id u
 			ObjID:    attribute.ObjectID,
 			Keys:     []metadata.UniqueKey{{Kind: metadata.UniqueKeyKindProperty, ID: uint64(attribute.ID)}},
 			Ispre:    false,
-			OwnerID:  kit.SupplierAccount,
+			TenantID: kit.SupplierAccount,
 			LastTime: metadata.Now(),
 		}
 		err = mongodb.Client().Table(common.BKTableNameObjUnique).Insert(kit.Ctx, &unique)

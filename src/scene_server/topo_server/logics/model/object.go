@@ -167,10 +167,10 @@ func (o *object) CreateObject(kit *rest.Kit, isMainline bool, data mapstr.MapStr
 	}
 
 	uni := metadata.ObjectUnique{
-		ObjID:   obj.ObjectID,
-		OwnerID: kit.SupplierAccount,
-		Keys:    keys,
-		Ispre:   false,
+		ObjID:    obj.ObjectID,
+		TenantID: kit.SupplierAccount,
+		Keys:     keys,
+		Ispre:    false,
 	}
 	// NOTICE: 唯一索引与index.MainLineInstanceUniqueIndex,index.InstanceUniqueIndex定义强依赖
 	// 原因：建立模型之前要将表和表中的索引提前建立，mongodb 4.2.6(4.4之前)事务中不能建表，事务操作表中数据操作和建表，建立索引为互斥操作。
@@ -981,10 +981,10 @@ func (o *object) createObjectAttr(kit *rest.Kit, objID string, attr []metadata.A
 		}
 
 		cond := metadata.CreateModelAttrUnique{Data: metadata.ObjectUnique{
-			ObjID:   objID,
-			OwnerID: kit.SupplierAccount,
-			Keys:    keys,
-			Ispre:   false,
+			ObjID:    objID,
+			TenantID: kit.SupplierAccount,
+			Keys:     keys,
+			Ispre:    false,
 		}}
 		_, err = o.clientSet.CoreService().Model().CreateModelAttrUnique(kit.Ctx, kit.Header, objID, cond)
 		if err != nil {
