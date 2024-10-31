@@ -567,7 +567,7 @@ func (a *attribute) checkAttributeGroupExist(kit *rest.Kit, data *metadata.Attri
 			GroupName:  common.BKBizDefault,
 			GroupID:    common.BKBizDefault,
 			ObjectID:   data.ObjectID,
-			OwnerID:    data.OwnerID,
+			OwnerID:    data.TenantID,
 			BizID:      data.BizID,
 		}
 
@@ -695,7 +695,7 @@ func (a *attribute) CreateTableObjectAttribute(kit *rest.Kit, data *metadata.Att
 		return nil, err
 	}
 
-	data.OwnerID = kit.SupplierAccount
+	data.TenantID = kit.SupplierAccount
 	if err := a.createModelQuoteRelation(kit, data.ObjectID, data.PropertyID); err != nil {
 		return nil, err
 	}
@@ -891,7 +891,7 @@ func (a *attribute) CreateObjectAttribute(kit *rest.Kit, data *metadata.Attribut
 		return nil, err
 	}
 
-	data.OwnerID = kit.SupplierAccount
+	data.TenantID = kit.SupplierAccount
 	input := metadata.CreateModelAttributes{Attributes: []metadata.Attribute{*data}}
 	resp, err := a.clientSet.CoreService().Model().CreateModelAttrs(kit.Ctx, kit.Header, data.ObjectID, &input)
 	if err != nil {
@@ -1683,7 +1683,7 @@ func (a *attribute) upsertObjectAttrBatch(kit *rest.Kit, objID string, attribute
 			continue
 		}
 
-		attr.OwnerID = kit.SupplierAccount
+		attr.TenantID = kit.SupplierAccount
 		attr.ObjectID = objID
 		if err := a.isValid(kit, true, &attr); err != nil {
 			blog.Errorf("attribute(%#v) is invalid, err: %v, rid: %s", attr, err, kit.Rid)

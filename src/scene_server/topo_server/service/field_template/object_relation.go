@@ -378,7 +378,7 @@ func tmplAttrConvertObjAttr(user, objID string, attr metadata.FieldTemplateAttr)
 		TemplateID:   attr.ID,
 		PropertyID:   attr.PropertyID,
 		Placeholder:  attr.Placeholder.Value,
-		OwnerID:      attr.OwnerID,
+		TenantID:     attr.OwnerID,
 		IsRequired:   attr.Required.Value,
 		PropertyName: attr.PropertyName,
 		PropertyType: attr.PropertyType,

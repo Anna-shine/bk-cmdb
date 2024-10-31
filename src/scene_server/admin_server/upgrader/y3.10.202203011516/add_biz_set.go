@@ -30,68 +30,68 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var dataRows = map[string]*metadata.Attribute{
+var dataRows = map[string]map[string]interface{}{
 	common.BKBizSetNameField: {
-		ObjectID:      common.BKInnerObjIDBizSet,
-		PropertyID:    common.BKBizSetNameField,
-		PropertyName:  "业务集名",
-		IsRequired:    true,
-		IsOnly:        true,
-		IsEditable:    true,
-		PropertyGroup: mCommon.BaseInfo,
-		PropertyType:  common.FieldTypeSingleChar,
-		Creator:       common.CCSystemOperatorUserName,
-		Option:        `^[^\\\|\/:\*,<>"\?#\s]+$`,
+		"bk_obj_id":         common.BKInnerObjIDBizSet,
+		"bk_property_id":    common.BKBizSetNameField,
+		"bk_property_name":  "业务集名",
+		"isrequired":        true,
+		"isonly":            true,
+		"editable":          true,
+		"bk_property_group": mCommon.BaseInfo,
+		"bk_property_type":  common.FieldTypeSingleChar,
+		"creator":           common.CCSystemOperatorUserName,
+		"option":            `^[^\\\|\/:\*,<>"\?#\s]+$`,
 	},
 	common.BKBizSetIDField: {
-		ObjectID:      common.BKInnerObjIDBizSet,
-		PropertyID:    common.BKBizSetIDField,
-		PropertyName:  "业务集ID",
-		IsAPI:         true,
-		IsRequired:    false,
-		IsOnly:        true,
-		PropertyGroup: mCommon.BaseInfo,
-		PropertyType:  common.FieldTypeInt,
-		Creator:       common.CCSystemOperatorUserName,
-		Option:        metadata.PrevIntOption{},
+		"bk_obj_id":         common.BKInnerObjIDBizSet,
+		"bk_property_id":    common.BKBizSetIDField,
+		"bk_property_name":  "业务集ID",
+		"bk_isapi":          true,
+		"isrequired":        false,
+		"isonly":            true,
+		"bk_property_group": mCommon.BaseInfo,
+		"bk_property_type":  common.FieldTypeInt,
+		"creator":           common.CCSystemOperatorUserName,
+		"option":            metadata.PrevIntOption{},
 	},
 	common.BKBizSetDescField: {
-		ObjectID:      common.BKInnerObjIDBizSet,
-		PropertyID:    common.BKBizSetDescField,
-		PropertyName:  "业务集描述",
-		IsRequired:    false,
-		IsOnly:        false,
-		IsEditable:    true,
-		PropertyGroup: mCommon.BaseInfo,
-		PropertyType:  common.FieldTypeSingleChar,
-		Creator:       common.CCSystemOperatorUserName,
-		Option:        "",
+		"bk_obj_id":         common.BKInnerObjIDBizSet,
+		"bk_property_id":    common.BKBizSetDescField,
+		"bk_property_name":  "业务集描述",
+		"isrequired":        false,
+		"isonly":            false,
+		"editable":          true,
+		"bk_property_group": mCommon.BaseInfo,
+		"bk_property_type":  common.FieldTypeSingleChar,
+		"creator":           common.CCSystemOperatorUserName,
+		"option":            "",
 	},
 	common.BKMaintainersField: {
-		ObjectID:      common.BKInnerObjIDBizSet,
-		PropertyID:    common.BKMaintainersField,
-		PropertyName:  "运维人员",
-		IsRequired:    false,
-		IsOnly:        false,
-		IsEditable:    true,
-		PropertyGroup: mCommon.AppRole,
-		PropertyType:  common.FieldTypeUser,
-		Creator:       common.CCSystemOperatorUserName,
-		Option:        "",
+		"bk_obj_id":         common.BKInnerObjIDBizSet,
+		"bk_property_id":    common.BKMaintainersField,
+		"bk_property_name":  "运维人员",
+		"isrequired":        false,
+		"isonly":            false,
+		"editable":          true,
+		"bk_property_group": mCommon.AppRole,
+		"bk_property_type":  common.FieldTypeUser,
+		"creator":           common.CCSystemOperatorUserName,
+		"option":            "",
 	},
 	common.BKBizSetScopeField: {
-		ObjectID:      common.BKInnerObjIDBizSet,
-		PropertyID:    common.BKBizSetScopeField,
-		PropertyName:  "业务范围",
-		IsRequired:    true,
-		IsOnly:        false,
-		IsEditable:    true,
-		IsAPI:         true,
-		PropertyGroup: mCommon.BaseInfo,
-		PropertyType:  common.FieldObject,
-		Creator:       common.CCSystemOperatorUserName,
-		Option:        "",
-		Placeholder:   "业务集所包含的业务的条件",
+		"bk_obj_id":         common.BKInnerObjIDBizSet,
+		"bk_property_id":    common.BKBizSetScopeField,
+		"bk_property_name":  "业务范围",
+		"isrequired":        true,
+		"isonly":            false,
+		"editable":          true,
+		"bk_isapi":          true,
+		"bk_property_group": mCommon.BaseInfo,
+		"bk_property_type":  common.FieldObject,
+		"creator":           common.CCSystemOperatorUserName,
+		"option":            "",
+		"placeholder":       "业务集所包含的业务的条件",
 	},
 }
 
@@ -338,7 +338,7 @@ func addBizSetObjectAttrRow(ctx context.Context, db dal.RDB, ownerID string) err
 
 		for _, attr := range attrs {
 			if data, ok := dataRows[attr.PropertyID]; ok {
-				if attr.PropertyName != data.PropertyName || attr.Creator != data.Creator {
+				if attr.PropertyName != data["bk_property_name"] || attr.Creator != data["creator"] {
 					blog.Errorf("the model biz set attribute %s already exists, but is illegal, name: %v, creator: %v",
 						attr.PropertyID, attr.PropertyName, attr.Creator)
 					return errors.New("model biz set attribute is invalid")
@@ -352,12 +352,12 @@ func addBizSetObjectAttrRow(ctx context.Context, db dal.RDB, ownerID string) err
 
 	nowTime := metadata.Now()
 	for _, row := range dataRows {
-		row.OwnerID = ownerID
-		row.IsPre = true
-		row.IsReadOnly = false
-		row.CreateTime = &nowTime
-		row.LastTime = &nowTime
-		row.Description = ""
+		row["bk_supplier_account"] = ownerID
+		row["ispre"] = true
+		row["isreadonly"] = false
+		row["create_time"] = &nowTime
+		row["last_time"] = &nowTime
+		row["description"] = ""
 		_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, row, "id", uniqueFields, []string{})
 		if err != nil {
 			blog.Errorf("add biz set attr failed, attribute: %v, err: %v", row, err)

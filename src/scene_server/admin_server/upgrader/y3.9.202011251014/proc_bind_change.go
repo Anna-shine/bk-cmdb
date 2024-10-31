@@ -52,29 +52,31 @@ func addProcBindInfo(ctx context.Context, db dal.RDB, conf *upgrader.Config) err
 	}
 	sort := common.BKPropertyIndexField + ":-1"
 	procAttr := &Attribute{}
-	if err := db.Table(common.BKTableNameObjAttDes).Find(bindIPAttrIdxFilter).Sort(sort).One(ctx, procAttr); err != nil {
-		blog.Errorf("addProcBindIP failed, find proc max property index id failed, filter: %s err: %s", bindIPAttrIdxFilter, err.Error())
+	if err := db.Table(common.BKTableNameObjAttDes).Find(bindIPAttrIdxFilter).Sort(sort).One(ctx,
+		procAttr); err != nil {
+		blog.Errorf("addProcBindIP failed, find proc max property index id failed, filter: %s err: %s",
+			bindIPAttrIdxFilter, err.Error())
 		return err
 	}
 
 	nowTime := metadata.Now()
-	procBindIPAttr := &Attribute{
-		ID:            int64(newAttributeID),
-		OwnerID:       conf.OwnerID,
-		ObjectID:      common.BKInnerObjIDProc,
-		PropertyID:    "bind_info",
-		PropertyName:  "bind_info",
-		PropertyGroup: "proc_port",
-		PropertyIndex: procAttr.PropertyIndex + 1,
-		Placeholder:   "process bind port information",
-		IsEditable:    true,
-		IsPre:         true,
-		IsRequired:    false,
-		PropertyType:  common.FieldTypeTable,
-		Option:        getSubAttr(),
-		Creator:       conf.User,
-		CreateTime:    &nowTime,
-		LastTime:      &nowTime,
+	procBindIPAttr := &map[string]interface{}{
+		"id":                  int64(newAttributeID),
+		"bk_supplier_account": conf.OwnerID,
+		"bk_obj_id":           common.BKInnerObjIDProc,
+		"bk_property_id":      "bind_info",
+		"bk_property_name":    "bind_info",
+		"bk_property_group":   "proc_port",
+		"bk_property_index":   procAttr.PropertyIndex + 1,
+		"placeholder":         "process bind port information",
+		"editable":            true,
+		"ispre":               true,
+		"isrequired":          false,
+		"bk_property_type":    common.FieldTypeTable,
+		"option":              getSubAttr(),
+		"creator":             conf.User,
+		"create_time":         &nowTime,
+		"last_time":           &nowTime,
 	}
 
 	return db.Table(common.BKTableNameObjAttDes).Insert(ctx, procBindIPAttr)
@@ -217,7 +219,8 @@ func migrateProcTempBindInfo(ctx context.Context, db dal.RDB, conf *upgrader.Con
 }
 
 func clearProcAttrAndGroup(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
-	delPropertyID := []string{common.BKProcGatewayIP, common.BKProcGatewayPort, common.BKProcGatewayProtocol, common.BKProcGatewayCity, common.BKBindIP, common.BKPort, common.BKProtocol, common.BKProcPortEnable}
+	delPropertyID := []string{common.BKProcGatewayIP, common.BKProcGatewayPort, common.BKProcGatewayProtocol,
+		common.BKProcGatewayCity, common.BKBindIP, common.BKPort, common.BKProtocol, common.BKProcPortEnable}
 
 	delProcAttr := map[string]interface{}{
 		common.BKObjIDField:      common.BKInnerObjIDProc,
@@ -235,7 +238,8 @@ func clearProcAttrAndGroup(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 	}
 	cnt, err := db.Table(common.BKTableNameObjAttDes).Find(proxyGroupAttrFilter).Count(ctx)
 	if err != nil {
-		blog.ErrorJSON("clearProcAttrAndGroup failed, find network proxy  attribute, filter:%s err: %s", proxyGroupAttrFilter, err.Error())
+		blog.ErrorJSON("clearProcAttrAndGroup failed, find network proxy  attribute, filter:%s err: %s",
+			proxyGroupAttrFilter, err.Error())
 		return err
 	}
 	if cnt > 0 {
@@ -246,7 +250,8 @@ func clearProcAttrAndGroup(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 		common.BKPropertyGroupField: "network_proxy",
 	}
 	if err := db.Table(common.BKTableNamePropertyGroup).Delete(ctx, delProxyGroupAttrFilter); err != nil {
-		blog.ErrorJSON("clearProcAttrAndGroup failed, find network proxy  attribute, filter:%s err: %s", delProxyGroupAttrFilter, err.Error())
+		blog.ErrorJSON("clearProcAttrAndGroup failed, find network proxy  attribute, filter:%s err: %s",
+			delProxyGroupAttrFilter, err.Error())
 		return err
 	}
 
@@ -278,12 +283,13 @@ func getSubAttr() []SubAttriubte {
 			IsRequired:    true,
 		},
 		SubAttriubte{
-			PropertyID:    "protocol",
-			PropertyName:  "Protocol",
-			Placeholder:   "service use protocol,",
-			IsEditable:    true,
-			PropertyType:  common.FieldTypeEnum,
-			Option:        []metadata.EnumVal{{ID: "1", Name: "TCP", Type: "text", IsDefault: true}, {ID: "2", Name: "UDP", Type: "text"}},
+			PropertyID:   "protocol",
+			PropertyName: "Protocol",
+			Placeholder:  "service use protocol,",
+			IsEditable:   true,
+			PropertyType: common.FieldTypeEnum,
+			Option: []metadata.EnumVal{{ID: "1", Name: "TCP", Type: "text", IsDefault: true},
+				{ID: "2", Name: "UDP", Type: "text"}},
 			PropertyGroup: common.BKProcBindInfo,
 			IsRequired:    true,
 		},

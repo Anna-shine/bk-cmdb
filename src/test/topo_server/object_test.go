@@ -829,7 +829,7 @@ var _ = Describe("object test", func() {
 				func() {
 					input := &metadata.ObjAttDes{
 						Attribute: metadata.Attribute{
-							OwnerID:       "0",
+							TenantID:      "0",
 							ObjectID:      "cc_obj",
 							PropertyID:    "test_sglchar",
 							PropertyName:  "test_sglchar",
@@ -851,14 +851,14 @@ var _ = Describe("object test", func() {
 					Expect(data.PropertyGroup).To(Equal(input.PropertyGroup))
 					Expect(data.IsEditable).To(Equal(input.IsEditable))
 					Expect(data.PropertyType).To(Equal(input.PropertyType))
-					Expect(data.OwnerID).To(Equal(input.OwnerID))
+					Expect(data.TenantID).To(Equal(input.TenantID))
 					attrId = strconv.FormatInt(data.ID, 10)
 				})
 
 			It("create object attribute with same bk_property_id", func() {
 				input := &metadata.ObjAttDes{
 					Attribute: metadata.Attribute{
-						OwnerID:       "0",
+						TenantID:      "0",
 						ObjectID:      "cc_obj",
 						PropertyID:    "test_sglchar",
 						PropertyName:  "sglchar",
@@ -876,7 +876,7 @@ var _ = Describe("object test", func() {
 			It("create object attribute with same bk_property_name", func() {
 				input := &metadata.ObjAttDes{
 					Attribute: metadata.Attribute{
-						OwnerID:       "0",
+						TenantID:      "0",
 						ObjectID:      "cc_obj",
 						PropertyID:    "sglchar",
 						PropertyName:  "test_sglchar",
@@ -894,7 +894,7 @@ var _ = Describe("object test", func() {
 			It("create object attribute invalid ObjectID", func() {
 				input := &metadata.ObjAttDes{
 					Attribute: metadata.Attribute{
-						OwnerID:       "0",
+						TenantID:      "0",
 						ObjectID:      "123456",
 						PropertyID:    "sglchar",
 						PropertyName:  "123456",
@@ -916,7 +916,7 @@ var _ = Describe("object test", func() {
 				}
 				input := &metadata.ObjAttDes{
 					Attribute: metadata.Attribute{
-						OwnerID:       "0",
+						TenantID:      "0",
 						ObjectID:      "cc_obj",
 						PropertyID:    longPropertyID,
 						PropertyName:  "1234567",
@@ -934,7 +934,7 @@ var _ = Describe("object test", func() {
 			It("create object attribute invalid PropertyType", func() {
 				input := &metadata.ObjAttDes{
 					Attribute: metadata.Attribute{
-						OwnerID:       "0",
+						TenantID:      "0",
 						ObjectID:      "cc_obj",
 						PropertyID:    "cc2",
 						PropertyName:  "123456789",
@@ -953,7 +953,7 @@ var _ = Describe("object test", func() {
 				func() {
 					input := &metadata.ObjAttDes{
 						Attribute: metadata.Attribute{
-							OwnerID:       "0",
+							TenantID:      "0",
 							ObjectID:      "cc_obj",
 							PropertyID:    "test_singlechar",
 							PropertyName:  "test_singlechar",
@@ -975,7 +975,7 @@ var _ = Describe("object test", func() {
 					Expect(data.PropertyGroup).To(Equal("default"))
 					Expect(data.IsEditable).To(Equal(input.IsEditable))
 					Expect(data.PropertyType).To(Equal(input.PropertyType))
-					Expect(data.OwnerID).To(Equal(input.OwnerID))
+					Expect(data.TenantID).To(Equal(input.TenantID))
 					attrId1 = strconv.FormatInt(data.ID, 10)
 				})
 
@@ -983,7 +983,7 @@ var _ = Describe("object test", func() {
 				func() {
 					input := &metadata.ObjAttDes{
 						Attribute: metadata.Attribute{
-							OwnerID:       "0",
+							TenantID:      "0",
 							ObjectID:      "cc_obj",
 							PropertyID:    "test_biz",
 							PropertyName:  "test_biz",
@@ -1006,7 +1006,7 @@ var _ = Describe("object test", func() {
 					Expect(data.PropertyGroup).To(Equal("bizdefault"))
 					Expect(data.IsEditable).To(Equal(input.IsEditable))
 					Expect(data.PropertyType).To(Equal(input.PropertyType))
-					Expect(data.OwnerID).To(Equal(input.OwnerID))
+					Expect(data.TenantID).To(Equal(input.TenantID))
 				})
 
 			It("update object attribute id="+attrId1, func() {

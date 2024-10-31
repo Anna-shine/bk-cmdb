@@ -82,7 +82,7 @@ func (m *modelAttribute) saveTableAttr(kit *rest.Kit, attribute metadata.Attribu
 
 	attribute.PropertyIndex = index
 	attribute.ID = int64(id)
-	attribute.OwnerID = kit.SupplierAccount
+	attribute.TenantID = kit.SupplierAccount
 
 	if attribute.CreateTime == nil {
 		attribute.CreateTime = &metadata.Time{}
@@ -123,7 +123,7 @@ func (m *modelAttribute) save(kit *rest.Kit, attribute metadata.Attribute) (id u
 
 	attribute.PropertyIndex = index
 	attribute.ID = int64(id)
-	attribute.OwnerID = kit.SupplierAccount
+	attribute.TenantID = kit.SupplierAccount
 
 	if attribute.CreateTime == nil {
 		attribute.CreateTime = &metadata.Time{}
@@ -1768,7 +1768,7 @@ func (m *modelAttribute) GetAttrLastIndex(kit *rest.Kit, attribute metadata.Attr
 	opt := make(map[string]interface{})
 	opt[common.BKObjIDField] = attribute.ObjectID
 	opt[common.BKPropertyGroupField] = attribute.PropertyGroup
-	opt = util.SetModOwner(opt, attribute.OwnerID)
+	opt = util.SetModOwner(opt, attribute.TenantID)
 	count, err := mongodb.Client().Table(common.BKTableNameObjAttDes).Find(opt).Count(kit.Ctx)
 	if err != nil {
 		blog.Error("GetAttrLastIndex, request(%s): database operation is failed, error info is %v", kit.Rid, err)

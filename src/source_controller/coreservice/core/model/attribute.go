@@ -100,7 +100,7 @@ func (m *modelAttribute) CreateTableModelAttributes(kit *rest.Kit, objID string,
 		}
 
 		attr.ObjectID = objID
-		attr.OwnerID = kit.SupplierAccount
+		attr.TenantID = kit.SupplierAccount
 		_, exists, err := m.isExists(kit, attr.ObjectID, attr.PropertyID, attr.BizID)
 		blog.V(5).Infof("table model attributes, property id: %s, bizID: %d, exists: %v, rid: %s", attr.PropertyID,
 			attr.BizID, exists, kit.Rid)
@@ -197,7 +197,7 @@ func (m *modelAttribute) CreateModelAttributes(kit *rest.Kit, objID string, inpu
 				attr.PropertyName, attr.PropertyID)
 		}
 
-		attr.OwnerID = kit.SupplierAccount
+		attr.TenantID = kit.SupplierAccount
 		_, exists, err := m.isExists(kit, attr.ObjectID, attr.PropertyID, attr.BizID)
 		blog.V(5).Infof("property(id: %s, bizID: %d) exists: %v, rid: %s", attr.PropertyID, attr.BizID, exists, kit.Rid)
 		if err != nil {
@@ -260,7 +260,7 @@ func (m *modelAttribute) SetModelAttributes(kit *rest.Kit, objID string, inputPa
 			addExceptionFunc(int64(attrIdx), err, &attr)
 			continue
 		}
-		attr.OwnerID = kit.SupplierAccount
+		attr.TenantID = kit.SupplierAccount
 		if exists {
 			cond := mongo.NewCondition()
 			cond.Element(&mongo.Eq{Key: metadata.AttributeFieldSupplierAccount, Val: kit.SupplierAccount})
@@ -460,7 +460,7 @@ func (m *modelAttribute) UpdateTableModelAttributes(kit *rest.Kit, inputParam me
 				}
 			}
 
-			attr.OwnerID = kit.SupplierAccount
+			attr.TenantID = kit.SupplierAccount
 			_, exists, err := m.isExists(kit, attr.ObjectID, attr.PropertyID, attr.BizID)
 			blog.V(5).Infof("table model attributes, property id: %s, bizID: %d, exists: %v, rid: %s", attr.PropertyID,
 				attr.BizID, exists, kit.Rid)

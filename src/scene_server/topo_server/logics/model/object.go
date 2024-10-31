@@ -732,7 +732,7 @@ func (o *object) createDefaultAttrs(kit *rest.Kit, isMainline bool, obj *metadat
 		PropertyType:      common.FieldTypeSingleChar,
 		PropertyID:        common.GetInstNameField(obj.ObjectID),
 		PropertyName:      common.DefaultInstName,
-		OwnerID:           kit.SupplierAccount,
+		TenantID:          kit.SupplierAccount,
 	})
 	resultIdxMap[len(attrs)-1] = struct{}{}
 
@@ -740,7 +740,7 @@ func (o *object) createDefaultAttrs(kit *rest.Kit, isMainline bool, obj *metadat
 		attr.PropertyGroup = groupData.GroupID
 		attr.PropertyGroupName = groupData.GroupName
 		attr.ObjectID = obj.ObjectID
-		attr.OwnerID = kit.SupplierAccount
+		attr.TenantID = kit.SupplierAccount
 		attrs = append(attrs, attr)
 	}
 
@@ -759,7 +759,7 @@ func (o *object) createDefaultAttrs(kit *rest.Kit, isMainline bool, obj *metadat
 			PropertyType:      common.FieldTypeInt,
 			PropertyID:        common.BKInstParentStr,
 			PropertyName:      common.BKInstParentStr,
-			OwnerID:           kit.SupplierAccount,
+			TenantID:          kit.SupplierAccount,
 		})
 		resultIdxMap[len(attrs)-1] = struct{}{}
 	}
