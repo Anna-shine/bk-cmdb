@@ -403,7 +403,7 @@ type AssociationKind struct {
 	// a memorable name for this association kind, could be a chinese name, a english name etc.
 	AssociationKindName string `field:"bk_asst_name" json:"bk_asst_name" bson:"bk_asst_name"`
 	// the owner that this association type belongs to.
-	OwnerID string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID string `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 	// the describe for the relationship from source object to the target(destination) object, which will be displayed
 	// when the topology is constructed between objects.
 	SourceToDestinationNote string `field:"src_des" json:"src_des" bson:"src_des"`

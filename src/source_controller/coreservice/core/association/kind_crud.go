@@ -81,7 +81,7 @@ func (m *associationKind) save(kit *rest.Kit, associationKind metadata.Associati
 	}
 
 	associationKind.ID = int64(id)
-	associationKind.OwnerID = kit.SupplierAccount
+	associationKind.TenantID = kit.SupplierAccount
 
 	err = mongodb.Client().Table(common.BKTableNameAsstDes).Insert(kit.Ctx, associationKind)
 	return id, err
