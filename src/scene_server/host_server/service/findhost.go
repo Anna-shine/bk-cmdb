@@ -478,7 +478,7 @@ func (s *Service) ListResourcePoolHosts(ctx *rest.Contexts) {
 	bizData := appResult.Info[0]
 	bizCount := 0
 	for _, biz := range appResult.Info {
-		supplier, _ := biz.String(common.BkSupplierAccount)
+		supplier, _ := biz.String(common.TenantID)
 		if supplier == httpheader.GetSupplierAccount(header) {
 			bizCount++
 			bizData = biz

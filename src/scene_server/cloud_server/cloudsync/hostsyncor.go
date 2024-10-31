@@ -476,16 +476,16 @@ func (h *HostSyncor) getCloudId(vpcID string) (int64, error) {
 // createCloudArea 创建vpc对应的云区域
 func (h *HostSyncor) createCloudArea(vpc *metadata.VpcSyncInfo, accountConf *metadata.CloudAccountConf) (int64, error) {
 	cloudArea := map[string]interface{}{
-		common.BKCloudNameField:  fmt.Sprintf("%d_%s", accountConf.AccountID, vpc.VpcID),
-		common.BKCloudVendor:     accountConf.VendorName,
-		common.BKVpcID:           vpc.VpcID,
-		common.BKVpcName:         vpc.VpcName,
-		common.BKRegion:          vpc.Region,
-		common.BKCloudAccountID:  accountConf.AccountID,
-		common.BKCreator:         common.BKCloudSyncUser,
-		common.BKLastEditor:      common.BKCloudSyncUser,
-		common.BkSupplierAccount: common.BKDefaultOwnerID,
-		common.BKStatus:          "1",
+		common.BKCloudNameField: fmt.Sprintf("%d_%s", accountConf.AccountID, vpc.VpcID),
+		common.BKCloudVendor:    accountConf.VendorName,
+		common.BKVpcID:          vpc.VpcID,
+		common.BKVpcName:        vpc.VpcName,
+		common.BKRegion:         vpc.Region,
+		common.BKCloudAccountID: accountConf.AccountID,
+		common.BKCreator:        common.BKCloudSyncUser,
+		common.BKLastEditor:     common.BKCloudSyncUser,
+		common.TenantID:         common.BKDefaultOwnerID,
+		common.BKStatus:         "1",
 	}
 
 	instInfo := &metadata.CreateModelInstance{

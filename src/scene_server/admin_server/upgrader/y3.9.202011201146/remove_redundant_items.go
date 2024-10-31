@@ -28,9 +28,9 @@ const (
 
 func removeRedundantItems(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	subscriptionFilter := map[string]interface{}{
-		subscriptionNameField:    "process instance refresh [Do not remove it]",
-		"system_name":            "cmdb",
-		common.BkSupplierAccount: common.BKDefaultOwnerID,
+		subscriptionNameField: "process instance refresh [Do not remove it]",
+		"system_name":         "cmdb",
+		"bk_supplier_account": common.BKDefaultOwnerID,
 	}
 
 	if err := db.Table(tableNameSubscription).Delete(ctx, subscriptionFilter); err != nil {

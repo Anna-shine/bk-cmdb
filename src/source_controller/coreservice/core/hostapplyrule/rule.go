@@ -311,9 +311,9 @@ func (p *hostApplyRule) GetHostApplyRule(kit *rest.Kit, bizID int64, ruleID int6
 	errors.CCErrorCoder) {
 	rule := metadata.HostApplyRule{}
 	filter := map[string]interface{}{
-		common.BkSupplierAccount: kit.SupplierAccount,
-		common.BKAppIDField:      bizID,
-		common.BKFieldID:         ruleID,
+		common.TenantID:     kit.SupplierAccount,
+		common.BKAppIDField: bizID,
+		common.BKFieldID:    ruleID,
 	}
 	if err := mongodb.Client().Table(common.BKTableNameHostApplyRule).Find(filter).One(kit.Ctx, &rule); err != nil {
 		if mongodb.Client().IsNotFoundError(err) {
@@ -332,7 +332,7 @@ func (p *hostApplyRule) GetHostApplyRuleByAttributeID(kit *rest.Kit,
 	bizID, moduleID, attributeID int64) (metadata.HostApplyRule, errors.CCErrorCoder) {
 	rule := metadata.HostApplyRule{}
 	filter := map[string]interface{}{
-		common.BkSupplierAccount:  kit.SupplierAccount,
+		common.TenantID:           kit.SupplierAccount,
 		common.BKAppIDField:       bizID,
 		common.BKModuleIDField:    moduleID,
 		common.BKAttributeIDField: attributeID,
@@ -356,7 +356,7 @@ func (p *hostApplyRule) ListHostApplyRule(kit *rest.Kit, bizID int64,
 	result := metadata.MultipleHostApplyRuleResult{}
 
 	filter := map[string]interface{}{
-		common.BkSupplierAccount: kit.SupplierAccount,
+		common.TenantID: kit.SupplierAccount,
 	}
 	if bizID != 0 {
 		filter[common.BKAppIDField] = bizID
@@ -426,8 +426,8 @@ func (p *hostApplyRule) SearchRuleRelatedModules(kit *rest.Kit, bizID int64,
 	moduleToRules, moduleIDs := getRuleRelationIDs(rules, module)
 
 	moduleFilter := map[string]interface{}{
-		common.BKAppIDField:      bizID,
-		common.BkSupplierAccount: kit.SupplierAccount,
+		common.BKAppIDField: bizID,
+		common.TenantID:     kit.SupplierAccount,
 		common.BKModuleIDField: map[string]interface{}{
 			common.BKDBIN: moduleIDs,
 		},
@@ -468,8 +468,8 @@ func getRuleAndAttribute(kit *rest.Kit, bizID int64, filter *querybuilder.QueryF
 	}
 
 	ruleFilter := map[string]interface{}{
-		common.BKAppIDField:      bizID,
-		common.BkSupplierAccount: kit.SupplierAccount,
+		common.BKAppIDField: bizID,
+		common.TenantID:     kit.SupplierAccount,
 		common.BKAttributeIDField: map[string]interface{}{
 			common.BKDBIN: attributeIDs,
 		},
@@ -614,7 +614,7 @@ func (p *hostApplyRule) BatchUpdateHostApplyRule(kit *rest.Kit, bizID int64,
 		}
 		ruleFilter := map[string]interface{}{
 			common.BKAppIDField:             bizID,
-			common.BkSupplierAccount:        kit.SupplierAccount,
+			common.TenantID:                 kit.SupplierAccount,
 			common.BKAttributeIDField:       item.AttributeID,
 			common.BKModuleIDField:          item.ModuleID,
 			common.BKServiceTemplateIDField: item.ServiceTemplateID,
@@ -741,8 +741,8 @@ func (p *hostApplyRule) SearchRuleRelatedServiceTemplates(kit *rest.Kit,
 	srvTemplateToRules, srvTemplateIDs := getRuleRelationIDs(rules, serviceTemplate)
 
 	srvTemplateFilter := map[string]interface{}{
-		common.BKAppIDField:      option.ApplicationID,
-		common.BkSupplierAccount: kit.SupplierAccount,
+		common.BKAppIDField: option.ApplicationID,
+		common.TenantID:     kit.SupplierAccount,
 		common.BKFieldID: map[string]interface{}{
 			common.BKDBIN: srvTemplateIDs,
 		},

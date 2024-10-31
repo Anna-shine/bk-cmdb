@@ -239,7 +239,7 @@ func DeleteAllObjects() {
 
 	delCond := mapstr.MapStr{common.BKObjIDField: mapstr.MapStr{common.BKDBNIN: innerObjs}}
 	objects := make([]metadata.Object, 0)
-	err := GetDB().Table(common.BKTableNameObjDes).Find(delCond).Fields(common.BKObjIDField, common.BkSupplierAccount).
+	err := GetDB().Table(common.BKTableNameObjDes).Find(delCond).Fields(common.BKObjIDField, common.TenantID).
 		All(ctx, &objects)
 	Expect(err).NotTo(HaveOccurred())
 

@@ -325,11 +325,11 @@ func (ps *parseStream) getResourcePoolBusinessID() (int64, error) {
 	}
 
 	opt := &metadata.QueryCondition{
-		Fields: []string{common.BKAppIDField, common.BkSupplierAccount},
+		Fields: []string{common.BKAppIDField, common.TenantID},
 		Page:   metadata.BasePage{Limit: common.BKNoLimit},
 		Condition: mapstr.MapStr{
-			common.BkSupplierAccount: supplierAccount,
-			"default":                1,
+			common.TenantID: supplierAccount,
+			"default":       1,
 		},
 	}
 
@@ -340,7 +340,7 @@ func (ps *parseStream) getResourcePoolBusinessID() (int64, error) {
 	}
 
 	for _, biz := range result.Info {
-		bizSupplierAccount, err := biz.String(common.BkSupplierAccount)
+		bizSupplierAccount, err := biz.String(common.TenantID)
 		if err != nil {
 			return 0, err
 		}
@@ -379,12 +379,12 @@ func (ps *parseStream) getResourcePoolDefaultDirID() (dirID int64, err error) {
 	}
 
 	opt := &metadata.QueryCondition{
-		Fields: []string{common.BKModuleIDField, common.BkSupplierAccount},
+		Fields: []string{common.BKModuleIDField, common.TenantID},
 		Page:   metadata.BasePage{Limit: common.BKNoLimit},
 		Condition: mapstr.MapStr{
-			common.BKDefaultField:    common.DefaultResModuleFlag,
-			common.BKAppIDField:      bizID,
-			common.BkSupplierAccount: supplierAccount,
+			common.BKDefaultField: common.DefaultResModuleFlag,
+			common.BKAppIDField:   bizID,
+			common.TenantID:       supplierAccount,
 		},
 	}
 
@@ -395,7 +395,7 @@ func (ps *parseStream) getResourcePoolDefaultDirID() (dirID int64, err error) {
 	}
 
 	for _, directory := range result.Info {
-		dirSupplierAccount, err := directory.String(common.BkSupplierAccount)
+		dirSupplierAccount, err := directory.String(common.TenantID)
 		if err != nil {
 			return 0, err
 		}

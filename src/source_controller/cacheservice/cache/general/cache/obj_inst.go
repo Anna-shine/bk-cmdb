@@ -48,7 +48,7 @@ func getObjInstTable(ctx context.Context, filter *types.BasicFilter, rid string)
 	util.SetQueryOwner(cond, filter.SupplierAccount)
 
 	obj := new(metadata.Object)
-	err := mongodb.Client().Table(common.BKTableNameObjDes).Find(cond).Fields(common.BkSupplierAccount).One(ctx, &obj)
+	err := mongodb.Client().Table(common.BKTableNameObjDes).Find(cond).Fields(common.TenantID).One(ctx, &obj)
 	if err != nil {
 		blog.Errorf("get object supplier account by cond(%+v) failed, err: %v, rid: %s", cond, err, rid)
 		return "", err

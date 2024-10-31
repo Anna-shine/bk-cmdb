@@ -317,8 +317,8 @@ func (p *processOperation) ListServiceInstance(kit *rest.Kit,
 		return nil, kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKAppIDField)
 	}
 	filter := map[string]interface{}{
-		common.BKAppIDField:      option.BusinessID,
-		common.BkSupplierAccount: kit.SupplierAccount,
+		common.BKAppIDField: option.BusinessID,
+		common.TenantID:     kit.SupplierAccount,
 	}
 	filter = util.SetQueryOwner(filter, kit.SupplierAccount)
 

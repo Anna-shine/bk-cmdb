@@ -87,7 +87,7 @@ var identityHostFields = []string{
 	common.BKCloudIDField,
 	common.BKHostInnerIPField,
 	common.BKOSTypeField,
-	common.BkSupplierAccount,
+	common.TenantID,
 	common.BKAddressingField,
 	common.BKAgentIDField,
 }
@@ -114,9 +114,11 @@ func (i *Identifier) findModuleHostRelation(kit *rest.Kit, hostIDs []int64) erro
 	condModuleHostMap := util.SetQueryOwner(hostModuleCond.ToMapStr(), kit.SupplierAccount)
 	// fetch  host and module relation
 	moduleHostRelation := make([]metadata.ModuleHost, 0)
-	err := mongodb.Client().Table(common.BKTableNameModuleHostConfig).Find(condModuleHostMap).All(kit.Ctx, &moduleHostRelation)
+	err := mongodb.Client().Table(common.BKTableNameModuleHostConfig).Find(condModuleHostMap).All(kit.Ctx,
+		&moduleHostRelation)
 	if err != nil {
-		blog.ErrorJSON("findModuleHostRelation query host and module relation error. err:%s, conidtion:%s, rid:%s", err.Error(), condModuleHostMap, kit.Rid)
+		blog.ErrorJSON("findModuleHostRelation query host and module relation error. err:%s, conidtion:%s, rid:%s",
+			err.Error(), condModuleHostMap, kit.Rid)
 		return kit.CCError.Error(common.CCErrCommDBSelectFailed)
 	}
 
@@ -162,7 +164,8 @@ func (i *Identifier) findHostServiceInst(kit *rest.Kit, hostIDs []int64) error {
 	}
 	err := i.dbQuery.ExecQuery(kit, common.BKTableNameProcessInstanceRelation, nil, relationFilter, &relations)
 	if err != nil {
-		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s", common.BKTableNameProcessInstanceRelation, relationFilter, kit.Rid)
+		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s",
+			common.BKTableNameProcessInstanceRelation, relationFilter, kit.Rid)
 		return err
 	}
 
@@ -172,7 +175,8 @@ func (i *Identifier) findHostServiceInst(kit *rest.Kit, hostIDs []int64) error {
 	for _, relation := range relations {
 		procIDs = append(procIDs, relation.ProcessID)
 		serviceInstIDs = append(serviceInstIDs, relation.ServiceInstanceID)
-		procServiceInstMap[relation.ProcessID] = append(procServiceInstMap[relation.ProcessID], relation.ServiceInstanceID)
+		procServiceInstMap[relation.ProcessID] = append(procServiceInstMap[relation.ProcessID],
+			relation.ServiceInstanceID)
 	}
 
 	serviceInstInfos := make([]metadata.ServiceInstance, 0)
@@ -183,14 +187,16 @@ func (i *Identifier) findHostServiceInst(kit *rest.Kit, hostIDs []int64) error {
 	}
 	err = i.dbQuery.ExecQuery(kit, common.BKTableNameServiceInstance, nil, serviceInstFilter, &serviceInstInfos)
 	if err != nil {
-		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s", common.BKTableNameServiceInstance, serviceInstFilter, kit.Rid)
+		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s", common.BKTableNameServiceInstance,
+			serviceInstFilter, kit.Rid)
 		return err
 	}
 
 	// 服务实例与模块的关系
 	serviceInstModuleRelation := make(map[int64][]int64, 0)
 	for _, serviceInstInfo := range serviceInstInfos {
-		serviceInstModuleRelation[serviceInstInfo.ID] = append(serviceInstModuleRelation[serviceInstInfo.ID], serviceInstInfo.ModuleID)
+		serviceInstModuleRelation[serviceInstInfo.ID] = append(serviceInstModuleRelation[serviceInstInfo.ID],
+			serviceInstInfo.ModuleID)
 	}
 
 	procInfos := make([]metadata.HostIdentProcess, 0)
@@ -198,7 +204,8 @@ func (i *Identifier) findHostServiceInst(kit *rest.Kit, hostIDs []int64) error {
 	cond := condition.CreateCondition().Field(common.BKProcIDField).In(procIDs)
 	err = i.dbQuery.ExecQuery(kit, common.BKTableNameBaseProcess, nil, cond.ToMapStr(), &procInfos)
 	if err != nil {
-		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s", common.BKTableNameBaseProcess, cond.ToMapStr(), kit.Rid)
+		blog.ErrorJSON("findHostServiceInst query table %s err. cond:%s, rid:%s", common.BKTableNameBaseProcess,
+			cond.ToMapStr(), kit.Rid)
 		return err
 	}
 
@@ -243,7 +250,8 @@ func (i *Identifier) findHostLayerInfo(kit *rest.Kit) error {
 	cond := condition.CreateCondition().Field(common.AssociationKindIDField).Eq(common.AssociationKindMainline)
 	err := i.dbQuery.ExecQuery(kit, common.BKTableNameObjAsst, nil, cond.ToMapStr(), &asstArr)
 	if err != nil {
-		blog.ErrorJSON("findHostLayerInfo query mainline association info error. condition:%s, rid:%s", cond.ToMapStr(), kit.Rid)
+		blog.ErrorJSON("findHostLayerInfo query mainline association info error. condition:%s, rid:%s", cond.ToMapStr(),
+			kit.Rid)
 		return err
 	}
 

@@ -37,8 +37,10 @@ func (lgc *Logics) GetDefaultAppIDWithSupplier(kit *rest.Kit) (int64, errors.CCE
 
 	id, err := util.GetInt64ByInterface(appDetails[common.BKAppIDField])
 	if nil != err {
-		blog.ErrorJSON("GetDefaultAppIDWithSupplier failed, parse bk_biz_id field from app details failed, inst:%s, err:%s, rid:%s", appDetails, err.Error(), kit.Rid)
-		return -1, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, common.BKInnerObjIDApp, common.BKAppIDField, "int", err.Error())
+		blog.ErrorJSON("GetDefaultAppIDWithSupplier failed, parse bk_biz_id field from app details failed, inst:%s, err:%s, rid:%s",
+			appDetails, err.Error(), kit.Rid)
+		return -1, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, common.BKInnerObjIDApp, common.BKAppIDField,
+			"int", err.Error())
 	}
 	return id, nil
 }
@@ -53,8 +55,10 @@ func (lgc *Logics) GetDefaultAppID(kit *rest.Kit) (int64, errors.CCError) {
 
 	id, err := appDetails.Int64(common.BKAppIDField)
 	if nil != err {
-		blog.ErrorJSON("GetDefaultAppID failed, parse bk_biz_id from app detail failed, inst:%s, err:%s, rid:%s", appDetails, err.Error(), kit.Rid)
-		return -1, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, common.BKInnerObjIDApp, common.BKAppIDField, "int", err.Error())
+		blog.ErrorJSON("GetDefaultAppID failed, parse bk_biz_id from app detail failed, inst:%s, err:%s, rid:%s",
+			appDetails, err.Error(), kit.Rid)
+		return -1, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, common.BKInnerObjIDApp, common.BKAppIDField,
+			"int", err.Error())
 	}
 	return id, nil
 }
@@ -63,7 +67,7 @@ func (lgc *Logics) GetDefaultAppID(kit *rest.Kit) (int64, errors.CCError) {
 func (lgc *Logics) GetAppDetails(kit *rest.Kit, fields string, condition map[string]interface{}) (types.MapStr,
 	errors.CCError) {
 
-	fields = fields + "," + common.BkSupplierAccount
+	fields = fields + "," + common.TenantID
 	input := &metadata.QueryCondition{
 		Condition: condition,
 		Fields:    strings.Split(fields, ","),
@@ -75,7 +79,7 @@ func (lgc *Logics) GetAppDetails(kit *rest.Kit, fields string, condition map[str
 	}
 
 	for idx, biz := range result.Info {
-		if kit.SupplierAccount == biz[common.BkSupplierAccount].(string) {
+		if kit.SupplierAccount == biz[common.TenantID].(string) {
 			return result.Info[idx], nil
 		}
 	}
@@ -96,7 +100,8 @@ func (lgc *Logics) IsHostExistInApp(kit *rest.Kit, appID, hostID int64) (bool, e
 		return false, kit.CCError.CCError(common.CCErrCommHTTPDoRequestFailed)
 	}
 	if err := result.CCError(); err != nil {
-		blog.Errorf("IsHostExistInApp http response error, err code:%d, err msg:%s, input:%+v, rid:%s", result.Code, result.ErrMsg, hostID, kit.Rid)
+		blog.Errorf("IsHostExistInApp http response error, err code:%d, err msg:%s, input:%+v, rid:%s", result.Code,
+			result.ErrMsg, hostID, kit.Rid)
 		return false, err
 	}
 

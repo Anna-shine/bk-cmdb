@@ -69,7 +69,7 @@ func (assoc *association) CreateMainlineAssociation(kit *rest.Kit, data *metadat
 		common.BKObjNameField:          data.ObjectName,
 		common.BKObjIconField:          data.ObjectIcon,
 		common.BKClassificationIDField: data.ClassificationID,
-		common.BkSupplierAccount:       data.OwnerID,
+		common.TenantID:                data.OwnerID,
 	}
 	currentObj, err := assoc.obj.CreateObject(kit, true, objData)
 	if err != nil {
@@ -235,7 +235,7 @@ func (assoc *association) SearchMainlineAssociationTopo(kit *rest.Kit, targetObj
 	}
 
 	queryCond := &metadata.QueryCondition{
-		Fields: []string{common.BKObjIDField, common.BKObjNameField, common.BkSupplierAccount},
+		Fields: []string{common.BKObjIDField, common.BKObjNameField, common.TenantID},
 		Condition: mapstr.MapStr{
 			common.BKObjIDField: mapstr.MapStr{common.BKDBIN: needFind},
 		},

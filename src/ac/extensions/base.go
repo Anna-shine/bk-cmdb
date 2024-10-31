@@ -113,7 +113,7 @@ func (am *AuthManager) getResourcePoolBusinessID(ctx context.Context, header htt
 	}
 	// get resource pool business id now.
 	query := &metadata.QueryCondition{
-		Fields: []string{common.BKAppIDField, common.BkSupplierAccount},
+		Fields: []string{common.BKAppIDField, common.TenantID},
 		Condition: map[string]interface{}{
 			"default": 1,
 		},
@@ -126,7 +126,7 @@ func (am *AuthManager) getResourcePoolBusinessID(ctx context.Context, header htt
 
 	supplier := httpheader.GetSupplierAccount(header)
 	for idx, biz := range result.Info {
-		if supplier == biz[common.BkSupplierAccount].(string) {
+		if supplier == biz[common.TenantID].(string) {
 			if !result.Info[idx].Exists(common.BKAppIDField) {
 				// this can not be happen normally.
 				return 0, fmt.Errorf("can not find resource pool business id")

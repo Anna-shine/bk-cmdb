@@ -71,7 +71,7 @@ func (m *operationManager) ModelInstCount(kit *rest.Kit, wg *sync.WaitGroup) err
 		common.BKInnerObjIDModule, common.BKInnerObjIDProc, common.BKInnerObjIDPlat}
 	cond := mapstr.MapStr{}
 	cond[common.BKObjIDField] = mapstr.MapStr{common.BKDBNIN: innerObject}
-	fields := []string{common.BKObjIDField, common.BkSupplierAccount}
+	fields := []string{common.BKObjIDField, common.TenantID}
 	modelInfos := make([]metadata.Object, 0)
 	if err := mongodb.Client().Table(common.BKTableNameObjDes).Find(cond).
 		Fields(fields...).All(kit.Ctx, &modelInfos); err != nil {
@@ -135,13 +135,16 @@ func (m *operationManager) ModelInstChange(kit *rest.Kit, wg *sync.WaitGroup) er
 		}
 	}
 
-	innerObject := []string{common.BKInnerObjIDHost, common.BKInnerObjIDApp, common.BKInnerObjIDSet, common.BKInnerObjIDModule, common.BKInnerObjIDProc, common.BKInnerObjIDPlat}
+	innerObject := []string{common.BKInnerObjIDHost, common.BKInnerObjIDApp, common.BKInnerObjIDSet,
+		common.BKInnerObjIDModule, common.BKInnerObjIDProc, common.BKInnerObjIDPlat}
 	cond := mapstr.MapStr{}
 	cond[common.BKObjIDField] = mapstr.MapStr{common.BKDBNIN: innerObject}
 	fields := []string{common.BKObjIDField, common.BKObjNameField}
 	modelData := []map[string]interface{}{}
-	if err = mongodb.Client().Table(common.BKTableNameObjDes).Find(cond).Fields(fields...).All(kit.Ctx, &modelData); nil != err {
-		blog.Errorf("request(%s): it is failed to find all models by the condition (%#v), error info is %s", kit.Rid, cond, err.Error())
+	if err = mongodb.Client().Table(common.BKTableNameObjDes).Find(cond).Fields(fields...).All(kit.Ctx,
+		&modelData); nil != err {
+		blog.Errorf("request(%s): it is failed to find all models by the condition (%#v), error info is %s", kit.Rid,
+			cond, err.Error())
 		return err
 	}
 
@@ -186,14 +189,16 @@ func (m *operationManager) BizHostCountChange(kit *rest.Kit, wg *sync.WaitGroup)
 		common.CreateTimeField:     nowStrFormat,
 	}
 	bizHostChange := make([]metadata.HostChangeChartData, 0)
-	if err = mongodb.Client().Table(common.BKTableNameChartData).Find(condition).All(kit.Ctx, &bizHostChange); err != nil {
+	if err = mongodb.Client().Table(common.BKTableNameChartData).Find(condition).All(kit.Ctx,
+		&bizHostChange); err != nil {
 		blog.Errorf("get host change data fail, err: %v, rid: %v", err, kit.Rid)
 		return err
 	}
 
 	if len(bizHostChange) > 0 {
 		bizHostChange[0].Data = bizHost
-		if err = mongodb.Client().Table(common.BKTableNameChartData).Update(kit.Ctx, condition, bizHostChange[0]); err != nil {
+		if err = mongodb.Client().Table(common.BKTableNameChartData).Update(kit.Ctx, condition,
+			bizHostChange[0]); err != nil {
 			blog.Errorf("update biz host change chart fail, err: %v, rid: %v", err, kit.Rid)
 			return err
 		}
@@ -222,7 +227,8 @@ func (m *operationManager) BizHostCount(kit *rest.Kit) ([]metadata.StringIDCount
 	}
 	bizInfos := []map[string]interface{}{}
 	fields := []string{common.BKAppIDField, common.BKAppNameField}
-	if err := mongodb.Client().Table(common.BKTableNameBaseApp).Find(cond).Fields(fields...).All(kit.Ctx, &bizInfos); err != nil {
+	if err := mongodb.Client().Table(common.BKTableNameBaseApp).Find(cond).Fields(fields...).All(kit.Ctx,
+		&bizInfos); err != nil {
 		blog.Errorf("BizHostCount failed, find err: %v, cond:%#v, rid: %v ", err, cond, kit.Rid)
 		return nil, err
 	}
@@ -235,7 +241,8 @@ func (m *operationManager) BizHostCount(kit *rest.Kit) ([]metadata.StringIDCount
 	for idx, bizInfo := range bizInfos {
 		bizID, err := util.GetInt64ByInterface(bizInfo[common.BKAppIDField])
 		if err != nil {
-			blog.Errorf("BizHostCount failed, GetInt64ByInterface err: %v, bizInfo:%#v, rid: %v ", err, bizInfo, kit.Rid)
+			blog.Errorf("BizHostCount failed, GetInt64ByInterface err: %v, bizInfo:%#v, rid: %v ", err, bizInfo,
+				kit.Rid)
 			return nil, err
 		}
 		bizIDs[idx] = bizID
@@ -254,7 +261,8 @@ func (m *operationManager) BizHostCount(kit *rest.Kit) ([]metadata.StringIDCount
 		},
 		},
 	}
-	if err := mongodb.Client().Table(common.BKTableNameModuleHostConfig).AggregateAll(kit.Ctx, pipeline, &bizCountArr); err != nil {
+	if err := mongodb.Client().Table(common.BKTableNameModuleHostConfig).AggregateAll(kit.Ctx, pipeline,
+		&bizCountArr); err != nil {
 		blog.Errorf("BizHostCount failed, err: %v, rid: %v", err, kit.Rid)
 		return nil, err
 	}
@@ -290,7 +298,8 @@ func (m *operationManager) HostCloudChartData(kit *rest.Kit, inputParam metadata
 		return nil, err
 	}
 	pipeline := []M{{common.BKDBGroup: M{"_id": groupField, "count": M{common.BKDBSum: 1}}}}
-	if err := mongodb.Client().Table(common.BKTableNameBaseHost).AggregateAll(kit.Ctx, pipeline, &commonCount); err != nil {
+	if err := mongodb.Client().Table(common.BKTableNameBaseHost).AggregateAll(kit.Ctx, pipeline,
+		&commonCount); err != nil {
 		blog.Errorf("hostCloudChartData, aggregate: model's instance count fail, err: %v, rid: %v", err, kit.Rid)
 		return nil, err
 	}
@@ -370,7 +379,8 @@ func (m *operationManager) StatisticOperationLog(kit *rest.Kit) (*metadata.Stati
 		createAuditLogs := []map[string]interface{}{}
 		if err := mongodb.Client().Table(common.BKTableNameAuditLog).Find(createCond).Fields(fields...).Start(uint64(start)).
 			Limit(uint64(limit)).All(kit.Ctx, &createAuditLogs); err != nil {
-			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, createCond: %+v, err: %v, rid: %s", createCond, err, kit.Rid)
+			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, createCond: %+v, err: %v, rid: %s", createCond,
+				err, kit.Rid)
 			return nil, err
 		}
 		// 判断当前类型是否查完
@@ -406,7 +416,8 @@ func (m *operationManager) StatisticOperationLog(kit *rest.Kit) (*metadata.Stati
 		deleteAuditLogs := []map[string]interface{}{}
 		if err := mongodb.Client().Table(common.BKTableNameAuditLog).Find(deleteCond).Fields(fields...).Start(uint64(start)).
 			Limit(uint64(limit)).All(kit.Ctx, &deleteAuditLogs); err != nil {
-			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, deleteCond: %+v, err: %v, rid: %s", deleteCond, err, kit.Rid)
+			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, deleteCond: %+v, err: %v, rid: %s", deleteCond,
+				err, kit.Rid)
 			return nil, err
 		}
 
@@ -443,7 +454,8 @@ func (m *operationManager) StatisticOperationLog(kit *rest.Kit) (*metadata.Stati
 		updateAuditLogs := []map[string]interface{}{}
 		if err := mongodb.Client().Table(common.BKTableNameAuditLog).Find(updateCond).Fields(fields...).Start(uint64(start)).
 			Limit(uint64(limit)).All(kit.Ctx, &updateAuditLogs); err != nil {
-			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, updateCond: %+v, err: %v, rid: %s", updateCond, err, kit.Rid)
+			blog.Errorf("ModelInstanceAuditLogCount: query auditLog, updateCond: %+v, err: %v, rid: %s", updateCond,
+				err, kit.Rid)
 			return nil, err
 		}
 

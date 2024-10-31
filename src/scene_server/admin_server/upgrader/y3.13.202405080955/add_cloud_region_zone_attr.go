@@ -55,7 +55,7 @@ func addAttribute(ctx context.Context, db dal.RDB, conf *upgrader.Config) error 
 		common.BKPropertyIDField: mapstr.MapStr{
 			common.BKDBIN: []string{common.BKCloudRegionField, common.BKCloudZoneField},
 		},
-		common.BkSupplierAccount: conf.OwnerID,
+		"bk_supplier_account": conf.OwnerID,
 	}
 
 	existAttrs := make([]attribute, 0)

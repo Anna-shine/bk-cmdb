@@ -407,7 +407,7 @@ func (o *object) FindObjectTopo(kit *rest.Kit, cond mapstr.MapStr) ([]metadata.O
 	queryObj := &metadata.QueryCondition{
 		Condition: cond,
 		Fields: []string{common.BKObjIDField, common.BKObjNameField, common.BKClassificationIDField,
-			common.BkSupplierAccount, "position"},
+			common.TenantID, "position"},
 		DisableCounter: true,
 	}
 	objs, err := o.clientSet.CoreService().Model().ReadModel(kit.Ctx, kit.Header, queryObj)
@@ -490,7 +490,7 @@ func (o *object) FindObjectTopo(kit *rest.Kit, cond mapstr.MapStr) ([]metadata.O
 		&metadata.QueryCondition{
 			Condition: cond,
 			Fields: []string{common.BKObjIDField, common.BKObjNameField, common.BKClassificationIDField,
-				common.BkSupplierAccount, "position"},
+				common.TenantID, "position"},
 		},
 	)
 
@@ -1295,7 +1295,7 @@ func (o *object) searchObjAttrByCondition(kit *rest.Kit, cond metadata.QueryCond
 			delete(attrInfo, "bk_issystem")
 			delete(attrInfo, "bk_isapi")
 			delete(attrInfo, common.LastTimeField)
-			delete(attrInfo, common.BkSupplierAccount)
+			delete(attrInfo, common.TenantID)
 			delete(attrInfo, common.BKAppIDField)
 			delete(attrInfo, common.CreatorField)
 			result[objID] = append(result[objID], attrInfo)
@@ -1339,7 +1339,7 @@ func (o *object) searchObjAsstByCondition(kit *rest.Kit, cond metadata.QueryCond
 
 		asstInfo := item.ToMapStr()
 		delete(asstInfo, common.BKFieldID)
-		delete(asstInfo, common.BkSupplierAccount)
+		delete(asstInfo, common.TenantID)
 		delete(asstInfo, "on_delete")
 		asstInfo["bk_asst_obj_name"] = asstObjRsp[item.AsstObjID].ObjectName
 		asstInfo["bk_asst_obj_icon"] = asstObjRsp[item.AsstObjID].ObjIcon
@@ -1363,7 +1363,7 @@ func (o *object) searchObjAsstByCondition(kit *rest.Kit, cond metadata.QueryCond
 	for _, item := range asstKind.Info {
 		itemMap := item.ToMapStr()
 		delete(itemMap, common.BKFieldID)
-		delete(itemMap, common.BkSupplierAccount)
+		delete(itemMap, common.TenantID)
 		asstKindMapstr = append(asstKindMapstr, itemMap)
 	}
 

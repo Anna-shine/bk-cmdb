@@ -34,7 +34,7 @@ import (
 // GetResourcePoolModuleID get module id,module name.
 func (lgc *Logics) GetResourcePoolModuleID(kit *rest.Kit, condition mapstr.MapStr) (int64, string, errors.CCError) {
 	query := &metadata.QueryCondition{
-		Fields:    []string{common.BKModuleIDField, common.BkSupplierAccount, common.BKModuleNameField},
+		Fields:    []string{common.BKModuleIDField, common.TenantID, common.BKModuleNameField},
 		Condition: condition,
 	}
 	result, err := lgc.CoreAPI.CoreService().Instance().ReadInstance(kit.Ctx, kit.Header, common.BKInnerObjIDModule,
@@ -51,7 +51,7 @@ func (lgc *Logics) GetResourcePoolModuleID(kit *rest.Kit, condition mapstr.MapSt
 
 	supplier := kit.SupplierAccount
 	for idx, mod := range result.Info {
-		if supplier == mod[common.BkSupplierAccount].(string) {
+		if supplier == mod[common.TenantID].(string) {
 			moduleId, err := result.Info[idx].Int64(common.BKModuleIDField)
 			if err != nil {
 				return moduleId, "", err

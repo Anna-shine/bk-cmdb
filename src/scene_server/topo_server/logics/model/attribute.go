@@ -1481,7 +1481,7 @@ func removeIrrelevantValues(data mapstr.MapStr) {
 	data.Remove(common.CreateTimeField)
 	data.Remove(common.ModifierField)
 	data.Remove(common.LastTimeField)
-	data.Remove(common.BkSupplierAccount)
+	data.Remove(common.TenantID)
 	data.Remove(common.BKTemplateID)
 	data.Remove(common.BKFieldID)
 	data.Remove(common.BKPropertyTypeField)

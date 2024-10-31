@@ -100,7 +100,7 @@ func (c *Cache) listDetailByIDs(kit *rest.Kit, opt *types.ListDetailByIDsOpt) (m
 		}
 
 		if !opt.IsSystem && kit.SupplierAccount != common.BKSuperOwnerID {
-			supplierAccount := gjson.Get(detail, common.BkSupplierAccount).String()
+			supplierAccount := gjson.Get(detail, common.TenantID).String()
 			if supplierAccount != common.BKDefaultOwnerID && supplierAccount != kit.SupplierAccount {
 				continue
 			}

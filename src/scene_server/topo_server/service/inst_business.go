@@ -766,8 +766,8 @@ func (s *Service) SearchOwnerResourcePoolBusiness(ctx *rest.Contexts) {
 	supplierAccount := ctx.Request.PathParameter("owner_id")
 	query := metadata.QueryCondition{
 		Condition: mapstr.MapStr{
-			common.BKDefaultField:    common.DefaultAppFlag,
-			common.BkSupplierAccount: supplierAccount,
+			common.BKDefaultField: common.DefaultAppFlag,
+			common.TenantID:       supplierAccount,
 		},
 	}
 

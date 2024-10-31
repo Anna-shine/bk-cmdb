@@ -50,7 +50,7 @@ func newMapStrCacheWithID(key *general.Key, needCacheAll bool, table, idField st
 			}
 			return &basicInfo{
 				id:       id,
-				supplier: util.GetStrByInterface(data[common.BkSupplierAccount]),
+				supplier: util.GetStrByInterface(data[common.TenantID]),
 			}, nil
 		})
 }

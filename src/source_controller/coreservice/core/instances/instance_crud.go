@@ -68,7 +68,7 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 		mapping := make(mapstr.MapStr, 0)
 		mapping[instIDFieldName] = ids[idx]
 		mapping[common.BKObjIDField] = objID
-		mapping[common.BkSupplierAccount] = kit.SupplierAccount
+		mapping[common.TenantID] = kit.SupplierAccount
 
 		mappings = append(mappings, mapping)
 	}
@@ -128,7 +128,7 @@ func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.Ma
 		mapping := make(mapstr.MapStr, 0)
 		mapping[instIDFieldName] = ids[0]
 		mapping[common.BKObjIDField] = objID
-		mapping[common.BkSupplierAccount] = kit.SupplierAccount
+		mapping[common.TenantID] = kit.SupplierAccount
 
 		// save instance object type mapping.
 		if err := instancemapping.Create(kit.Ctx, mapping); err != nil {

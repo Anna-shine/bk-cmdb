@@ -90,7 +90,7 @@ func fixedHostPlatAssocateRelation(ctx context.Context, db dal.RDB, conf *upgrad
 		if err != nil {
 			return err
 		}
-		ownerID := util.GetStrByInterface(host[common.BkSupplierAccount])
+		ownerID := util.GetStrByInterface(host["bk_supplier_account"])
 
 		instAsstConditionMap := mapstr.MapStr{
 			common.BKObjIDField:     common.BKInnerObjIDHost,

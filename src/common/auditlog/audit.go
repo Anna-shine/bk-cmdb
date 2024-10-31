@@ -117,7 +117,7 @@ func (a *audit) getDefaultAppID(kit *rest.Kit) (int64, error) {
 	cond := mapstr.MapStr{
 		common.BKDefaultField: common.DefaultAppFlag,
 	}
-	fields := []string{common.BKAppIDField, common.BkSupplierAccount}
+	fields := []string{common.BKAppIDField, common.TenantID}
 
 	results, err := a.getInstByCond(kit, common.BKInnerObjIDApp, cond, fields)
 	if err != nil {
@@ -126,10 +126,10 @@ func (a *audit) getDefaultAppID(kit *rest.Kit) (int64, error) {
 	}
 
 	for _, data := range results {
-		ownID, err := data.String(common.BkSupplierAccount)
+		ownID, err := data.String(common.TenantID)
 		if err != nil {
 			return 0, kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, common.BKInnerObjIDApp,
-				common.BkSupplierAccount, "string", err.Error())
+				common.TenantID, "string", err.Error())
 		}
 
 		if kit.SupplierAccount == ownID {
