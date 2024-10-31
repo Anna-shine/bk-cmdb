@@ -53,7 +53,7 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 			params[idx][common.BKObjIDField] = objID
 		}
 		params[idx].Set(instIDFieldName, ids[idx])
-		params[idx].Set(common.BKOwnerIDField, kit.SupplierAccount)
+		params[idx].Set(common.TenantID, kit.SupplierAccount)
 		params[idx].Set(common.CreateTimeField, ts)
 		params[idx].Set(common.LastTimeField, ts)
 
@@ -115,7 +115,7 @@ func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.Ma
 		inputParam[common.BKObjIDField] = objID
 	}
 	ts := time.Now()
-	inputParam.Set(common.BKOwnerIDField, kit.SupplierAccount)
+	inputParam.Set(common.TenantID, kit.SupplierAccount)
 	inputParam.Set(common.CreateTimeField, ts)
 	inputParam.Set(common.LastTimeField, ts)
 

@@ -374,7 +374,7 @@ func baseDataCleaning(document map[string]interface{}) map[string]interface{} {
 	delete(document, mongoMetaId)
 	delete(document, common.CreateTimeField)
 	delete(document, common.LastTimeField)
-	delete(document, common.BKOwnerIDField)
+	delete(document, common.TenantID)
 	return document
 }
 
@@ -573,7 +573,7 @@ func analysisDocument(document map[string]interface{}, collection string) (strin
 // outputDocument return output document
 func outputDocument(input *monstachemap.MapperPluginInput, output *monstachemap.MapperPluginOutput, objID,
 	esObjID string) (map[string]interface{}, error) {
-	oId := input.Document[common.BKOwnerIDField]
+	oId := input.Document[common.TenantID]
 	metaId := input.Document[mongoMetaId]
 	bizId := input.Document[common.BKAppIDField]
 
@@ -709,7 +709,7 @@ func indexingModel(input *monstachemap.MapperPluginInput, output *monstachemap.M
 		return fmt.Errorf("query model object[%s] failed, %v", objectID, err)
 	}
 
-	oId, bizId, metaId := model[common.BKOwnerIDField], model[common.BKAppIDField], model[mongoMetaId]
+	oId, bizId, metaId := model[common.TenantID], model[common.BKAppIDField], model[mongoMetaId]
 
 	// analysis model document.
 	_, keywords, err := analysisDocument(model, common.BKTableNameObjDes)
@@ -787,7 +787,7 @@ func indexingObjectInstance(input *monstachemap.MapperPluginInput, output *monst
 
 	objId := input.Document[common.BKObjIDField]
 	bizId := input.Document[common.BKAppIDField]
-	oId := input.Document[common.BKOwnerIDField]
+	oId := input.Document[common.TenantID]
 	metaId := input.Document[mongoMetaId]
 
 	// analysis document.
@@ -1162,9 +1162,9 @@ func indexingTableInst(input *monstachemap.MapperPluginInput, output *monstachem
 	}
 	tableId := documentID.Hex()
 
-	account, err := getMetaIdToStr(input.Document[common.BKOwnerIDField])
+	account, err := getMetaIdToStr(input.Document[common.TenantID])
 	if err != nil {
-		return fmt.Errorf("missing: %s, err: %v", common.BKOwnerIDField, err)
+		return fmt.Errorf("missing: %s, err: %v", common.TenantID, err)
 	}
 
 	// todo 后续需要通过引用表

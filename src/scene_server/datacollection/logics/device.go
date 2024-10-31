@@ -104,7 +104,7 @@ func (lgc *Logics) SearchDevice(pHeader http.Header, params *meta.NetCollSearchP
 	rid := httpheader.GetRid(pHeader)
 
 	deviceCond := map[string]interface{}{}
-	deviceCond[common.BKOwnerIDField] = httpheader.GetSupplierAccount(pHeader)
+	deviceCond[common.TenantID] = httpheader.GetSupplierAccount(pHeader)
 
 	objCond := map[string]interface{}{}
 
@@ -186,7 +186,7 @@ func (lgc *Logics) DeleteDevice(pHeader http.Header, netDeviceID uint64) error {
 	ownerID := httpheader.GetSupplierAccount(pHeader)
 
 	deviceCond := map[string]interface{}{
-		common.BKOwnerIDField:  ownerID,
+		common.TenantID:        ownerID,
 		common.BKDeviceIDField: netDeviceID}
 
 	// check if net device has property
@@ -366,7 +366,7 @@ func (lgc *Logics) updateExistingDeviceByDeviceID(deviceInfo meta.NetcollectDevi
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField: netDeviceID,
-		common.BKOwnerIDField:  deviceInfo.OwnerID,
+		common.TenantID:        deviceInfo.OwnerID,
 	}
 
 	deviceInfo.LastTime = util.GetCurrentTimePtr()
@@ -387,7 +387,7 @@ func (lgc *Logics) updateExistingDeviceByDeviceName(deviceInfo meta.NetcollectDe
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceNameField: deviceInfo.DeviceName,
-		common.BKOwnerIDField:    deviceInfo.OwnerID,
+		common.TenantID:          deviceInfo.OwnerID,
 	}
 
 	deviceInfo.LastTime = util.GetCurrentTimePtr()
@@ -467,7 +467,7 @@ func (lgc *Logics) checkIfNetDeviceNameExist(deviceName string, ownerID string) 
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceNameField: deviceName,
-		common.BKOwnerIDField:    ownerID,
+		common.TenantID:          ownerID,
 	}
 
 	rowCount, err := lgc.db.Table(common.BKTableNameNetcollectDevice).Find(queryParams).Count(lgc.ctx)
@@ -492,7 +492,7 @@ func (lgc *Logics) getNetDeviceIDByName(deviceName string, ownerID string) (uint
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceNameField: deviceName,
-		common.BKOwnerIDField:    ownerID,
+		common.TenantID:          ownerID,
 	}
 
 	result := meta.NetcollectDevice{}
@@ -536,7 +536,7 @@ func (lgc *Logics) checkDeviceHasProperty(deviceID uint64, ownerID string) (bool
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField: deviceID,
-		common.BKOwnerIDField:  ownerID,
+		common.TenantID:        ownerID,
 	}
 	rowCount, err := lgc.db.Table(common.BKTableNameNetcollectProperty).Find(queryParams).Count(lgc.ctx)
 	if nil != err {

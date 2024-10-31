@@ -457,7 +457,7 @@ func (ibt *importerBizTopo) initBKTopoSet(ctx context.Context, bizID, setParentI
 		setInfo[common.BKDefaultField] = common.NormalSetDefaultFlag
 		setInfo[common.CreateTimeField] = time.Now().UTC()
 		setInfo[common.LastTimeField] = time.Now().UTC()
-		setInfo[common.BKOwnerIDField] = ibt.opt.OwnerID
+		setInfo[common.TenantID] = ibt.opt.OwnerID
 		setArr = append(setArr, setInfo)
 	}
 
@@ -499,7 +499,7 @@ func (ibt *importerBizTopo) initBKTopoModule(ctx context.Context, bizID int64) e
 			moduleInfo[common.BKDefaultField] = common.NormalModuleFlag
 			moduleInfo[common.CreateTimeField] = time.Now().UTC()
 			moduleInfo[common.LastTimeField] = time.Now().UTC()
-			moduleInfo[common.BKOwnerIDField] = ibt.opt.OwnerID
+			moduleInfo[common.TenantID] = ibt.opt.OwnerID
 			moduleInfo[common.BKServiceCategoryIDField] = srvTempInfo.ServiceCategoryID
 			moduleInfo[common.BKServiceTemplateIDField] = srvTempID
 			if _, ok := moduleInfo[common.BKModuleTypeField]; !ok {

@@ -46,7 +46,7 @@ func (s *coreService) AddHostFavourite(ctx *rest.Contexts) {
 		"name":                  paras.Name,
 		common.HostFavoriteType: paras.Type,
 		common.BKAppIDField:     paras.BizID,
-		common.BKOwnerIDField:   ctx.Kit.SupplierAccount,
+		common.TenantID:         ctx.Kit.SupplierAccount,
 	}
 	rowCount, err := mongodb.Client().Table(common.BKTableNameHostFavorite).Find(query).Count(ctx.Kit.Ctx)
 	if err != nil {
@@ -98,14 +98,15 @@ func (s *coreService) UpdateHostFavouriteByID(ctx *rest.Contexts) {
 
 	// check exist
 	query := map[string]interface{}{
-		"user":                user,
-		"id":                  id,
-		common.BKOwnerIDField: ctx.Kit.SupplierAccount,
+		"user":          user,
+		"id":            id,
+		common.TenantID: ctx.Kit.SupplierAccount,
 	}
 	dbData := make([]meta.FavouriteMeta, 0)
 	err := mongodb.Client().Table(common.BKTableNameHostFavorite).Find(query).All(ctx.Kit.Ctx, &dbData)
 	if nil != err {
-		blog.Errorf("update host favorites with id[%s], but query failed, err: %v, ctx:%v, rid: %s", id, err, query, ctx.Kit.Rid)
+		blog.Errorf("update host favorites with id[%s], but query failed, err: %v, ctx:%v, rid: %s", id, err, query,
+			ctx.Kit.Rid)
 		ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrHostFavouriteQueryFail))
 		return
 	}
@@ -120,15 +121,16 @@ func (s *coreService) UpdateHostFavouriteByID(ctx *rest.Contexts) {
 	// check name duplicate before update name field
 	if len(fav.Name) != 0 {
 		dupFilter := map[string]interface{}{
-			"name":                fav.Name,
-			common.BKUser:         user,
-			common.BKFieldID:      common.KvMap{common.BKDBNE: id},
-			common.BKOwnerIDField: ctx.Kit.SupplierAccount,
-			common.BKAppIDField:   fav.BizID,
+			"name":              fav.Name,
+			common.BKUser:       user,
+			common.BKFieldID:    common.KvMap{common.BKDBNE: id},
+			common.TenantID:     ctx.Kit.SupplierAccount,
+			common.BKAppIDField: fav.BizID,
 		}
 		rowCount, err := mongodb.Client().Table(common.BKTableNameHostFavorite).Find(dupFilter).Count(ctx.Kit.Ctx)
 		if err != nil {
-			blog.Errorf("query user api validate name duplicate fail, err: %v, ctx:%v, rid: %s", err, dupFilter, ctx.Kit.Rid)
+			blog.Errorf("query user api validate name duplicate fail, err: %v, ctx:%v, rid: %s", err, dupFilter,
+				ctx.Kit.Rid)
 			ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrCommDBSelectFailed))
 			return
 		}
@@ -153,7 +155,8 @@ func (s *coreService) UpdateHostFavouriteByID(ctx *rest.Contexts) {
 	}
 
 	// do update host favorite
-	if err = mongodb.Client().Table(common.BKTableNameHostFavorite).Update(ctx.Kit.Ctx, query, hostFavourite); err != nil {
+	if err = mongodb.Client().Table(common.BKTableNameHostFavorite).Update(ctx.Kit.Ctx, query,
+		hostFavourite); err != nil {
 		blog.Errorf("update host favorite failed, err: %v, ctx:%v, rid: %s", err, query, ctx.Kit.Rid)
 		ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrHostFavouriteUpdateFail))
 		return
@@ -168,19 +171,21 @@ func (s *coreService) DeleteHostFavouriteByID(ctx *rest.Contexts) {
 	user := ctx.Request.PathParameter("user")
 
 	query := map[string]interface{}{
-		"user":                user,
-		"id":                  id,
-		common.BKOwnerIDField: ctx.Kit.SupplierAccount,
+		"user":          user,
+		"id":            id,
+		common.TenantID: ctx.Kit.SupplierAccount,
 	}
 	rowCount, err := mongodb.Client().Table(common.BKTableNameHostFavorite).Find(query).Count(ctx.Kit.Ctx)
 	if nil != err {
-		blog.Errorf("delete host favorites with id[%s], but query failed, err: %v, ctx:%v, rid: %s", id, err, query, ctx.Kit.Rid)
+		blog.Errorf("delete host favorites with id[%s], but query failed, err: %v, ctx:%v, rid: %s", id, err, query,
+			ctx.Kit.Rid)
 		ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrHostFavouriteDeleteFail))
 		return
 	}
 
 	if rowCount != 1 {
-		blog.V(5).Infof("delete host favorites with id[%s], but favorites match: %d, ctx:%v, rid: %s", id, rowCount, query, ctx.Kit.Rid)
+		blog.V(5).Infof("delete host favorites with id[%s], but favorites match: %d, ctx:%v, rid: %s", id, rowCount,
+			query, ctx.Kit.Rid)
 		ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrHostFavouriteDeleteFail))
 		return
 	}
@@ -209,7 +214,7 @@ func (s *coreService) ListHostFavourites(ctx *rest.Contexts) {
 		condition = dat.Condition.(map[string]interface{})
 	}
 	condition["user"] = ctx.Request.PathParameter("user")
-	condition[common.BKOwnerIDField] = ctx.Kit.SupplierAccount
+	condition[common.TenantID] = ctx.Kit.SupplierAccount
 
 	// read fields and page
 	fieldArr := []string{"id", "info", "query_params", "name", "is_default", common.CreateTimeField, "count",
@@ -259,9 +264,9 @@ func (s *coreService) GetHostFavouriteByID(ctx *rest.Contexts) {
 	}
 
 	query := common.KvMap{
-		"user":                user,
-		"id":                  ID,
-		common.BKOwnerIDField: ctx.Kit.SupplierAccount,
+		"user":          user,
+		"id":            ID,
+		common.TenantID: ctx.Kit.SupplierAccount,
 	}
 	result := new(meta.FavouriteMeta)
 	err := mongodb.Client().Table(common.BKTableNameHostFavorite).Find(query).One(ctx.Kit.Ctx, result)

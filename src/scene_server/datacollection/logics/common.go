@@ -121,7 +121,7 @@ func (lgc *Logics) checkNetDeviceExist(pheader http.Header, deviceID uint64, dev
 		return 0, "", defErr.Errorf(common.CCErrCommParamsNeedSet, common.BKDeviceIDField)
 	}
 
-	deviceCond := map[string]interface{}{common.BKOwnerIDField: httpheader.GetSupplierAccount(pheader)}
+	deviceCond := map[string]interface{}{common.TenantID: httpheader.GetSupplierAccount(pheader)}
 
 	if "" != deviceName {
 		deviceCond[common.BKDeviceNameField] = deviceName
@@ -152,7 +152,7 @@ func (lgc *Logics) getNetPropertyID(propertyID string, deviceID uint64, ownerID 
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField:   deviceID,
 		common.BKPropertyIDField: propertyID,
-		common.BKOwnerIDField:    ownerID,
+		common.TenantID:          ownerID,
 	}
 
 	result := meta.NetcollectProperty{}

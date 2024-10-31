@@ -103,7 +103,7 @@ func updateProcessBindIPProperty(ctx context.Context, db dal.RDB, conf *upgrader
 		Option:        `^([0-9]{1,3}\.){3}[0-9]{1,3}$`,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, bindIPProperty, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateProcessBindIPProperty bind_ip failed, err: %+v", err)
@@ -164,7 +164,7 @@ func updateProcessNameProperty(ctx context.Context, db dal.RDB, conf *upgrader.C
 		CreateTime:    &now,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, ProcNameProperty, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateProcessNameProperty bind_ip failed, err: %+v", err)
@@ -228,7 +228,7 @@ func updateAutoTimeGapProperty(ctx context.Context, db dal.RDB, conf *upgrader.C
 		LastTime:   &now,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, property, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateAutoTimeGapProperty bind_ip failed, err: %+v", err)
@@ -292,7 +292,7 @@ func updateProcNumProperty(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 		PropertyType:  "int",
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, property, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateProcNumProperty bind_ip failed, err: %+v", err)
@@ -356,7 +356,7 @@ func updatePriorityProperty(ctx context.Context, db dal.RDB, conf *upgrader.Conf
 		IsRequired:   false,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, property, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updatePriorityProperty bind_ip failed, err: %+v", err)
@@ -420,7 +420,7 @@ func updateTimeoutProperty(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 		Placeholder:   "",
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, property, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateTimeoutProperty bind_ip failed, err: %+v", err)
@@ -520,7 +520,7 @@ func updateFuncIDProperty(ctx context.Context, db dal.RDB, conf *upgrader.Config
 		LastTime:      &now,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, property, "id", uniqueFields, []string{})
 	if nil != err {
 		blog.Errorf("[upgrade v19.05.16.01] updateFuncIDProperty bk_func_id failed, err: %+v", err)
@@ -541,7 +541,8 @@ func UpdateProcPortPropertyGroupName(ctx context.Context, db dal.RDB, conf *upgr
 		OwnerID:    conf.OwnerID,
 		IsDefault:  true,
 	}
-	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNamePropertyGroup, row, "id", []string{common.BKObjIDField, "bk_group_id"}, []string{"id"}); err != nil {
+	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNamePropertyGroup, row, "id",
+		[]string{common.BKObjIDField, "bk_group_id"}, []string{"id"}); err != nil {
 		blog.Errorf("add data for  %s table error  %s", common.BKTableNamePropertyGroup, err)
 		return err
 	}

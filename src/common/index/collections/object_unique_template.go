@@ -46,7 +46,7 @@ var commObjectUniqueTemplateIndexes = []types.Index{
 				common.BKTemplateID, 1,
 			},
 			{
-				common.BKOwnerIDField, 1,
+				common.TenantID, 1,
 			},
 		},
 		Background: true,

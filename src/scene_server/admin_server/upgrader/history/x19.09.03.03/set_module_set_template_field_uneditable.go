@@ -40,7 +40,7 @@ func AddProcAttrGroup(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 		common.BKObjIDField:           common.BKInnerObjIDProc,
 		common.BkSupplierAccount:      conf.OwnerID,
 	}
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyGroupIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyGroupIDField, "bk_supplier_account"}
 	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNamePropertyGroup, doc, "id", uniqueFields, []string{})
 	if err != nil {
 		if db.IsNotFoundError(err) == false {

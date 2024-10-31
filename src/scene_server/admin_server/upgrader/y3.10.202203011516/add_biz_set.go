@@ -348,7 +348,7 @@ func addBizSetObjectAttrRow(ctx context.Context, db dal.RDB, ownerID string) err
 		return nil
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 
 	nowTime := metadata.Now()
 	for _, row := range dataRows {
@@ -387,7 +387,7 @@ func addBizSetTableIndexes(ctx context.Context, db dal.RDB) error {
 			Keys: bson.D{
 				{common.BKBizSetIDField, 1},
 				{common.BKBizSetNameField, 1},
-				{common.BKOwnerIDField, 1},
+				{"bk_supplier_account", 1},
 			},
 			Background: true,
 		},

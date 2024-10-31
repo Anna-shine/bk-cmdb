@@ -127,7 +127,7 @@ const (
 )
 
 // IgnoredUpdateClusterFields update the fields that need to be ignored in the cluster scenario.
-var IgnoredUpdateClusterFields = []string{common.BKFieldID, common.BKOwnerIDField, BKBizIDField, ClusterUIDField}
+var IgnoredUpdateClusterFields = []string{common.BKFieldID, common.TenantID, BKBizIDField, ClusterUIDField}
 
 // CreateClusterResult create cluster result for internal call.
 type CreateClusterResult struct {

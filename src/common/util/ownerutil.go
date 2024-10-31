@@ -25,10 +25,10 @@ func SetQueryOwner(condition map[string]interface{}, ownerID string) map[string]
 		return condition
 	}
 	if ownerID == common.BKDefaultOwnerID {
-		condition[common.BKOwnerIDField] = common.BKDefaultOwnerID
+		condition[common.TenantID] = common.BKDefaultOwnerID
 		return condition
 	}
-	condition[common.BKOwnerIDField] = map[string]interface{}{common.BKDBIN: []string{common.BKDefaultOwnerID, ownerID}}
+	condition[common.TenantID] = map[string]interface{}{common.BKDBIN: []string{common.BKDefaultOwnerID, ownerID}}
 	return condition
 }
 
@@ -40,6 +40,6 @@ func SetModOwner(condition map[string]interface{}, ownerID string) map[string]in
 	if ownerID == common.BKSuperOwnerID {
 		return condition
 	}
-	condition[common.BKOwnerIDField] = ownerID
+	condition[common.TenantID] = ownerID
 	return condition
 }

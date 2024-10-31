@@ -305,7 +305,7 @@ func (dt *dbTable) countQuotedWithDestModel(ctx context.Context, destModel strin
 func (dt *dbTable) findSyncIndexesLogicUnique(ctx context.Context) (map[string][]types.Index, error) {
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		return nil, err
 	}
@@ -412,7 +412,7 @@ func (dt *dbTable) syncModelShardingTable(ctx context.Context) error {
 
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		return err
 	}
@@ -518,7 +518,7 @@ func (dt *dbTable) createTable(ctx context.Context, obj metadata.Object, modelDB
 func (dt *dbTable) cleanRedundancyTable(ctx context.Context, modelDBTableNameMap map[string]struct{}) error {
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		// NOTICE: 错误直接忽略不行后需功能
 		return err

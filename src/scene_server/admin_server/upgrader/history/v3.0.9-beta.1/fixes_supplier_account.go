@@ -23,12 +23,12 @@ import (
 func fixesSupplierAccount(ctx context.Context, db dal.RDB, conf *upgrader.Config) (err error) {
 	for _, tablename := range shouldAddSupplierAccountFieldTables {
 		condition := map[string]interface{}{
-			common.BKOwnerIDField: map[string]interface{}{
+			"bk_supplier_account": map[string]interface{}{
 				"$in": []interface{}{nil, ""},
 			},
 		}
 		data := map[string]interface{}{
-			common.BKOwnerIDField: common.BKDefaultOwnerID,
+			"bk_supplier_account": common.BKDefaultOwnerID,
 		}
 		err := db.Table(tablename).Update(ctx, condition, data)
 		if nil != err {

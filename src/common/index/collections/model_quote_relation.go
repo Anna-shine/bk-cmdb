@@ -36,7 +36,7 @@ var commModelQuoteRelationIndexes = []types.Index{
 				common.BKDestModelField, 1,
 			},
 			{
-				common.BKOwnerIDField, 1,
+				common.TenantID, 1,
 			},
 		},
 		Background: true,
@@ -51,7 +51,7 @@ var commModelQuoteRelationIndexes = []types.Index{
 				common.BKPropertyIDField, 1,
 			},
 			{
-				common.BKOwnerIDField, 1,
+				common.TenantID, 1,
 			},
 		},
 		Background: true,
@@ -63,7 +63,7 @@ var commModelQuoteRelationIndexes = []types.Index{
 				common.BKSrcModelField, 1,
 			},
 			{
-				common.BKOwnerIDField, 1,
+				common.TenantID, 1,
 			},
 		},
 		Background: true,

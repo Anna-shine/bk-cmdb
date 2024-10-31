@@ -99,8 +99,9 @@ func addSetVersionField(ctx context.Context, db dal.RDB, conf *upgrader.Config) 
 		CreateTime:   &now,
 		LastTime:     &now,
 	}
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
-	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, attribute, "id", uniqueFields, []string{}); err != nil {
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
+	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, attribute, "id", uniqueFields,
+		[]string{}); err != nil {
 		blog.Errorf("addSetVersionField failed, add set_template_version attribute failed, err: %+v", err)
 		return fmt.Errorf("add set_template_version attribute failed, err: %+v", err)
 	}

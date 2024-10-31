@@ -151,7 +151,7 @@ func (s *service) BatchDeleteCluster(ctx *rest.Contexts) {
 	}
 
 	filter := map[string]interface{}{
-		common.BKOwnerIDField: ctx.Kit.SupplierAccount,
+		common.TenantID: ctx.Kit.SupplierAccount,
 		types.BKIDField: map[string]interface{}{
 			common.BKDBIN: option.IDs,
 		},

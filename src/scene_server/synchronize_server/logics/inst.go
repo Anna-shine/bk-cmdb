@@ -48,7 +48,7 @@ func (lgc *Logics) NewFetchInst(syncConfig *options.ConfigItem, baseConds mapstr
 func (fi *FetchInst) Pretreatment() errors.CCError {
 	conds := condition.CreateCondition()
 	if len(fi.syncConfig.SupplerAccount) > 0 {
-		conds.Field(common.BKOwnerIDField).In(fi.syncConfig.SupplerAccount)
+		conds.Field(common.TenantID).In(fi.syncConfig.SupplerAccount)
 	}
 
 	// 是否开启实例数据根据同步身份过滤

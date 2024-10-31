@@ -151,7 +151,7 @@ func PlatRow() []*Attribute {
 		&Attribute{ObjectID: objID, PropertyID: common.BKCloudNameField, PropertyName: "云区域", IsRequired: true,
 			IsOnly: true, IsPre: true, IsEditable: true, PropertyGroup: groupBaseInfo,
 			PropertyType: common.FieldTypeSingleChar, Option: ""},
-		&Attribute{ObjectID: objID, PropertyID: common.BKOwnerIDField, PropertyName: "供应商", IsRequired: true,
+		&Attribute{ObjectID: objID, PropertyID: "bk_supplier_account", PropertyName: "供应商", IsRequired: true,
 			IsOnly: true, IsPre: true, PropertyGroup: groupBaseInfo, PropertyType: common.FieldTypeSingleChar,
 			Option: ""},
 	}

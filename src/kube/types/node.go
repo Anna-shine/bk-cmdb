@@ -95,7 +95,7 @@ type Node struct {
 
 // IgnoredUpdateNodeFields  update fields that need to be ignored in node scenarios
 var IgnoredUpdateNodeFields = []string{common.BKFieldID, common.BKAppIDField, ClusterUIDField,
-	common.BKFieldName, common.BKOwnerIDField, BKClusterIDFiled, common.BKHostIDField, HasPodField}
+	common.BKFieldName, common.TenantID, BKClusterIDFiled, common.BKHostIDField, HasPodField}
 
 // createValidate validate the NodeBaseFields
 func (option *Node) createValidate() ccErr.RawErrorInfo {

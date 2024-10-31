@@ -37,7 +37,7 @@ func addProcNetworkProxyGroup(ctx context.Context, db dal.RDB, conf *upgrader.Co
 		IsCollapse: true,
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyGroupIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyGroupIDField, "bk_supplier_account"}
 	err := upgrader.Insert(ctx, db, common.BKTableNamePropertyGroup, group, "id", uniqueFields)
 	if err != nil {
 		if db.IsNotFoundError(err) == false {
@@ -54,14 +54,23 @@ func addProcNetworkProxyGroup(ctx context.Context, db dal.RDB, conf *upgrader.Co
 func addProcNetworkProxyAttrs(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	objID := common.BKInnerObjIDProc
 	dataRows := []*Attribute{
-		{ObjectID: objID, PropertyID: "bk_gateway_ip", PropertyName: "网关IP", IsRequired: false, IsOnly: false, IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeLongChar, Option: ""},
-		{ObjectID: objID, PropertyID: "bk_gateway_port", PropertyName: "网关端口", IsRequired: false, IsOnly: false, IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeSingleChar, Option: common.PatternMultiplePortRange, Placeholder: `单个端口：8080 </br>多个连续端口：8080-8089 </br>多个不连续端口：8080-8089,8199`},
-		{ObjectID: objID, PropertyID: "bk_gateway_protocol", PropertyName: "网关协议", IsRequired: false, IsOnly: false, IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeEnum, Option: []metadata.EnumVal{{ID: "1", Name: "TCP", Type: "text"}, {ID: "2", Name: "UDP", Type: "text"}}},
-		{ObjectID: objID, PropertyID: "bk_gateway_city", PropertyName: "网关所在城市", IsRequired: false, IsOnly: false, IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeSingleChar, Option: ""},
+		{ObjectID: objID, PropertyID: "bk_gateway_ip", PropertyName: "网关IP", IsRequired: false, IsOnly: false,
+			IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeLongChar,
+			Option: ""},
+		{ObjectID: objID, PropertyID: "bk_gateway_port", PropertyName: "网关端口", IsRequired: false, IsOnly: false,
+			IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeSingleChar,
+			Option:      common.PatternMultiplePortRange,
+			Placeholder: `单个端口：8080 </br>多个连续端口：8080-8089 </br>多个不连续端口：8080-8089,8199`},
+		{ObjectID: objID, PropertyID: "bk_gateway_protocol", PropertyName: "网关协议", IsRequired: false, IsOnly: false,
+			IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeEnum,
+			Option: []metadata.EnumVal{{ID: "1", Name: "TCP", Type: "text"}, {ID: "2", Name: "UDP", Type: "text"}}},
+		{ObjectID: objID, PropertyID: "bk_gateway_city", PropertyName: "网关所在城市", IsRequired: false, IsOnly: false,
+			IsEditable: true, PropertyGroup: mCommon.ProcNetworkProxyInfo, PropertyType: common.FieldTypeSingleChar,
+			Option: ""},
 	}
 
 	now := time.Now()
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	for _, r := range dataRows {
 		r.OwnerID = conf.OwnerID
 		r.IsPre = true

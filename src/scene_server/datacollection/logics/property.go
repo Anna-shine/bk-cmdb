@@ -164,7 +164,7 @@ func (lgc *Logics) SearchProperty(pHeader http.Header, params *meta.NetCollSearc
 		netPropertyCond[common.BKDeviceIDField] = map[string]interface{}{common.BKDBIN: deviceIDs}
 	}
 
-	netPropertyCond[common.BKOwnerIDField] = httpheader.GetSupplierAccount(pHeader)
+	netPropertyCond[common.TenantID] = httpheader.GetSupplierAccount(pHeader)
 	searchResult.Count, err = lgc.db.Table(common.BKTableNameNetcollectProperty).Find(netPropertyCond).Count(lgc.ctx)
 	if nil != err {
 		blog.Errorf("[NetProperty] search net property fail, count net property by condition [%#v] error: %v, rid: %s",
@@ -225,7 +225,7 @@ func (lgc *Logics) DeleteProperty(pHeader http.Header, netPropertyID uint64) err
 	rid := httpheader.GetRid(pHeader)
 
 	netPropertyCond := map[string]interface{}{
-		common.BKOwnerIDField:              httpheader.GetSupplierAccount(pHeader),
+		common.TenantID:                    httpheader.GetSupplierAccount(pHeader),
 		common.BKNetcollectPropertyIDField: netPropertyID}
 
 	if err := lgc.db.Table(common.BKTableNameNetcollectProperty).Delete(lgc.ctx, netPropertyCond); nil != err {
@@ -450,7 +450,7 @@ func (lgc *Logics) updateNetPropertyByPropertyIDAndDeviceID(netPropertyInfo meta
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField:   netPropertyInfo.DeviceID,
 		common.BKPropertyIDField: netPropertyInfo.PropertyID,
-		common.BKOwnerIDField:    netPropertyInfo.OwnerID,
+		common.TenantID:          netPropertyInfo.OwnerID,
 	}
 
 	netPropertyInfo.LastTime = util.GetCurrentTimePtr()
@@ -470,7 +470,7 @@ func (lgc *Logics) updateExistingPropertyByNetPropertyID(netPropertyInfo meta.Ne
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKNetcollectPropertyIDField: netPropertyID,
-		common.BKOwnerIDField:              netPropertyInfo.OwnerID,
+		common.TenantID:                    netPropertyInfo.OwnerID,
 	}
 
 	netPropertyInfo.LastTime = util.GetCurrentTimePtr()
@@ -493,7 +493,7 @@ func (lgc *Logics) checkNetPropertyExist(deviceID uint64, propertyID, ownerID st
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField:   deviceID,
 		common.BKPropertyIDField: propertyID,
-		common.BKOwnerIDField:    ownerID,
+		common.TenantID:          ownerID,
 	}
 	rowCount, err := lgc.db.Table(common.BKTableNameNetcollectProperty).Find(queryParams).Count(lgc.ctx)
 	if nil != err {
@@ -627,7 +627,7 @@ func (lgc *Logics) getDeviceIDsAndShowFields(
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	defErr := lgc.Engine.CCErr.CreateDefaultCCErrorIf(httpheader.GetLanguage(pHeader))
 
-	deviceCond[common.BKOwnerIDField] = httpheader.GetSupplierAccount(pHeader)
+	deviceCond[common.TenantID] = httpheader.GetSupplierAccount(pHeader)
 	deviceField := []string{common.BKDeviceIDField, common.BKDeviceNameField, common.BKDeviceModelField,
 		common.BKObjIDField}
 	deviceResult := make([]meta.NetcollectDevice, 0)
@@ -780,7 +780,7 @@ func (lgc *Logics) getDeviceShowField(pHeader http.Header, deviceIDs []uint64) (
 
 	deviceCond := map[string]interface{}{
 		common.BKDeviceIDField: map[string]interface{}{common.BKDBIN: deviceIDs},
-		common.BKOwnerIDField:  httpheader.GetSupplierAccount(pHeader),
+		common.TenantID:        httpheader.GetSupplierAccount(pHeader),
 	}
 	_, deviceIDMapDeviceShowFields, err := lgc.getDeviceIDsAndShowFields(pHeader, deviceCond, objIDMapShowFields)
 	if nil != err {

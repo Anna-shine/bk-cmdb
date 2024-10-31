@@ -303,8 +303,8 @@ const (
 	// BKDefaultField the default field
 	BKDefaultField = "default"
 
-	// BKOwnerIDField the owner field
-	BKOwnerIDField = "bk_supplier_account"
+	// TenantID the owner field
+	TenantID = "tenant_id"
 
 	// BKAppIDField the appid field
 	BKAppIDField = "bk_biz_id"

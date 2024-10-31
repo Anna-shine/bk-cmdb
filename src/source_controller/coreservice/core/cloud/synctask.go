@@ -25,7 +25,8 @@ import (
 )
 
 // CreateSyncTask TODO
-func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncTask) (*metadata.CloudSyncTask, errors.CCErrorCoder) {
+func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncTask) (*metadata.CloudSyncTask,
+	errors.CCErrorCoder) {
 	if err := c.validCreateSyncTask(kit, task); nil != err {
 		blog.Errorf("CreateAccount failed, valid error: %+v, rid: %s", err, kit.Rid)
 		return nil, err
@@ -33,7 +34,8 @@ func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncT
 
 	cloudVendor, errVendor := c.getSyncTaskCloudVendor(kit, task.AccountID)
 	if errVendor != nil {
-		blog.ErrorJSON("CreateSyncTask getSyncTaskCloudVendor failed, taskName: %s, err: %s, rid: %s", task.TaskName, errVendor, kit.Rid)
+		blog.ErrorJSON("CreateSyncTask getSyncTaskCloudVendor failed, taskName: %s, err: %s, rid: %s", task.TaskName,
+			errVendor, kit.Rid)
 		return nil, errVendor
 	}
 	task.CloudVendor = cloudVendor
@@ -53,7 +55,8 @@ func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncT
 
 	err = c.dbProxy.Table(common.BKTableNameCloudSyncTask).Insert(kit.Ctx, task)
 	if err != nil {
-		blog.ErrorJSON("CreateSyncTask failed, db insert failed, taskName: %s, err: %s, rid: %s", task.TaskName, err, kit.Rid)
+		blog.ErrorJSON("CreateSyncTask failed, db insert failed, taskName: %s, err: %s, rid: %s", task.TaskName, err,
+			kit.Rid)
 		return nil, kit.CCError.CCError(common.CCErrCommDBInsertFailed)
 	}
 
@@ -61,7 +64,8 @@ func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncT
 }
 
 // SearchSyncTask TODO
-func (c *cloudOperation) SearchSyncTask(kit *rest.Kit, option *metadata.SearchCloudOption) (*metadata.MultipleCloudSyncTask, errors.CCErrorCoder) {
+func (c *cloudOperation) SearchSyncTask(kit *rest.Kit,
+	option *metadata.SearchCloudOption) (*metadata.MultipleCloudSyncTask, errors.CCErrorCoder) {
 	results := make([]metadata.CloudSyncTask, 0)
 	option.Condition = util.SetQueryOwner(option.Condition, kit.SupplierAccount)
 	err := c.dbProxy.Table(common.BKTableNameCloudSyncTask).Find(option.Condition).Fields(option.Fields...).
@@ -103,9 +107,10 @@ func (c *cloudOperation) UpdateSyncTask(kit *rest.Kit, taskID int64, option maps
 	// 确保不会更新云厂商类型、云账户id、开发商id
 	option.Remove(common.BKCloudVendor)
 	option.Remove(common.BKCloudIDField)
-	option.Remove(common.BKOwnerIDField)
+	option.Remove(common.TenantID)
 	if e := c.dbProxy.Table(common.BKTableNameCloudSyncTask).Update(kit.Ctx, filter, option); e != nil {
-		blog.Errorf("UpdateSyncTask failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameCloudSyncTask, filter, e, kit.Rid)
+		blog.Errorf("UpdateSyncTask failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameCloudSyncTask, filter, e, kit.Rid)
 		return kit.CCError.CCError(common.CCErrCommDBUpdateFailed)
 	}
 	return nil
@@ -125,7 +130,8 @@ func (c *cloudOperation) DeleteSyncTask(kit *rest.Kit, taskID int64) errors.CCEr
 	}
 	cond = util.SetModOwner(cond, kit.SupplierAccount)
 	if err := c.dbProxy.Table(common.BKTableNameCloudSyncTask).Delete(kit.Ctx, cond); err != nil {
-		blog.Errorf("DeleteSyncTask failed, mongodb operate failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameCloudAccount, cond, err, kit.Rid)
+		blog.Errorf("DeleteSyncTask failed, mongodb operate failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameCloudAccount, cond, err, kit.Rid)
 		return kit.CCError.CCError(common.CCErrCommDBDeleteFailed)
 	}
 
@@ -133,7 +139,8 @@ func (c *cloudOperation) DeleteSyncTask(kit *rest.Kit, taskID int64) errors.CCEr
 }
 
 // CreateSyncHistory TODO
-func (c *cloudOperation) CreateSyncHistory(kit *rest.Kit, history *metadata.SyncHistory) (*metadata.SyncHistory, errors.CCErrorCoder) {
+func (c *cloudOperation) CreateSyncHistory(kit *rest.Kit, history *metadata.SyncHistory) (*metadata.SyncHistory,
+	errors.CCErrorCoder) {
 	id, err := c.dbProxy.NextSequence(kit.Ctx, common.BKTableNameCloudSyncHistory)
 	if nil != err {
 		blog.Errorf("CreateSyncTask failed, generate id failed, err: %+v, rid: %s", err, kit.Rid)
@@ -145,7 +152,8 @@ func (c *cloudOperation) CreateSyncHistory(kit *rest.Kit, history *metadata.Sync
 
 	err = c.dbProxy.Table(common.BKTableNameCloudSyncHistory).Insert(kit.Ctx, history)
 	if err != nil {
-		blog.ErrorJSON("CreateSyncHistory failed, db insert failed, taskID: %s, err: %s, rid: %s", history.TaskID, err, kit.Rid)
+		blog.ErrorJSON("CreateSyncHistory failed, db insert failed, taskID: %s, err: %s, rid: %s", history.TaskID, err,
+			kit.Rid)
 		return nil, kit.CCError.CCError(common.CCErrCommDBInsertFailed)
 	}
 
@@ -153,17 +161,20 @@ func (c *cloudOperation) CreateSyncHistory(kit *rest.Kit, history *metadata.Sync
 }
 
 // SearchSyncHistory TODO
-func (c *cloudOperation) SearchSyncHistory(kit *rest.Kit, option *metadata.SearchSyncHistoryOption) (*metadata.MultipleSyncHistory, errors.CCErrorCoder) {
+func (c *cloudOperation) SearchSyncHistory(kit *rest.Kit,
+	option *metadata.SearchSyncHistoryOption) (*metadata.MultipleSyncHistory, errors.CCErrorCoder) {
 	results := make([]metadata.SyncHistory, 0)
 	// 设置查询条件
 	option.Condition = util.SetQueryOwner(option.Condition, kit.SupplierAccount)
 	cond := option.Condition
 	cond.Set(common.BKCloudSyncTaskID, option.TaskID)
 	if option.StarTime != "" {
-		cond.Set(common.CreateTimeField, map[string]interface{}{common.BKDBGTE: option.StarTime, common.BKTimeTypeParseFlag: "1"})
+		cond.Set(common.CreateTimeField,
+			map[string]interface{}{common.BKDBGTE: option.StarTime, common.BKTimeTypeParseFlag: "1"})
 	}
 	if option.EndTime != "" {
-		cond.Set(common.CreateTimeField, map[string]interface{}{common.BKDBLTE: option.EndTime, common.BKTimeTypeParseFlag: "1"})
+		cond.Set(common.CreateTimeField,
+			map[string]interface{}{common.BKDBLTE: option.EndTime, common.BKTimeTypeParseFlag: "1"})
 	}
 	// 转换时间
 	query := metadata.QueryInput{Condition: cond}
@@ -206,7 +217,8 @@ func (c *cloudOperation) getSyncTaskCloudVendor(kit *rest.Kit, accountID int64) 
 	cond = util.SetQueryOwner(cond, kit.SupplierAccount)
 	err := c.dbProxy.Table(common.BKTableNameCloudAccount).Find(cond).One(kit.Ctx, result)
 	if err != nil {
-		blog.ErrorJSON("getSyncTaskCloudVendor failed, db operate failed, cond: %s, err: %s, rid: %s", cond, err, kit.Rid)
+		blog.ErrorJSON("getSyncTaskCloudVendor failed, db operate failed, cond: %s, err: %s, rid: %s", cond, err,
+			kit.Rid)
 		return "", kit.CCError.CCError(common.CCErrCommDBSelectFailed)
 	}
 
@@ -214,7 +226,8 @@ func (c *cloudOperation) getSyncTaskCloudVendor(kit *rest.Kit, accountID int64) 
 }
 
 // DeleteDestroyedHostRelated TODO
-func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metadata.DeleteDestroyedHostRelatedOption) errors.CCErrorCoder {
+func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit,
+	option *metadata.DeleteDestroyedHostRelatedOption) errors.CCErrorCoder {
 	// update destroyed host
 	updateHostCond := map[string]interface{}{
 		common.BKHostIDField: map[string]interface{}{
@@ -238,9 +251,11 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 		},
 	}
 	instances := make([]metadata.ServiceInstance, 0)
-	err = c.dbProxy.Table(common.BKTableNameServiceInstance).Find(serviceInstanceFilter).Fields(common.BKFieldID).All(kit.Ctx, &instances)
+	err = c.dbProxy.Table(common.BKTableNameServiceInstance).Find(serviceInstanceFilter).Fields(common.BKFieldID).All(kit.Ctx,
+		&instances)
 	if err != nil {
-		blog.ErrorJSON("DeleteDestroyedHostRelated failed, get service instance IDs err:%s, filter: %#v, rid: %s", err, serviceInstanceFilter, kit.Rid)
+		blog.ErrorJSON("DeleteDestroyedHostRelated failed, get service instance IDs err:%s, filter: %#v, rid: %s", err,
+			serviceInstanceFilter, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 	if len(instances) == 0 {
@@ -258,8 +273,10 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 		},
 	}
 	relations := make([]metadata.ProcessInstanceRelation, 0)
-	if err := c.dbProxy.Table(common.BKTableNameProcessInstanceRelation).Find(processRelationFilter).All(kit.Ctx, &relations); nil != err {
-		blog.Errorf("DeleteDestroyedHostRelated failed, get process instance relation err:%s, filter: %#v, rid: %s", err, processRelationFilter, kit.Rid)
+	if err := c.dbProxy.Table(common.BKTableNameProcessInstanceRelation).Find(processRelationFilter).All(kit.Ctx,
+		&relations); nil != err {
+		blog.Errorf("DeleteDestroyedHostRelated failed, get process instance relation err:%s, filter: %#v, rid: %s",
+			err, processRelationFilter, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 	processIDs := make([]int64, 0)
@@ -269,8 +286,10 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 
 	// delete all process relations and instances
 	if len(processIDs) > 0 {
-		if err := c.dbProxy.Table(common.BKTableNameProcessInstanceRelation).Delete(kit.Ctx, processRelationFilter); nil != err {
-			blog.Errorf("DeleteDestroyedHostRelated failed, delete process instance relation err:%s, filter: %#v, rid: %s", err, processRelationFilter, kit.Rid)
+		if err := c.dbProxy.Table(common.BKTableNameProcessInstanceRelation).Delete(kit.Ctx,
+			processRelationFilter); nil != err {
+			blog.Errorf("DeleteDestroyedHostRelated failed, delete process instance relation err:%s, filter: %#v, rid: %s",
+				err, processRelationFilter, kit.Rid)
 			return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 		}
 
@@ -280,7 +299,8 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 			},
 		}
 		if err := c.dbProxy.Table(common.BKTableNameBaseProcess).Delete(kit.Ctx, processFilter); nil != err {
-			blog.Errorf("DeleteDestroyedHostRelated failed, delete process instances err:%s, filter: %#v, rid: %s", err, processFilter, kit.Rid)
+			blog.Errorf("DeleteDestroyedHostRelated failed, delete process instances err:%s, filter: %#v, rid: %s", err,
+				processFilter, kit.Rid)
 			return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 		}
 	}
@@ -292,7 +312,8 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 		},
 	}
 	if err := c.dbProxy.Table(common.BKTableNameServiceInstance).Delete(kit.Ctx, serviceInstanceIDFilter); nil != err {
-		blog.Errorf("DeleteDestroyedHostRelated failed, delete service instances err:%s, filter: %#v, rid: %s", err, serviceInstanceIDFilter, kit.Rid)
+		blog.Errorf("DeleteDestroyedHostRelated failed, delete service instances err:%s, filter: %#v, rid: %s", err,
+			serviceInstanceIDFilter, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 	}
 
@@ -347,7 +368,8 @@ func (c *cloudOperation) DeleteDestroyedHostRelated(kit *rest.Kit, option *metad
 
 	err = c.dbProxy.Table(hostAsstTableName).Delete(kit.Ctx, asstFilter)
 	if nil != err {
-		blog.Errorf("DeleteDestroyedHostRelated failed, delete inst association err:%s, filter:%s, rid: %s", err, asstFilter, kit.Rid)
+		blog.Errorf("DeleteDestroyedHostRelated failed, delete inst association err:%s, filter:%s, rid: %s", err,
+			asstFilter, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 	}
 

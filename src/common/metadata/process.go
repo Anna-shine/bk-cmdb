@@ -1074,7 +1074,7 @@ func (p *Process) Map() map[string]interface{} {
 		common.BKUser:                   p.User,
 		common.BKProcTimeOut:            p.TimeoutSeconds,
 		common.BKDescriptionField:       p.Description,
-		common.BKOwnerIDField:           p.SupplierAccount,
+		common.TenantID:                 p.SupplierAccount,
 		common.BKStartParamRegex:        p.StartParamRegex,
 		common.BKProcBindInfo:           bindInfoArr,
 		common.CreateTimeField:          p.CreateTime,
@@ -1878,7 +1878,8 @@ func (pt *ProcessProperty) validateFields() (string, error) {
 
 // Update all not nil field from input to pt
 // rawProperty allows us set property field to nil
-//  参数rawProperty，input 数据是一样的，只不过一个是map,一个struct。 因为struct 是有默认行为的。 rawProperty为了获取用户是否输入
+//
+//	参数rawProperty，input 数据是一样的，只不过一个是map,一个struct。 因为struct 是有默认行为的。 rawProperty为了获取用户是否输入
 func (pt *ProcessProperty) Update(input ProcessProperty, rawProperty map[string]interface{}) {
 	selfType := reflect.TypeOf(pt).Elem()
 	selfVal := reflect.ValueOf(pt).Elem()

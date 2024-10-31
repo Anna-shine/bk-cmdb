@@ -71,7 +71,8 @@ func createInstanceAssociationIndex(ctx context.Context, db dal.RDB, conf *upgra
 			continue
 		}
 		if err := db.Table(common.BKTableNameInstAsst).CreateIndex(ctx, idx); err != nil && !db.IsDuplicatedError(err) {
-			blog.ErrorJSON("create index to cc_InstAsst error, err:%s, current index:%s, all create index:%s", err.Error(), idx, createIdxArr)
+			blog.ErrorJSON("create index to cc_InstAsst error, err:%s, current index:%s, all create index:%s",
+				err.Error(), idx, createIdxArr)
 			return err
 		}
 
@@ -173,7 +174,10 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 	}
 
 	properyMap := map[string]metadata.ObjAttDes{}
-	buildObjPropertyMapKey := func(objID string, propertyID string) string { return fmt.Sprintf("%s:%s", objID, propertyID) }
+	buildObjPropertyMapKey := func(objID string, propertyID string) string {
+		return fmt.Sprintf("%s:%s", objID,
+			propertyID)
+	}
 	for _, property := range propertys {
 		properyMap[buildObjPropertyMapKey(property.ObjectID, property.PropertyID)] = property
 		blog.Infof("key %s: %+v", buildObjPropertyMapKey(property.ObjectID, property.PropertyID), property)
@@ -219,7 +223,8 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 			case "multiasst":
 				asst.Mapping = metadata.ManyToManyMapping
 			default:
-				blog.Warnf("property: %+v, asst: %+v, for key: %v", property, asst, buildObjPropertyMapKey(asst.ObjectID, asst.ObjectAttID))
+				blog.Warnf("property: %+v, asst: %+v, for key: %v", property, asst,
+					buildObjPropertyMapKey(asst.ObjectID, asst.ObjectAttID))
 				asst.Mapping = metadata.ManyToManyMapping
 			}
 			// 交换 源<->目标
@@ -248,12 +253,15 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 				page += 1
 				// update ObjAsst
 				instAssts := []metadata.InstAsst{}
-				blog.InfoJSON("find  data from table:%s, page:%s, cond:%s", common.BKTableNameInstAsst, page, instCond.ToMapStr())
-				if err = db.Table(common.BKTableNameInstAsst).Find(instCond.ToMapStr()).Limit(pageSize).All(ctx, &instAssts); err != nil {
+				blog.InfoJSON("find  data from table:%s, page:%s, cond:%s", common.BKTableNameInstAsst, page,
+					instCond.ToMapStr())
+				if err = db.Table(common.BKTableNameInstAsst).Find(instCond.ToMapStr()).Limit(pageSize).All(ctx,
+					&instAssts); err != nil {
 					return err
 				}
 
-				blog.InfoJSON("find  data from table:%s, cond:%s, result count:%s", common.BKTableNameInstAsst, instCond.ToMapStr(), len(instAssts))
+				blog.InfoJSON("find  data from table:%s, cond:%s, result count:%s", common.BKTableNameInstAsst,
+					instCond.ToMapStr(), len(instAssts))
 				if len(instAssts) == 0 {
 					break
 				}
@@ -303,13 +311,15 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 	deleteHostCloudAssociation := condition.CreateCondition()
 	deleteHostCloudAssociation.Field("bk_obj_id").Eq(common.BKInnerObjIDHost)
 	deleteHostCloudAssociation.Field("bk_asst_obj_id").Eq(common.BKInnerObjIDPlat)
-	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAsst, deleteHostCloudAssociation.ToMapStr())
+	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAsst,
+		deleteHostCloudAssociation.ToMapStr())
 	err = db.Table(common.BKTableNameObjAsst).Delete(ctx, deleteHostCloudAssociation.ToMapStr())
 	if err != nil {
 		return err
 	}
 
-	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAttDes, propertyCond.ToMapStr())
+	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAttDes,
+		propertyCond.ToMapStr())
 	// drop outdate propertys
 	err = db.Table(common.BKTableNameObjAttDes).Delete(ctx, propertyCond.ToMapStr())
 	if err != nil {
@@ -354,7 +364,8 @@ func dropFlagColumn(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 	pageSize := uint64(2000)
 	for startIdx := uint64(0); startIdx < cnt; startIdx += pageSize {
 		insts := make([]map[string]int64, 0)
-		if err := db.Table(common.BKTableNameInstAsst).Find(flagFilter).Fields(common.BKFieldID).Start(startIdx).Limit(pageSize).All(ctx, &insts); err != nil {
+		if err := db.Table(common.BKTableNameInstAsst).Find(flagFilter).Fields(common.BKFieldID).Start(startIdx).Limit(pageSize).All(ctx,
+			&insts); err != nil {
 			blog.Errorf("find insts failed, Find err: %s", err.Error())
 			return err
 		}

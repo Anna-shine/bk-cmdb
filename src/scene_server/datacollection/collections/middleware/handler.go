@@ -173,8 +173,8 @@ func (d *Discover) UpdateOrCreateInst(msg *string) error {
 	}
 	keys := make([]string, 0)
 	cond = map[string]interface{}{
-		common.BKObjIDField:   objID,
-		common.BKOwnerIDField: ownerID,
+		common.BKObjIDField: objID,
+		common.TenantID:     ownerID,
 		common.BKFieldID: map[string]interface{}{
 			common.BKDBIN: keyIDs,
 		},
@@ -201,8 +201,8 @@ func (d *Discover) UpdateOrCreateInst(msg *string) error {
 	}
 
 	cond = map[string]interface{}{
-		common.BKObjIDField:   objID,
-		common.BKOwnerIDField: ownerID,
+		common.BKObjIDField: objID,
+		common.TenantID:     ownerID,
 	}
 	valArr := make([]string, 0)
 	for _, key := range keys {
@@ -317,7 +317,7 @@ func (d *Discover) UpdateOrCreateInst(msg *string) error {
 
 	// remove unchangeable fields.
 	delete(inst, common.BKObjIDField)
-	delete(inst, common.BKOwnerIDField)
+	delete(inst, common.TenantID)
 	delete(inst, common.BKDefaultField)
 	delete(inst, instIDField)
 	delete(inst, common.LastTimeField)

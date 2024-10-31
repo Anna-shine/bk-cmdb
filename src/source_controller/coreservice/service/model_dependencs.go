@@ -42,7 +42,7 @@ func (s *coreService) HasAssociation(kit *rest.Kit, objIDS []string) (exists boo
 
 	// construct the model association query condition
 	cond := mongo.NewCondition()
-	cond.Element(&mongo.Eq{Key: metadata.AssociationFieldSupplierAccount, Val: kit.SupplierAccount})
+	cond.Element(&mongo.Eq{Key: metadata.TenantID, Val: kit.SupplierAccount})
 	cond.Or(&mongo.In{Key: metadata.AssociationFieldObjectID, Val: objIDS})
 	cond.Or(&mongo.In{Key: metadata.AssociationFieldAsstID, Val: objIDS})
 
@@ -69,14 +69,16 @@ func (s *coreService) CascadeDeleteAssociation(kit *rest.Kit, objIDS []string) e
 
 	// construct the deletion command
 	cond := mongo.NewCondition()
-	cond.Element(&mongo.Eq{Key: metadata.AssociationFieldSupplierAccount, Val: kit.SupplierAccount})
+	cond.Element(&mongo.Eq{Key: metadata.TenantID, Val: kit.SupplierAccount})
 	cond.Or(&mongo.In{Key: metadata.AssociationFieldObjectID, Val: objIDS})
 	cond.Or(&mongo.In{Key: metadata.AssociationFieldAssociationObjectID, Val: objIDS})
 
 	// execute delete command
-	_, err := s.core.AssociationOperation().CascadeDeleteModelAssociation(kit, metadata.DeleteOption{Condition: cond.ToMapStr()})
+	_, err := s.core.AssociationOperation().CascadeDeleteModelAssociation(kit,
+		metadata.DeleteOption{Condition: cond.ToMapStr()})
 	if nil != err {
-		blog.Errorf("aborted to cascade the model associations by the condition (%v), err: %s, rid: %s", cond.ToMapStr(), err.Error(), kit.Rid)
+		blog.Errorf("aborted to cascade the model associations by the condition (%v), err: %s, rid: %s",
+			cond.ToMapStr(), err.Error(), kit.Rid)
 		return err
 	}
 
@@ -90,7 +92,8 @@ func (s *coreService) CascadeDeleteInstances(kit *rest.Kit, objIDS []string) err
 	for _, objID := range objIDS {
 		_, err := s.core.InstanceOperation().CascadeDeleteModelInstance(kit, objID, metadata.DeleteOption{})
 		if nil != err {
-			blog.Errorf("aborted to cascade delete the association for the model objectID(%s), err: %s, rid: %s", objID, err.Error(), kit.Rid)
+			blog.Errorf("aborted to cascade delete the association for the model objectID(%s), err: %s, rid: %s", objID,
+				err.Error(), kit.Rid)
 			return err
 		}
 	}

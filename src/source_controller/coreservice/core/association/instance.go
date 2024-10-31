@@ -356,7 +356,7 @@ func (m *associationInstance) checkInstAsstCreateData(kit *rest.Kit, inputParam 
 
 	checkAssoCond := mongo.NewCondition()
 	checkAssoCond.Element(&mongo.Eq{Key: common.AssociationObjAsstIDField, Val: inputParam.Data.ObjectAsstID})
-	checkAssoCond.Element(&mongo.Eq{Key: common.BKOwnerIDField, Val: kit.SupplierAccount})
+	checkAssoCond.Element(&mongo.Eq{Key: common.TenantID, Val: kit.SupplierAccount})
 	assoItems, err := m.search(kit, checkAssoCond)
 	if err != nil {
 		blog.ErrorJSON("search associations with condition: %s failed, err: %s, rid: %s",

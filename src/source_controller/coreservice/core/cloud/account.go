@@ -25,7 +25,8 @@ import (
 )
 
 // CreateAccount TODO
-func (c *cloudOperation) CreateAccount(kit *rest.Kit, account *metadata.CloudAccount) (*metadata.CloudAccount, errors.CCErrorCoder) {
+func (c *cloudOperation) CreateAccount(kit *rest.Kit, account *metadata.CloudAccount) (*metadata.CloudAccount,
+	errors.CCErrorCoder) {
 	if err := c.validCreateAccount(kit, account); nil != err {
 		blog.Errorf("CreateAccount failed, valid error: %+v, rid: %s", err, kit.Rid)
 		return nil, err
@@ -46,7 +47,8 @@ func (c *cloudOperation) CreateAccount(kit *rest.Kit, account *metadata.CloudAcc
 
 	err = c.dbProxy.Table(common.BKTableNameCloudAccount).Insert(kit.Ctx, account)
 	if err != nil {
-		blog.ErrorJSON("CreateAccount failed, db insert failed, accountName: %s, err: %s, rid: %s", account.AccountName, err, kit.Rid)
+		blog.ErrorJSON("CreateAccount failed, db insert failed, accountName: %s, err: %s, rid: %s", account.AccountName,
+			err, kit.Rid)
 		return nil, kit.CCError.CCError(common.CCErrCommDBInsertFailed)
 	}
 	// 不返回bk_secret_key的值
@@ -55,7 +57,8 @@ func (c *cloudOperation) CreateAccount(kit *rest.Kit, account *metadata.CloudAcc
 }
 
 // SearchAccount TODO
-func (c *cloudOperation) SearchAccount(kit *rest.Kit, option *metadata.SearchCloudOption) (*metadata.MultipleCloudAccount, errors.CCErrorCoder) {
+func (c *cloudOperation) SearchAccount(kit *rest.Kit,
+	option *metadata.SearchCloudOption) (*metadata.MultipleCloudAccount, errors.CCErrorCoder) {
 	accounts := []metadata.CloudAccount{}
 	option.Condition = util.SetQueryOwner(option.Condition, kit.SupplierAccount)
 	err := c.dbProxy.Table(common.BKTableNameCloudAccount).Find(option.Condition).Fields(option.Fields...).
@@ -90,7 +93,8 @@ func (c *cloudOperation) SearchAccount(kit *rest.Kit, option *metadata.SearchClo
 		if accountTaskcntMap[accounts[i].AccountID] == 0 {
 			canDeleteAccount = true
 		}
-		results = append(results, metadata.CloudAccountWithExtraInfo{CloudAccount: accounts[i], CanDeleteAccount: canDeleteAccount})
+		results = append(results,
+			metadata.CloudAccountWithExtraInfo{CloudAccount: accounts[i], CanDeleteAccount: canDeleteAccount})
 	}
 
 	return &metadata.MultipleCloudAccount{Count: int64(count), Info: results}, nil
@@ -109,9 +113,10 @@ func (c *cloudOperation) UpdateAccount(kit *rest.Kit, accountID int64, option ma
 	// 确保不会更新云厂商类型、云账户id、开发商id
 	option.Remove(common.BKCloudVendor)
 	option.Remove(common.BKCloudIDField)
-	option.Remove(common.BKOwnerIDField)
+	option.Remove(common.TenantID)
 	if e := c.dbProxy.Table(common.BKTableNameCloudAccount).Update(kit.Ctx, filter, option); e != nil {
-		blog.Errorf("UpdateAccount failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameCloudAccount, filter, e, kit.Rid)
+		blog.Errorf("UpdateAccount failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameCloudAccount, filter, e, kit.Rid)
 		return kit.CCError.CCError(common.CCErrCommDBUpdateFailed)
 	}
 	return nil
@@ -127,18 +132,21 @@ func (c *cloudOperation) DeleteAccount(kit *rest.Kit, accountID int64) errors.CC
 	filter := map[string]interface{}{common.BKCloudAccountID: accountID}
 	filter = util.SetModOwner(filter, kit.SupplierAccount)
 	if e := c.dbProxy.Table(common.BKTableNameCloudAccount).Delete(kit.Ctx, filter); e != nil {
-		blog.Errorf("DeleteAccount failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameCloudAccount, filter, e, kit.Rid)
+		blog.Errorf("DeleteAccount failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameCloudAccount, filter, e, kit.Rid)
 		return kit.CCError.CCError(common.CCErrCommDBDeleteFailed)
 	}
 	return nil
 }
 
 // SearchAccountConf 查询云厂商账户配置
-func (c *cloudOperation) SearchAccountConf(kit *rest.Kit, option *metadata.SearchCloudOption) (*metadata.MultipleCloudAccountConf, errors.CCErrorCoder) {
+func (c *cloudOperation) SearchAccountConf(kit *rest.Kit,
+	option *metadata.SearchCloudOption) (*metadata.MultipleCloudAccountConf, errors.CCErrorCoder) {
 	accountconfs := []metadata.CloudAccountConf{}
 	option.Condition = util.SetQueryOwner(option.Condition, kit.SupplierAccount)
 	err := c.dbProxy.Table(common.BKTableNameCloudAccount).Find(option.Condition).Fields(option.Fields...).
-		Start(uint64(option.Page.Start)).Limit(uint64(option.Page.Limit)).Sort(option.Page.Sort).All(kit.Ctx, &accountconfs)
+		Start(uint64(option.Page.Start)).Limit(uint64(option.Page.Limit)).Sort(option.Page.Sort).All(kit.Ctx,
+		&accountconfs)
 	if err != nil {
 		blog.ErrorJSON("SearchAccount failed, db insert failed, option: %s, err: %s, rid: %s", option, err, kit.Rid)
 		return nil, kit.CCError.CCError(common.CCErrCommDBSelectFailed)
@@ -178,7 +186,8 @@ func (c *cloudOperation) getAcccountTaskcntMap(kit *rest.Kit) (map[int64]int64, 
 		Num       int64 `bson:"num"`
 	}
 	resultAll := make([]accountTaskcnt, 0)
-	if err := c.dbProxy.Table(common.BKTableNameCloudSyncTask).AggregateAll(kit.Ctx, aggregateCond, &resultAll); err != nil {
+	if err := c.dbProxy.Table(common.BKTableNameCloudSyncTask).AggregateAll(kit.Ctx, aggregateCond,
+		&resultAll); err != nil {
 		return nil, err
 	}
 

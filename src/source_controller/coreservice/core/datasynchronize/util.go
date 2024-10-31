@@ -79,10 +79,12 @@ func (s *synchronizeAdapter) PreSynchronizeFilter(kit *rest.Kit) errors.CCError 
 			if item.Info.Exists(common.MetadataField) {
 				mData, err := item.Info.MapStr(common.MetadataField)
 				if err != nil {
-					blog.Errorf("preSynchronizeFilter get %s field error, inst info:%#v,rid:%s", common.MetadataField, item, kit.Rid)
+					blog.Errorf("preSynchronizeFilter get %s field error, inst info:%#v,rid:%s", common.MetadataField,
+						item, kit.Rid)
 					s.errorArray[item.ID] = synchronizeAdapterError{
 						instInfo: item,
-						err:      kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, s.syncData.DataClassify, common.MetadataField, "mapstr", err.Error()),
+						err: kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, s.syncData.DataClassify,
+							common.MetadataField, "mapstr", err.Error()),
 					}
 					continue
 				}
@@ -140,7 +142,8 @@ func (s *synchronizeAdapter) replaceSynchronize(kit *rest.Kit, dbParam synchroni
 		// can be combined
 		mergeInstID, exist, err := s.getSameInfo(kit, dbParam.InstIDField, dbParam.tableName, item)
 		if err != nil {
-			blog.Errorf("replaceSynchronize getSameInfo error. err:%s, DataClassify:%s, info:%#v, rid:%s", err.Error(), s.syncData.DataClassify, item, kit.Rid)
+			blog.Errorf("replaceSynchronize getSameInfo error. err:%s, DataClassify:%s, info:%#v, rid:%s", err.Error(),
+				s.syncData.DataClassify, item, kit.Rid)
 			s.errorArray[item.ID] = synchronizeAdapterError{
 				instInfo: item,
 				err:      err,
@@ -153,7 +156,8 @@ func (s *synchronizeAdapter) replaceSynchronize(kit *rest.Kit, dbParam synchroni
 		} else {
 			exist, err = s.existSynchronizeID(kit, dbParam.tableName, mapstr.MapStr{dbParam.InstIDField: item.ID})
 			if err != nil {
-				blog.Errorf("replaceSynchronize existSynchronizeID error. err:%s, DataClassify:%s, info:%#v, exist:%v, rid:%s", err.Error(), s.syncData.DataClassify, item, exist, kit.Rid)
+				blog.Errorf("replaceSynchronize existSynchronizeID error. err:%s, DataClassify:%s, info:%#v, exist:%v, rid:%s",
+					err.Error(), s.syncData.DataClassify, item, exist, kit.Rid)
 				s.errorArray[item.ID] = synchronizeAdapterError{
 					instInfo: item,
 					err:      err,
@@ -165,13 +169,15 @@ func (s *synchronizeAdapter) replaceSynchronize(kit *rest.Kit, dbParam synchroni
 			}
 		}
 
-		blog.V(6).Infof("replaceSynchronize DataClassify:%s, info:%#v, table:%s, version:%v, exist:%v, rid:%s", s.syncData.DataClassify, item, dbParam.tableName, s.syncData.Version, exist, kit.Rid)
+		blog.V(6).Infof("replaceSynchronize DataClassify:%s, info:%#v, table:%s, version:%v, exist:%v, rid:%s",
+			s.syncData.DataClassify, item, dbParam.tableName, s.syncData.Version, exist, kit.Rid)
 		if exist {
 			// Existing data, does not update the ID field
 			delete(item.Info, dbParam.InstIDField)
 			err := mongodb.Client().Table(dbParam.tableName).Update(kit.Ctx, conds, item.Info)
 			if err != nil {
-				blog.Errorf("replaceSynchronize update info error,err:%s.DataClassify:%s,condition:%#v,info:%#v,rid:%s", err.Error(), s.syncData.DataClassify, conds, item, kit.Rid)
+				blog.Errorf("replaceSynchronize update info error,err:%s.DataClassify:%s,condition:%#v,info:%#v,rid:%s",
+					err.Error(), s.syncData.DataClassify, conds, item, kit.Rid)
 				s.errorArray[item.ID] = synchronizeAdapterError{
 					instInfo: item,
 					err:      kit.CCError.Error(common.CCErrCommDBUpdateFailed),
@@ -181,7 +187,8 @@ func (s *synchronizeAdapter) replaceSynchronize(kit *rest.Kit, dbParam synchroni
 		} else {
 			err := mongodb.Client().Table(dbParam.tableName).Insert(kit.Ctx, item.Info)
 			if err != nil {
-				blog.Errorf("replaceSynchronize insert info error,err:%s.DataClassify:%s,info:%#v,rid:%s", err.Error(), s.syncData.DataClassify, item, kit.Rid)
+				blog.Errorf("replaceSynchronize insert info error,err:%s.DataClassify:%s,info:%#v,rid:%s", err.Error(),
+					s.syncData.DataClassify, item, kit.Rid)
 				s.errorArray[item.ID] = synchronizeAdapterError{
 					instInfo: item,
 					err:      kit.CCError.Error(common.CCErrCommDBInsertFailed),
@@ -197,9 +204,11 @@ func (s *synchronizeAdapter) deleteSynchronize(kit *rest.Kit, dbParam synchroniz
 	for _, item := range s.syncData.InfoArray {
 		instIDArr = append(instIDArr, item.ID)
 	}
-	err := mongodb.Client().Table(dbParam.tableName).Delete(kit.Ctx, mapstr.MapStr{dbParam.InstIDField: mapstr.MapStr{common.BKDBIN: instIDArr}})
+	err := mongodb.Client().Table(dbParam.tableName).Delete(kit.Ctx,
+		mapstr.MapStr{dbParam.InstIDField: mapstr.MapStr{common.BKDBIN: instIDArr}})
 	if err != nil {
-		blog.Errorf("deleteSynchronize delete info error,err:%s.DataClassify:%s,instIDArr:%#v,rid:%s", err.Error(), s.syncData.DataClassify, instIDArr, kit.Rid)
+		blog.Errorf("deleteSynchronize delete info error,err:%s.DataClassify:%s,instIDArr:%#v,rid:%s", err.Error(),
+			s.syncData.DataClassify, instIDArr, kit.Rid)
 		for _, item := range s.syncData.InfoArray {
 			s.errorArray[item.ID] = synchronizeAdapterError{
 				instInfo: item,
@@ -209,10 +218,12 @@ func (s *synchronizeAdapter) deleteSynchronize(kit *rest.Kit, dbParam synchroniz
 	}
 }
 
-func (s *synchronizeAdapter) existSynchronizeID(kit *rest.Kit, tableName string, conds mapstr.MapStr) (bool, errors.CCError) {
+func (s *synchronizeAdapter) existSynchronizeID(kit *rest.Kit, tableName string, conds mapstr.MapStr) (bool,
+	errors.CCError) {
 	cnt, err := mongodb.Client().Table(tableName).Find(conds).Count(kit.Ctx)
 	if err != nil {
-		blog.Errorf("existSynchronizeID error. DataClassify:%s,conds:%#v,rid:%s", s.syncData.DataClassify, conds, kit.Rid)
+		blog.Errorf("existSynchronizeID error. DataClassify:%s,conds:%#v,rid:%s", s.syncData.DataClassify, conds,
+			kit.Rid)
 		return false, kit.CCError.Error(common.CCErrCommDBSelectFailed)
 	}
 	if cnt > 0 {
@@ -222,7 +233,8 @@ func (s *synchronizeAdapter) existSynchronizeID(kit *rest.Kit, tableName string,
 
 }
 
-func (s *synchronizeAdapter) getSameInfo(kit *rest.Kit, instIDField, tableName string, info *metadata.SynchronizeItem) (int64, bool, errors.CCError) {
+func (s *synchronizeAdapter) getSameInfo(kit *rest.Kit, instIDField, tableName string,
+	info *metadata.SynchronizeItem) (int64, bool, errors.CCError) {
 
 	bsi := NewBuildSameInfo(info, s.syncData)
 	err := bsi.BuildSameInfoBaseCond(kit)
@@ -259,11 +271,13 @@ func (s *synchronizeAdapter) getSameInfo(kit *rest.Kit, instIDField, tableName s
 	inst := mapstr.New()
 	err = mongodb.Client().Table(tableName).Find(bsi.Condition()).One(kit.Ctx, &inst)
 	if err != nil && !mongodb.Client().IsNotFoundError(err) {
-		blog.Errorf("existSameInfo query db error. err:%s, DataClassify:%s,info:%#v,condition:%#v, rid:%s", err.Error(), bsi.syncData.DataClassify, info.Info, bsi.Condition(), kit.Rid)
+		blog.Errorf("existSameInfo query db error. err:%s, DataClassify:%s,info:%#v,condition:%#v, rid:%s", err.Error(),
+			bsi.syncData.DataClassify, info.Info, bsi.Condition(), kit.Rid)
 		return 0, false, kit.CCError.Error(common.CCErrCommDBSelectFailed)
 	}
 
-	blog.V(6).Infof("getSameInfo DataClassify:%s, info:%#v, condition:%#v, inst:%#v, rid:%s", bsi.syncData.DataClassify, info.Info, bsi.Condition(), inst, kit.Rid)
+	blog.V(6).Infof("getSameInfo DataClassify:%s, info:%#v, condition:%#v, inst:%#v, rid:%s", bsi.syncData.DataClassify,
+		info.Info, bsi.Condition(), inst, kit.Rid)
 	// not found data
 	if len(inst) == 0 {
 		return 0, false, nil
@@ -271,8 +285,10 @@ func (s *synchronizeAdapter) getSameInfo(kit *rest.Kit, instIDField, tableName s
 
 	instID, err := inst.Int64(instIDField)
 	if err != nil {
-		blog.Errorf("buildSameInfoBaseCond get inst error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return 0, false, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, "propery data", instIDField, "int", err.Error())
+		blog.Errorf("buildSameInfoBaseCond get inst error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify,
+			info.Info, kit.Rid)
+		return 0, false, kit.CCError.Errorf(common.CCErrCommInstFieldConvertFail, "propery data", instIDField, "int",
+			err.Error())
 	}
 	return instID, true, nil
 
@@ -296,10 +312,12 @@ func NewBuildSameInfo(info *metadata.SynchronizeItem, syncData *metadata.Synchro
 // BuildSameInfoBaseCond TODO
 func (bsi *buildSameInfo) BuildSameInfoBaseCond(kit *rest.Kit) errors.CCError {
 	info := bsi.info
-	ownerID, err := info.Info.String(common.BKOwnerIDField)
+	ownerID, err := info.Info.String(common.TenantID)
 	if err != nil {
-		blog.Errorf("buildSameInfoBaseCond get ownerID error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKOwnerIDField, "string", err.Error())
+		blog.Errorf("buildSameInfoBaseCond get ownerID error. DataClassify:%s,info:%#v,rid:%s",
+			bsi.syncData.DataClassify, info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.TenantID, "string",
+			err.Error())
 	}
 	bsi.cond = util.SetQueryOwner(bsi.cond, ownerID)
 	return nil
@@ -310,8 +328,10 @@ func (bsi *buildSameInfo) BuildSameInfoObjDescCond(kit *rest.Kit) errors.CCError
 	info := bsi.info
 	objID, err := info.Info.String(common.BKObjIDField)
 	if err != nil {
-		blog.Errorf("buildSameInfoObjDescCond get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string", err.Error())
+		blog.Errorf("buildSameInfoObjDescCond get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s",
+			bsi.syncData.DataClassify, info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string",
+			err.Error())
 	}
 
 	bsi.cond.Set(common.BKObjIDField, objID)
@@ -323,13 +343,17 @@ func (bsi *buildSameInfo) BuildSameInfoObjAttrDescCond(kit *rest.Kit) errors.CCE
 	info := bsi.info
 	objID, err := info.Info.String(common.BKObjIDField)
 	if err != nil {
-		blog.Errorf("buildSameInfoObjAttrDescCond get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string", err.Error())
+		blog.Errorf("buildSameInfoObjAttrDescCond get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s",
+			bsi.syncData.DataClassify, info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string",
+			err.Error())
 	}
 	propertyID, err := info.Info.String(common.BKPropertyIDField)
 	if err != nil {
-		blog.Errorf("buildSameInfoObjAttrDescCond get bk_obj_name error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKPropertyIDField, "string", err.Error())
+		blog.Errorf("buildSameInfoObjAttrDescCond get bk_obj_name error. DataClassify:%s,info:%#v,rid:%s",
+			bsi.syncData.DataClassify, info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKPropertyIDField, "string",
+			err.Error())
 	}
 
 	bsi.cond.Set(common.BKObjIDField, objID)
@@ -342,13 +366,17 @@ func (bsi *buildSameInfo) BuildSameInfoObjAttrGroupCond(kit *rest.Kit) errors.CC
 	info := bsi.info
 	objID, err := info.Info.String(common.BKObjIDField)
 	if err != nil {
-		blog.Errorf("existSameInfo get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string", err.Error())
+		blog.Errorf("existSameInfo get bk_obj_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify,
+			info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKObjIDField, "string",
+			err.Error())
 	}
 	groupID, err := info.Info.String(common.BKPropertyGroupIDField)
 	if err != nil {
-		blog.Errorf("existSameInfo get bk_group_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKPropertyGroupIDField, "string", err.Error())
+		blog.Errorf("existSameInfo get bk_group_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify,
+			info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKPropertyGroupIDField,
+			"string", err.Error())
 	}
 
 	bsi.cond.Set(common.BKObjIDField, objID)
@@ -361,8 +389,10 @@ func (bsi *buildSameInfo) BuildSameInfoObjClassificationCond(kit *rest.Kit) erro
 	info := bsi.info
 	classificationID, err := info.Info.String(common.BKClassificationIDField)
 	if err != nil {
-		blog.Errorf("existSameInfo get bk_classification_id error. DataClassify:%s,info:%#v,rid:%s", bsi.syncData.DataClassify, info.Info, kit.Rid)
-		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKClassificationIDField, "string", err.Error())
+		blog.Errorf("existSameInfo get bk_classification_id error. DataClassify:%s,info:%#v,rid:%s",
+			bsi.syncData.DataClassify, info.Info, kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommInstFieldConvertFail, "propery", common.BKClassificationIDField,
+			"string", err.Error())
 	}
 
 	bsi.cond.Set(common.BKClassificationIDField, classificationID)

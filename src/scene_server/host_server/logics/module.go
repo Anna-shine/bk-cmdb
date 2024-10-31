@@ -166,7 +166,8 @@ func (lgc *Logics) GetModuleIDAndIsInternal(kit *rest.Kit, bizID, moduleID int64
 		}
 		moduleID, _, err := lgc.GetResourcePoolModuleID(kit, cond)
 		if err != nil {
-			blog.Errorf("GetModuleIDAndIsInternal get default moduleID failed, err: %s, bizID: %d, rid: %s", err.Error(), bizID, kit.Rid)
+			blog.Errorf("GetModuleIDAndIsInternal get default moduleID failed, err: %s, bizID: %d, rid: %s",
+				err.Error(), bizID, kit.Rid)
 			return 0, false, err
 		}
 		return moduleID, true, nil
@@ -177,12 +178,14 @@ func (lgc *Logics) GetModuleIDAndIsInternal(kit *rest.Kit, bizID, moduleID int64
 		}
 		moduleMap, err := lgc.GetModuleMapByCond(kit, []string{common.BKDefaultField, common.BKModuleIDField}, cond)
 		if err != nil {
-			blog.Errorf("GetModuleIDAndIsInternal get module info failed, err: %s, bizID: %d, moduleID: %d, rid: %s", err.Error(), bizID, moduleID, kit.Rid)
+			blog.Errorf("GetModuleIDAndIsInternal get module info failed, err: %s, bizID: %d, moduleID: %d, rid: %s",
+				err.Error(), bizID, moduleID, kit.Rid)
 			return 0, false, err
 		}
 		module, ok := moduleMap[moduleID]
 		if !ok {
-			blog.Errorf("GetModuleIDAndIsInternal module not exist, bizID: %d, moduleID: %d, rid: %s", bizID, moduleID, kit.Rid)
+			blog.Errorf("GetModuleIDAndIsInternal module not exist, bizID: %d, moduleID: %d, rid: %s", bizID, moduleID,
+				kit.Rid)
 			return 0, false, kit.CCError.CCErrorf(common.CCErrHostModuleNotBelongBusinessErr, moduleID, bizID)
 		}
 		return moduleID, module[common.BKDefaultField] != common.NormalModuleFlag, nil
@@ -190,11 +193,13 @@ func (lgc *Logics) GetModuleIDAndIsInternal(kit *rest.Kit, bizID, moduleID int64
 }
 
 // MoveHostToResourcePool transfer hosts to a resource pool
-func (lgc *Logics) MoveHostToResourcePool(kit *rest.Kit, conf *metadata.DefaultModuleHostConfigParams) ([]metadata.ExceptionResult, error) {
+func (lgc *Logics) MoveHostToResourcePool(kit *rest.Kit,
+	conf *metadata.DefaultModuleHostConfigParams) ([]metadata.ExceptionResult, error) {
 
 	ownerAppID, err := lgc.GetDefaultAppID(kit)
 	if err != nil {
-		blog.Errorf("move host to resource pool, but get default appid failed, err: %v, input:%+v,rid:%s", err, conf, kit.Rid)
+		blog.Errorf("move host to resource pool, but get default appid failed, err: %v, input:%+v,rid:%s", err, conf,
+			kit.Rid)
 		return nil, err
 	}
 	if 0 == conf.ApplicationID {
@@ -217,7 +222,8 @@ func (lgc *Logics) MoveHostToResourcePool(kit *rest.Kit, conf *metadata.DefaultM
 
 	ownerModuleID, _, err := lgc.GetResourcePoolModuleID(kit, ownerModuleIDCond)
 	if err != nil {
-		blog.Errorf("move host to resource pool, but get module id failed, err: %v, input:%+v,param:%+v,rid:%s", err, conf, ownerModuleIDCond, kit.Rid)
+		blog.Errorf("move host to resource pool, but get module id failed, err: %v, input:%+v,param:%+v,rid:%s", err,
+			conf, ownerModuleIDCond, kit.Rid)
 		return nil, err
 	}
 
@@ -242,12 +248,14 @@ func (lgc *Logics) MoveHostToResourcePool(kit *rest.Kit, conf *metadata.DefaultM
 
 	errHostID, err := lgc.notExistAppModuleHost(kit, []int64{conf.ApplicationID}, moduleIDs, conf.HostIDs)
 	if err != nil {
-		blog.Errorf("move host to resource pool, notExistAppModuleHost error, err: %v, owneAppID: %d, input:%#v, rid:%s", err, ownerAppID, conf, kit.Rid)
+		blog.Errorf("move host to resource pool, notExistAppModuleHost error, err: %v, owneAppID: %d, input:%#v, rid:%s",
+			err, ownerAppID, conf, kit.Rid)
 		return nil, err
 	}
 	if len(errHostID) > 0 {
 		errHostIP := lgc.convertHostIDToHostIP(kit, errHostID)
-		blog.Errorf("move host to resource pool, notExistAppModuleHost error, has host not belong to idle module , owneAppID: %d, input:%#v, err host inner ip:%#v, rid:%s", ownerAppID, conf, errHostIP, kit.Rid)
+		blog.Errorf("move host to resource pool, notExistAppModuleHost error, has host not belong to idle module , owneAppID: %d, input:%#v, err host inner ip:%#v, rid:%s",
+			ownerAppID, conf, errHostIP, kit.Rid)
 		return nil, kit.CCError.Errorf(common.CCErrHostModuleConfigNotMatch, util.PrettyIPStr(errHostIP))
 	}
 
@@ -260,22 +268,26 @@ func (lgc *Logics) MoveHostToResourcePool(kit *rest.Kit, conf *metadata.DefaultM
 
 	audit := auditlog.NewHostModuleLog(lgc.CoreAPI.CoreService(), conf.HostIDs)
 	if err := audit.WithPrevious(kit); err != nil {
-		blog.Errorf("move host to resource pool, but get prev module host config failed, err: %v, input:%+v,rid:%s", err, conf, kit.Rid)
+		blog.Errorf("move host to resource pool, but get prev module host config failed, err: %v, input:%+v,rid:%s",
+			err, conf, kit.Rid)
 		return nil, kit.CCError.Errorf(common.CCErrCommResourceInitFailed, "audit server")
 	}
 	result, err := lgc.CoreAPI.CoreService().Host().TransferToAnotherBusiness(kit.Ctx, kit.Header, param)
 	if err != nil {
-		blog.Errorf("move host to resource pool, but update host module http do error, err: %v, input:%#v,params:%#v,rid:%v", err, conf, param, kit.Rid)
+		blog.Errorf("move host to resource pool, but update host module http do error, err: %v, input:%#v,params:%#v,rid:%v",
+			err, conf, param, kit.Rid)
 		return nil, kit.CCError.Error(common.CCErrCommHTTPDoRequestFailed)
 	}
 	if !result.Result {
-		blog.Errorf("move host to resource pool, but update host module http response error, err code:%d, err messge:%s, input:%#v,query:%#v,rid:%v", result.Code, result.ErrMsg, conf, param, kit.Rid)
+		blog.Errorf("move host to resource pool, but update host module http response error, err code:%d, err messge:%s, input:%#v,query:%#v,rid:%v",
+			result.Code, result.ErrMsg, conf, param, kit.Rid)
 		return result.Data, kit.CCError.New(result.Code, result.ErrMsg)
 
 	}
 
 	if err := audit.SaveAudit(kit); err != nil {
-		blog.Errorf("move host to resource pool, but save audit log failed, err: %v, input:%+v,rid:%s", err, conf, kit.Rid)
+		blog.Errorf("move host to resource pool, but save audit log failed, err: %v, input:%+v,rid:%s", err, conf,
+			kit.Rid)
 		return nil, kit.CCError.Errorf(common.CCErrCommResourceInitFailed, "audit server")
 	}
 
@@ -313,17 +325,19 @@ func (lgc *Logics) notExistAppModuleHost(kit *rest.Kit, appIDs []int64, moduleID
 }
 
 // AssignHostToApp transfer resource host to  idle module
-func (lgc *Logics) AssignHostToApp(kit *rest.Kit, conf *metadata.DefaultModuleHostConfigParams) ([]metadata.ExceptionResult, error) {
+func (lgc *Logics) AssignHostToApp(kit *rest.Kit,
+	conf *metadata.DefaultModuleHostConfigParams) ([]metadata.ExceptionResult, error) {
 
 	cond := hutil.NewOperation().WithAppID(conf.ApplicationID).Data()
-	fields := fmt.Sprintf("%s,%s", common.BKOwnerIDField, common.BKAppNameField)
+	fields := fmt.Sprintf("%s,%s", common.TenantID, common.BKAppNameField)
 	appInfo, err := lgc.GetAppDetails(kit, fields, cond)
 	if err != nil {
 		blog.Errorf("assign host to app failed, err: %v,input:%+v,rid:%s", err, conf, kit.Rid)
 		return nil, err
 	}
 	if 0 == len(appInfo) {
-		blog.Errorf("assign host to app error, not foud app appID: %d,input:%+v,rid:%s", conf.ApplicationID, conf, kit.Rid)
+		blog.Errorf("assign host to app error, not foud app appID: %d,input:%+v,rid:%s", conf.ApplicationID, conf,
+			kit.Rid)
 		return nil, kit.CCError.Error(common.CCErrCommNotFound)
 	}
 
@@ -353,7 +367,8 @@ func (lgc *Logics) AssignHostToApp(kit *rest.Kit, conf *metadata.DefaultModuleHo
 
 	resourceModuleIDs, err := lgc.GetModuleIDByCond(kit, metadata.ConditionWithTime{Condition: moduleCond})
 	if err != nil {
-		blog.Errorf("assign host to app failed, GetModuleIDByCond err: %v, moduleCond:%+v, rid:%s", err, moduleCond, kit.Rid)
+		blog.Errorf("assign host to app failed, GetModuleIDByCond err: %v, moduleCond:%+v, rid:%s", err, moduleCond,
+			kit.Rid)
 		return nil, err
 	}
 
@@ -364,14 +379,16 @@ func (lgc *Logics) AssignHostToApp(kit *rest.Kit, conf *metadata.DefaultModuleHo
 	}
 	if len(errHostID) > 0 {
 		errHostIP := lgc.convertHostIDToHostIP(kit, errHostID)
-		blog.Errorf("assign host to app, notExistAppModuleHost error, has host not belong to resource directory module , input:%+v, rid:%s", conf, kit.Rid)
+		blog.Errorf("assign host to app, notExistAppModuleHost error, has host not belong to resource directory module , input:%+v, rid:%s",
+			conf, kit.Rid)
 		return nil, kit.CCError.Errorf(common.CCErrHostModuleConfigNotMatch, strings.Join(errHostIP, ","))
 	}
 
 	mConds := hutil.NewOperation().WithDefaultField(int64(common.DefaultResModuleFlag)).WithAppID(conf.ApplicationID)
 	moduleID, moduleName, err := lgc.GetResourcePoolModuleID(kit, mConds.MapStr())
 	if err != nil {
-		blog.Errorf("assign host to app, but get module id failed, err: %v,input:%+v,params:%+v,rid:%s", err, conf, mConds.MapStr(), kit.Rid)
+		blog.Errorf("assign host to app, but get module id failed, err: %v,input:%+v,params:%+v,rid:%s", err, conf,
+			mConds.MapStr(), kit.Rid)
 		return nil, err
 	}
 	if moduleID == 0 {
@@ -394,11 +411,13 @@ func (lgc *Logics) AssignHostToApp(kit *rest.Kit, conf *metadata.DefaultModuleHo
 
 	result, err := lgc.CoreAPI.CoreService().Host().TransferToAnotherBusiness(kit.Ctx, kit.Header, assignParams)
 	if err != nil {
-		blog.Errorf("assign host to app, but assign to app http do error. err: %v, input:%+v,param:%+v,rid:%s", err, conf, assignParams, kit.Rid)
+		blog.Errorf("assign host to app, but assign to app http do error. err: %v, input:%+v,param:%+v,rid:%s", err,
+			conf, assignParams, kit.Rid)
 		return nil, kit.CCError.Error(common.CCErrHostEditRelationPoolFail)
 	}
 	if !result.Result {
-		blog.Errorf("assign host to app, but assign to app http response error. result:%#v, input:%+v, param:%+v, rid:%s", result, conf, assignParams, kit.Rid)
+		blog.Errorf("assign host to app, but assign to app http response error. result:%#v, input:%+v, param:%+v, rid:%s",
+			result, conf, assignParams, kit.Rid)
 		return result.Data, kit.CCError.New(result.Code, result.ErrMsg)
 	}
 

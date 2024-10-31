@@ -369,7 +369,7 @@ func addProjectObjectAttrRow(ctx context.Context, db dal.RDB, ownerID string) er
 		return nil
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	nowTime := metadata.Now()
 	for _, row := range dataRows {
 		row.OwnerID = ownerID

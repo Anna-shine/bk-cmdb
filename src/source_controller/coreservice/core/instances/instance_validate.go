@@ -31,7 +31,7 @@ import (
 )
 
 var updateIgnoreKeys = []string{
-	common.BKOwnerIDField,
+	common.TenantID,
 	common.BKDefaultField,
 	common.BKInstParentStr,
 	common.BKAppIDField,
@@ -40,7 +40,7 @@ var updateIgnoreKeys = []string{
 }
 
 var createIgnoreKeys = []string{
-	common.BKOwnerIDField,
+	common.TenantID,
 	common.BKDefaultField,
 	common.BKInstParentStr,
 	common.BKAppIDField,

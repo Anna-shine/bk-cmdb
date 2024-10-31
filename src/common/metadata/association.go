@@ -26,11 +26,11 @@ const (
 	AssociationFieldObjectID = "bk_obj_id"
 	// AssociationFieldAsstID the association data field bk_obj_asst_id
 	AssociationFieldAsstID = "bk_obj_asst_id"
-	// AssociationFieldSupplierAccount TODO
+	// TenantID TODO
 	// AssociationFieldObjectAttributeID the association data field definition
 	// AssociationFieldObjectAttributeID = "bk_object_att_id"
-	// AssociationFieldSupplierAccount the association data field definition
-	AssociationFieldSupplierAccount = "bk_supplier_account"
+	// TenantID the association data field definition
+	TenantID = "tenant_id"
 	// AssociationFieldAssociationObjectID the association data field definition
 	// AssociationFieldAssociationForward = "bk_asst_forward"
 	// AssociationFieldAssociationObjectID the association data field definition

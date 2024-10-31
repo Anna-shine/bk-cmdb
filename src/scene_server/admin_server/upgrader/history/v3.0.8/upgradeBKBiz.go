@@ -38,11 +38,12 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	appModelData[common.BKTimeZoneField] = "Asia/Shanghai"
 	appModelData[common.BKLanguageField] = "1" // "中文"
 	appModelData[common.BKLifeCycleField] = common.DefaultAppLifeCycleNormal
-	appModelData[common.BKOwnerIDField] = conf.OwnerID
+	appModelData["bk_supplier_account"] = conf.OwnerID
 	appModelData[common.BKDefaultField] = common.DefaultFlagDefaultValue
 	filled := fillEmptyFields(appModelData, AppRow())
 	var preData map[string]interface{}
-	bizID, preData, err := upgrader.Upsert(ctx, db, common.BKTableNameBaseApp, appModelData, common.BKAppIDField, []string{common.BKAppNameField, common.BKOwnerIDField}, append(filled, common.BKAppIDField))
+	bizID, preData, err := upgrader.Upsert(ctx, db, common.BKTableNameBaseApp, appModelData, common.BKAppIDField,
+		[]string{common.BKAppNameField, "bk_supplier_account"}, append(filled, common.BKAppIDField))
 	if err != nil {
 		blog.Error("add addBKApp error ", err.Error())
 		return err
@@ -98,9 +99,11 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	inputSetInfo[common.BKInstParentStr] = bizID
 	inputSetInfo[common.BKSetNameField] = common.DefaultResSetName
 	inputSetInfo[common.BKDefaultField] = common.DefaultResSetFlag
-	inputSetInfo[common.BKOwnerIDField] = conf.OwnerID
+	inputSetInfo["bk_supplier_account"] = conf.OwnerID
 	filled = fillEmptyFields(inputSetInfo, SetRow())
-	setID, _, err := upgrader.Upsert(ctx, db, common.BKTableNameBaseSet, inputSetInfo, common.BKSetIDField, []string{common.BKOwnerIDField, common.BKAppIDField, common.BKSetNameField}, append(filled, common.BKSetIDField))
+	setID, _, err := upgrader.Upsert(ctx, db, common.BKTableNameBaseSet, inputSetInfo, common.BKSetIDField,
+		[]string{"bk_supplier_account", common.BKAppIDField, common.BKSetNameField},
+		append(filled, common.BKSetIDField))
 	if err != nil {
 		blog.Error("add defaultSet error ", err.Error())
 		return err
@@ -113,9 +116,11 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	inputResModuleInfo[common.BKAppIDField] = bizID
 	inputResModuleInfo[common.BKModuleNameField] = common.DefaultResModuleName
 	inputResModuleInfo[common.BKDefaultField] = common.DefaultResModuleFlag
-	inputResModuleInfo[common.BKOwnerIDField] = conf.OwnerID
+	inputResModuleInfo["bk_supplier_account"] = conf.OwnerID
 	filled = fillEmptyFields(inputResModuleInfo, ModuleRow())
-	_, _, err = upgrader.Upsert(ctx, db, common.BKTableNameBaseModule, inputResModuleInfo, common.BKModuleIDField, []string{common.BKOwnerIDField, common.BKModuleNameField, common.BKAppIDField, common.BKSetIDField}, append(filled, common.BKModuleIDField))
+	_, _, err = upgrader.Upsert(ctx, db, common.BKTableNameBaseModule, inputResModuleInfo, common.BKModuleIDField,
+		[]string{"bk_supplier_account", common.BKModuleNameField, common.BKAppIDField, common.BKSetIDField},
+		append(filled, common.BKModuleIDField))
 	if err != nil {
 		blog.Error("add defaultResModule error ", err.Error())
 		return err
@@ -127,9 +132,11 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	inputFaultModuleInfo[common.BKAppIDField] = bizID
 	inputFaultModuleInfo[common.BKModuleNameField] = common.DefaultFaultModuleName
 	inputFaultModuleInfo[common.BKDefaultField] = common.DefaultFaultModuleFlag
-	inputFaultModuleInfo[common.BKOwnerIDField] = conf.OwnerID
+	inputFaultModuleInfo["bk_supplier_account"] = conf.OwnerID
 	filled = fillEmptyFields(inputFaultModuleInfo, ModuleRow())
-	_, _, err = upgrader.Upsert(ctx, db, common.BKTableNameBaseModule, inputFaultModuleInfo, common.BKModuleIDField, []string{common.BKOwnerIDField, common.BKModuleNameField, common.BKAppIDField, common.BKSetIDField}, append(filled, common.BKModuleIDField))
+	_, _, err = upgrader.Upsert(ctx, db, common.BKTableNameBaseModule, inputFaultModuleInfo, common.BKModuleIDField,
+		[]string{"bk_supplier_account", common.BKModuleNameField, common.BKAppIDField, common.BKSetIDField},
+		append(filled, common.BKModuleIDField))
 	if err != nil {
 		blog.Error("add defaultFaultModule error ", err.Error())
 		return err
