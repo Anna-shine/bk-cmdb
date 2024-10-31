@@ -165,7 +165,7 @@ func (s *migrateCheckService) checkUnique() error {
 				fmt.Printf("WARNING: not must check object(%s) unique(%d) will not be supported\n", objID, unique.ID)
 			}
 
-			if err := s.checkObjectUnique(ctx, objID, unique.OwnerID, unique, attrMap); err != nil {
+			if err := s.checkObjectUnique(ctx, objID, unique.TenantID, unique, attrMap); err != nil {
 				return err
 			}
 		}
@@ -350,7 +350,7 @@ type ObjectUnique struct {
 	MustCheck bool                 `json:"must_check" bson:"must_check"`
 	Keys      []metadata.UniqueKey `json:"keys" bson:"keys"`
 	Ispre     bool                 `json:"ispre" bson:"ispre"`
-	OwnerID   string               `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID  string               `json:"tenant_id" bson:"tenant_id"`
 	LastTime  *time.Time           `json:"last_time" bson:"last_time"`
 }
 
