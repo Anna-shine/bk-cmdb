@@ -37,8 +37,6 @@ import (
 const (
 	// AttributeFieldID TODO
 	AttributeFieldID = "id"
-	// AttributeFieldSupplierAccount TODO
-	AttributeFieldSupplierAccount = "tenant_id"
 	// AttributeFieldObjectID TODO
 	AttributeFieldObjectID = "bk_obj_id"
 	// AttributeFieldPropertyID TODO

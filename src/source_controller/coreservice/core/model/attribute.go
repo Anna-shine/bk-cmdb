@@ -263,7 +263,7 @@ func (m *modelAttribute) SetModelAttributes(kit *rest.Kit, objID string, inputPa
 		attr.TenantID = kit.SupplierAccount
 		if exists {
 			cond := mongo.NewCondition()
-			cond.Element(&mongo.Eq{Key: metadata.AttributeFieldSupplierAccount, Val: kit.SupplierAccount})
+			cond.Element(&mongo.Eq{Key: metadata.TenantID, Val: kit.SupplierAccount})
 			cond.Element(&mongo.Eq{Key: metadata.AttributeFieldID, Val: existsAttr.ID})
 
 			_, err := m.update(kit, mapstr.NewFromStruct(attr, "field"), cond, false)
@@ -619,7 +619,7 @@ func (m *modelAttribute) DeleteModelAttributes(kit *rest.Kit, objID string,
 		return &metadata.DeletedCount{}, err
 	}
 
-	cond.Element(&mongo.Eq{Key: metadata.AttributeFieldSupplierAccount, Val: kit.SupplierAccount})
+	cond.Element(&mongo.Eq{Key: metadata.TenantID, Val: kit.SupplierAccount})
 	cnt, err := m.delete(kit, cond, false)
 	return &metadata.DeletedCount{Count: cnt}, err
 }

@@ -1302,7 +1302,7 @@ func (m *modelAttribute) checkTableAttrUpdate(kit *rest.Kit, data mapstr.MapStr,
 
 	// 删除不可更新字段， 避免由于传入数据，修改字段
 	data.Remove(metadata.AttributeFieldPropertyID)
-	data.Remove(metadata.AttributeFieldSupplierAccount)
+	data.Remove(metadata.TenantID)
 	data.Remove(metadata.AttributeFieldPropertyType)
 	data.Remove(metadata.AttributeFieldCreateTime)
 	data.Remove(metadata.AttributeFieldIsPre)
@@ -1620,7 +1620,7 @@ func (m *modelAttribute) checkUpdate(kit *rest.Kit, data mapstr.MapStr, cond uni
 	// 删除不可更新字段， 避免由于传入数据，修改字段
 	// TODO: 改成白名单方式
 	data.Remove(metadata.AttributeFieldPropertyID)
-	data.Remove(metadata.AttributeFieldSupplierAccount)
+	data.Remove(metadata.TenantID)
 	data.Remove(metadata.AttributeFieldPropertyType)
 	data.Remove(metadata.AttributeFieldCreateTime)
 	data.Remove(metadata.AttributeFieldIsPre)

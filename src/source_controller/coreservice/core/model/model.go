@@ -650,7 +650,7 @@ func (m *modelManager) SearchModelWithAttribute(kit *rest.Kit, inputParam metada
 		queryAttributeCondMap := util.SetQueryOwner(make(map[string]interface{}), modelItem.OwnerID)
 		queryAttributeCond, _ := mongo.NewConditionFromMapStr(queryAttributeCondMap)
 		queryAttributeCond.Element(mongo.Field(metadata.AttributeFieldObjectID).Eq(modelItem.ObjectID))
-		queryAttributeCond.Element(mongo.Field(metadata.AttributeFieldSupplierAccount).Eq(modelItem.OwnerID))
+		queryAttributeCond.Element(mongo.Field(metadata.TenantID).Eq(modelItem.OwnerID))
 		attributeItems, err := m.modelAttribute.search(kit, queryAttributeCond)
 		if nil != err {
 			blog.Errorf("request(%s):it is failed to search the object(%s)'s attributes, error info is %s",
