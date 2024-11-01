@@ -300,7 +300,7 @@ func (lgc *Logics) updateProperty(
 	}
 
 	// update to the storage
-	netPropertyInfo.OwnerID = ownerID
+	netPropertyInfo.TenantID = ownerID
 	if err := lgc.updateExistingPropertyByNetPropertyID(netPropertyInfo, netPropertyID); nil != err {
 		blog.Errorf("[NetProperty] upadte net property fail, error: %v, rid: %s", err, rid)
 		return defErr.Error(common.CCErrCollectNetPropertyUpdateFail)
@@ -331,7 +331,7 @@ func (lgc *Logics) addOrUpdateProperty(
 			return INVALIDID, defErr.Error(common.CCErrCollectNetPropertyUpdateFail)
 		}
 
-		netPropertyInfo.OwnerID = ownerID
+		netPropertyInfo.TenantID = ownerID
 		netPropertyInfo.NetcollectPropertyID = netPropertyID
 		// update to the storage
 		if err = lgc.updateNetPropertyByPropertyIDAndDeviceID(netPropertyInfo); nil != err {
@@ -423,7 +423,7 @@ func (lgc *Logics) addNewNetProperty(netPropertyInfo meta.NetcollectProperty, ow
 	now := util.GetCurrentTimePtr()
 	netPropertyInfo.CreateTime = now
 	netPropertyInfo.LastTime = now
-	netPropertyInfo.OwnerID = ownerID
+	netPropertyInfo.TenantID = ownerID
 
 	// set default value
 	if "" == netPropertyInfo.Action {
@@ -450,7 +450,7 @@ func (lgc *Logics) updateNetPropertyByPropertyIDAndDeviceID(netPropertyInfo meta
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField:   netPropertyInfo.DeviceID,
 		common.BKPropertyIDField: netPropertyInfo.PropertyID,
-		common.TenantID:          netPropertyInfo.OwnerID,
+		common.TenantID:          netPropertyInfo.TenantID,
 	}
 
 	netPropertyInfo.LastTime = util.GetCurrentTimePtr()
@@ -470,7 +470,7 @@ func (lgc *Logics) updateExistingPropertyByNetPropertyID(netPropertyInfo meta.Ne
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKNetcollectPropertyIDField: netPropertyID,
-		common.TenantID:                    netPropertyInfo.OwnerID,
+		common.TenantID:                    netPropertyInfo.TenantID,
 	}
 
 	netPropertyInfo.LastTime = util.GetCurrentTimePtr()

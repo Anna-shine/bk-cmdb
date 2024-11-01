@@ -36,7 +36,7 @@ type ProcInstanceModel struct {
 	HostID         int64  `json:"bk_host_id" bson:"bk_host_id"`
 	HostInstanID   uint64 `json:"bk_host_instance_id" bson:"bk_host_instance_id"`
 	HostProcID     uint64 `json:"host_proc_id" bson:"host_proc_id"`
-	OwnerID        string `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID       string `json:"tenant_id" bson:"tenant_id"`
 }
 
 // MatchProcInstParam TODO
@@ -102,7 +102,7 @@ type GseProcRequest struct {
 // ProcInstanceDetail TODO
 type ProcInstanceDetail struct {
 	GseProcRequest `json:",inline" bson:",inline"`
-	OwnerID        string                   `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID       string                   `json:"tenant_id" bson:"tenant_id"`
 	HostID         int64                    `json:"bk_host_id" bson:"bk_host_id"`
 	Status         ProcInstanceDetailStatus `json:"status" bson:"status"` // 1 register gse sucess, 2 register error need retry 3 unregister error need retry
 }

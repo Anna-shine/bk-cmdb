@@ -245,7 +245,7 @@ func (lgc *Logics) updateDevice(
 	}
 
 	// update to the storage
-	deviceInfo.OwnerID = ownerID
+	deviceInfo.TenantID = ownerID
 
 	if err := lgc.updateExistingDeviceByDeviceID(deviceInfo, netDeviceID); nil != err {
 		blog.Errorf("[NetDevice] update net device fail, update to database error: %v, rid: %s", err, rid)
@@ -276,7 +276,7 @@ func (lgc *Logics) addOrUpdateDevice(pHeader http.Header, deviceInfo meta.Netcol
 		}
 
 		// update to the storage
-		deviceInfo.OwnerID = ownerID
+		deviceInfo.TenantID = ownerID
 
 		if err := lgc.updateExistingDeviceByDeviceName(deviceInfo); nil != err {
 			blog.Errorf("[NetDevice] batch add net device fail, error: %v, rid: %s", err, rid)
@@ -346,7 +346,7 @@ func (lgc *Logics) addNewDevice(deviceInfo meta.NetcollectDevice, ownerID string
 	now := util.GetCurrentTimePtr()
 	deviceInfo.CreateTime = now
 	deviceInfo.LastTime = now
-	deviceInfo.OwnerID = ownerID
+	deviceInfo.TenantID = ownerID
 
 	deviceInfo.DeviceID, err = lgc.db.NextSequence(lgc.ctx, common.BKTableNameNetcollectDevice)
 	if nil != err {
@@ -366,7 +366,7 @@ func (lgc *Logics) updateExistingDeviceByDeviceID(deviceInfo meta.NetcollectDevi
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceIDField: netDeviceID,
-		common.TenantID:        deviceInfo.OwnerID,
+		common.TenantID:        deviceInfo.TenantID,
 	}
 
 	deviceInfo.LastTime = util.GetCurrentTimePtr()
@@ -387,7 +387,7 @@ func (lgc *Logics) updateExistingDeviceByDeviceName(deviceInfo meta.NetcollectDe
 	rid := util.ExtractRequestIDFromContext(lgc.ctx)
 	queryParams := map[string]interface{}{
 		common.BKDeviceNameField: deviceInfo.DeviceName,
-		common.TenantID:          deviceInfo.OwnerID,
+		common.TenantID:          deviceInfo.TenantID,
 	}
 
 	deviceInfo.LastTime = util.GetCurrentTimePtr()

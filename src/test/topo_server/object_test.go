@@ -1062,7 +1062,7 @@ var _ = Describe("object test", func() {
 				}
 				arr[0].Condition.ObjectID = "cc_obj"
 				arr[0].Condition.PropertyID = "test_singlechar"
-				arr[0].Condition.OwnerID = "0"
+				arr[0].Condition.TenantID = "0"
 				arr[0].Data.PropertyGroupID = "1"
 				input := map[string]interface{}{
 					"data": arr,
@@ -1079,7 +1079,7 @@ var _ = Describe("object test", func() {
 				}
 				arr[0].Condition.ObjectID = "cc_obj"
 				arr[0].Condition.PropertyID = "test_singlechar"
-				arr[0].Condition.OwnerID = "0"
+				arr[0].Condition.TenantID = "0"
 				arr[0].Data.PropertyGroupID = "10000"
 				input := map[string]interface{}{
 					"data": arr,

@@ -70,7 +70,7 @@ func (s *coreService) AddHostFavourite(ctx *rest.Contexts) {
 		User:        user,
 		Type:        paras.Type,
 		QueryParams: paras.QueryParams,
-		OwnerID:     ctx.Kit.SupplierAccount,
+		TenantID:    ctx.Kit.SupplierAccount,
 		CreateTime:  time.Now().UTC(),
 		UpdateTime:  time.Now().UTC(),
 		BizID:       paras.BizID,

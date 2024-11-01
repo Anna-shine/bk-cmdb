@@ -38,7 +38,7 @@ const (
 // PropertyGroupObjectAtt uset to update or delete the property group object attribute
 type PropertyGroupObjectAtt struct {
 	Condition struct {
-		OwnerID    string `field:"bk_supplier_account" json:"bk_supplier_account"`
+		TenantID   string `field:"tenant_id" json:"tenant_id"`
 		ObjectID   string `field:"bk_obj_id" json:"bk_obj_id"`
 		PropertyID string `field:"bk_property_id" json:"bk_property_id"`
 	} `json:"condition"`
