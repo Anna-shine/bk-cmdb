@@ -147,7 +147,7 @@ func (c *cloudOperation) CreateSyncHistory(kit *rest.Kit, history *metadata.Sync
 		return nil, kit.CCError.CCErrorf(common.CCErrCommGenerateRecordIDFailed)
 	}
 	history.HistoryID = int64(id)
-	history.OwnerID = kit.SupplierAccount
+	history.TenantID = kit.SupplierAccount
 	history.CreateTime = time.Now()
 
 	err = c.dbProxy.Table(common.BKTableNameCloudSyncHistory).Insert(kit.Ctx, history)

@@ -350,7 +350,7 @@ type CloudArea struct {
 	CloudName   string    `json:"bk_cloud_name" bson:"bk_cloud_name"`
 	Status      string    `json:"bk_status" bson:"bk_status"`
 	CloudVendor string    `json:"bk_cloud_vendor" bson:"bk_cloud_vendor"`
-	OwnerID     string    `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID    string    `json:"tenant_id" bson:"tenant_id"`
 	VpcID       string    `json:"bk_vpc_id" bson:"bk_vpc_id"`
 	VpcName     string    `json:"bk_vpc_name" bson:"bk_vpc_name"`
 	Region      string    `json:"bk_region" bson:"bk_region"`
@@ -375,7 +375,7 @@ type SyncHistory struct {
 	HistoryID         int64          `json:"bk_history_id" bson:"bk_history_id"`
 	TaskID            int64          `json:"bk_task_id" bson:"bk_task_id"`
 	SyncStatus        string         `json:"bk_sync_status" bson:"bk_sync_status"`
-	OwnerID           string         `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID          string         `json:"tenant_id" bson:"tenant_id"`
 	StatusDescription SyncStatusDesc `json:"bk_status_description" bson:"bk_status_description"`
 	Detail            SyncDetail     `json:"bk_detail" bson:"bk_detail"`
 	CreateTime        time.Time      `json:"create_time" bson:"create_time"`

@@ -221,7 +221,7 @@ type ProcessOperateTask struct {
 	Namespace   string                              `json:"namespace" bson:"namespace"`
 	Status      ProcOpTaskStatus                    `json:"status" bson:"status"`
 	CreateTime  time.Time                           `json:"create_time" bson:"create_time"`
-	OwnerID     string                              `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID    string                              `json:"tenant_id" bson:"tenant_id"`
 	User        string                              `json:"user,omitempty" bson:"user,omitempty"`
 	Detail      map[string]ProcessOperateTaskDetail `json:"detail" bson:"detail"`
 	Host        []GseHost                           `json:"host_info" bson:"host_info"`
