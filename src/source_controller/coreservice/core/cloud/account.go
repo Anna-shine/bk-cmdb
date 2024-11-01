@@ -39,7 +39,7 @@ func (c *cloudOperation) CreateAccount(kit *rest.Kit, account *metadata.CloudAcc
 	}
 	account.AccountID = int64(id)
 	ts := time.Now()
-	account.OwnerID = kit.SupplierAccount
+	account.TenantID = kit.SupplierAccount
 	account.Creator = kit.User
 	account.LastEditor = kit.User
 	account.CreateTime = ts

@@ -29,7 +29,7 @@ type CloudAccount struct {
 	SecretID    string    `json:"bk_secret_id" bson:"bk_secret_id"`
 	SecretKey   string    `json:"bk_secret_key" bson:"bk_secret_key"`
 	Description string    `json:"bk_description" bson:"bk_description"`
-	OwnerID     string    `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID    string    `json:"tenant_id" bson:"tenant_id"`
 	Creator     string    `json:"bk_creator" bson:"bk_creator"`
 	LastEditor  string    `json:"bk_last_editor" bson:"bk_last_editor"`
 	CreateTime  time.Time `json:"create_time" bson:"create_time"`
@@ -237,7 +237,7 @@ type CloudSyncTask struct {
 	AccountID         int64          `json:"bk_account_id" bson:"bk_account_id"`
 	CloudVendor       string         `json:"bk_cloud_vendor" bson:"bk_cloud_vendor"`
 	SyncStatus        string         `json:"bk_sync_status" bson:"bk_sync_status"`
-	OwnerID           string         `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID          string         `json:"tenant_id" bson:"tenant_id"`
 	StatusDescription SyncStatusDesc `json:"bk_status_description" bson:"bk_status_description"`
 	LastSyncTime      *time.Time     `json:"bk_last_sync_time" bson:"bk_last_sync_time"`
 	SyncAll           bool           `json:"bk_sync_all" bson:"bk_sync_all"`
@@ -339,7 +339,7 @@ type HostSyncInfo struct {
 	PrivateIp     string    `json:"bk_host_innerip" bson:"bk_host_innerip"`
 	PublicIp      string    `json:"bk_host_outerip" bson:"bk_host_outerip"`
 	InstanceState string    `json:"bk_cloud_host_status" bson:"bk_cloud_host_status"`
-	OwnerID       string    `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID      string    `json:"tenant_id" bson:"tenant_id"`
 	CreateTime    time.Time `json:"create_time" bson:"create_time"`
 	LastTime      time.Time `json:"last_time" bson:"last_time"`
 }

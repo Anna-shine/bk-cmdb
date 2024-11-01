@@ -261,7 +261,7 @@ var _ = Describe("object test", func() {
 			data1 := metadata.MainlineObjectTopo{
 				ObjID:      "biz",
 				ObjName:    "业务",
-				OwnerID:    "0",
+				TenantID:   "0",
 				NextObj:    "cc_test_object",
 				NextName:   "cc_test_object",
 				PreObjID:   "",
@@ -271,7 +271,7 @@ var _ = Describe("object test", func() {
 			data2 := metadata.MainlineObjectTopo{
 				ObjID:      "cc_test_object",
 				ObjName:    "cc_test_object",
-				OwnerID:    "0",
+				TenantID:   "0",
 				NextObj:    "set",
 				NextName:   "集群",
 				PreObjID:   "biz",
@@ -281,7 +281,7 @@ var _ = Describe("object test", func() {
 			data3 := metadata.MainlineObjectTopo{
 				ObjID:      "set",
 				ObjName:    "集群",
-				OwnerID:    "0",
+				TenantID:   "0",
 				NextObj:    "module",
 				NextName:   "模块",
 				PreObjID:   "cc_test_object",

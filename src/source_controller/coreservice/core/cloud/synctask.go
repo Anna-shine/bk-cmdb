@@ -47,7 +47,7 @@ func (c *cloudOperation) CreateSyncTask(kit *rest.Kit, task *metadata.CloudSyncT
 	}
 	task.TaskID = int64(id)
 	ts := time.Now()
-	task.OwnerID = kit.SupplierAccount
+	task.TenantID = kit.SupplierAccount
 	task.Creator = kit.User
 	task.LastEditor = kit.User
 	task.CreateTime = ts

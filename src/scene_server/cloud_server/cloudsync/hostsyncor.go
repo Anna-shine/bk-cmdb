@@ -122,7 +122,7 @@ func (h *HostSyncor) Sync(task *metadata.CloudSyncTask) error {
 	// 每次同步生成新的kit
 	h.readKit = ccom.NewKit()
 	// 将云同步任务的开发商ID作为写kit的开发商ID
-	h.writeKit = ccom.NewWriteKit(task.OwnerID)
+	h.writeKit = ccom.NewWriteKit(task.TenantID)
 	// 让读写kit的requestID保持一致，以追踪同一个task的日志
 	httpheader.SetRid(h.writeKit.Header, httpheader.GetRid(h.readKit.Header))
 

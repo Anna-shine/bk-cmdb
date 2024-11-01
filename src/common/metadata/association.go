@@ -616,7 +616,7 @@ func (cli *InstAsst) ToMapStr() mapstr.MapStr {
 type MainlineObjectTopo struct {
 	ObjID      string `field:"bk_obj_id" json:"bk_obj_id"`
 	ObjName    string `field:"bk_obj_name" json:"bk_obj_name"`
-	OwnerID    string `field:"bk_supplier_account" json:"bk_supplier_account"`
+	TenantID   string `field:"tenant_id" json:"tenant_id"`
 	NextObj    string `field:"bk_next_obj" json:"bk_next_obj"`
 	NextName   string `field:"bk_next_name" json:"bk_next_name"`
 	PreObjID   string `field:"bk_pre_obj_id" json:"bk_pre_obj_id"`
