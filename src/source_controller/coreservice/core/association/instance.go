@@ -149,7 +149,7 @@ func (m *associationInstance) save(kit *rest.Kit, asstInst metadata.InstAsst) (i
 	}
 
 	asstInst.ID = int64(id)
-	asstInst.OwnerID = kit.SupplierAccount
+	asstInst.TenantID = kit.SupplierAccount
 
 	objInstAsstTableName := common.GetObjectInstAsstTableName(asstInst.ObjectID, kit.SupplierAccount)
 	err = mongodb.Client().Table(objInstAsstTableName).Insert(kit.Ctx, asstInst)
@@ -305,7 +305,7 @@ func (m *associationInstance) CreateOneInstanceAssociation(kit *rest.Kit,
 func (m *associationInstance) checkInstAsstCreateData(kit *rest.Kit, inputParam metadata.CreateOneInstanceAssociation) (
 	metadata.AssociationMapping, error) {
 
-	inputParam.Data.OwnerID = kit.SupplierAccount
+	inputParam.Data.TenantID = kit.SupplierAccount
 	exists, err := m.isExists(kit, inputParam.Data.InstID, inputParam.Data.AsstInstID, inputParam.Data.ObjectAsstID,
 		inputParam.Data.ObjectID, inputParam.Data.BizID)
 	if err != nil {
@@ -381,7 +381,7 @@ func (m *associationInstance) CreateManyInstanceAssociation(kit *rest.Kit,
 	for idx, item := range inputParam.Datas {
 		itemIdx := int64(idx)
 
-		item.OwnerID = kit.SupplierAccount
+		item.TenantID = kit.SupplierAccount
 		// check is exist
 		exists, err := m.isExists(kit, item.InstID, item.AsstInstID, item.ObjectAsstID, item.ObjectID, item.BizID)
 		if err != nil {

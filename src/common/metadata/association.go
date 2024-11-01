@@ -560,7 +560,7 @@ type InstAsst struct {
 	// association target ObjectID
 	AsstObjectID string `field:"bk_asst_obj_id" json:"bk_asst_obj_id,omitempty" bson:"bk_asst_obj_id"`
 	// bk_supplier_account
-	OwnerID string `field:"bk_supplier_account" json:"bk_supplier_account,omitempty" bson:"bk_supplier_account"`
+	TenantID string `field:"tenant_id" json:"tenant_id,omitempty" bson:"tenant_id"`
 	// association id between two object
 	ObjectAsstID string `field:"bk_obj_asst_id" json:"bk_obj_asst_id,omitempty" bson:"bk_obj_asst_id"`
 	// association kind id
