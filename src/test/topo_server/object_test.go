@@ -334,7 +334,7 @@ var _ = Describe("object test", func() {
 				ClassificationID:   "cc_class",
 				ClassificationName: "新测试分类",
 				ClassificationIcon: "icon-cc-middleware",
-				OwnerID:            "0",
+				TenantID:           "0",
 			}
 			rsp, err := objectClient.CreateClassification(context.Background(), header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -355,7 +355,7 @@ var _ = Describe("object test", func() {
 				ClassificationID:   "cc_est_object",
 				ClassificationName: "cc_est_object",
 				ClassificationIcon: "icon-cc-default-class",
-				OwnerID:            "0",
+				TenantID:           "0",
 			}
 			rsp, err := objectClient.CreateClassification(context.Background(), header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -376,7 +376,7 @@ var _ = Describe("object test", func() {
 				ClassificationID:   "cc_class",
 				ClassificationName: "测试分类",
 				ClassificationIcon: "icon-cc-middleware",
-				OwnerID:            "0",
+				TenantID:           "0",
 			}
 			rsp, err := objectClient.CreateClassification(context.Background(), header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -389,7 +389,7 @@ var _ = Describe("object test", func() {
 				ClassificationID:   "cc_class1",
 				ClassificationName: "cc_est_object",
 				ClassificationIcon: "icon-cc-middleware",
-				OwnerID:            "0",
+				TenantID:           "0",
 			}
 			rsp, err := objectClient.CreateClassification(context.Background(), header, input)
 			util.RegisterResponseWithRid(rsp, header)
