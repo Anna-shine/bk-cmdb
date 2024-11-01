@@ -318,7 +318,7 @@ func addProjectCollection(ctx context.Context, db dal.RDB) error {
 }
 
 func addProjectPropertyGroup(ctx context.Context, db dal.RDB, ownerID string) error {
-	rows := []*metadata.Group{
+	rows := []*group{
 		{
 			ObjectID:   common.BKInnerObjIDProject,
 			GroupID:    mCommon.BaseInfo,
@@ -507,4 +507,18 @@ type attribute struct {
 	Creator           string         `field:"creator" json:"creator" bson:"creator"`
 	CreateTime        *metadata.Time `json:"create_time" bson:"create_time"`
 	LastTime          *metadata.Time `json:"last_time" bson:"last_time"`
+}
+
+// Group group metadata definition
+type group struct {
+	BizID      int64  `field:"bk_biz_id" json:"bk_biz_id" bson:"bk_biz_id"`
+	ID         int64  `field:"id" json:"id" bson:"id"`
+	GroupID    string `field:"bk_group_id" json:"bk_group_id" bson:"bk_group_id"`
+	GroupName  string `field:"bk_group_name" json:"bk_group_name" bson:"bk_group_name"`
+	GroupIndex int64  `field:"bk_group_index" json:"bk_group_index" bson:"bk_group_index"`
+	ObjectID   string `field:"bk_obj_id" json:"bk_obj_id" bson:"bk_obj_id"`
+	OwnerID    string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	IsDefault  bool   `field:"bk_isdefault" json:"bk_isdefault" bson:"bk_isdefault"`
+	IsPre      bool   `field:"ispre" json:"ispre" bson:"ispre"`
+	IsCollapse bool   `field:"is_collapse" json:"is_collapse" bson:"is_collapse"`
 }

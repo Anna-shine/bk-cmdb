@@ -250,58 +250,58 @@ func getObjAttDescData(ownerID string) []*Attribute {
 	return append(predataRows, dataRows...)
 }
 
-func getPropertyGroupData(ownerID string) []*metadata.Group {
+func getPropertyGroupData(ownerID string) []*group {
 	objectIDs := make(map[string]map[string]string)
 
-	dataRows := []*metadata.Group{
+	dataRows := []*group{
 		// app
-		&metadata.Group{ObjectID: common.BKInnerObjIDApp, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDApp, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDApp, GroupID: mCommon.AppRole, GroupName: mCommon.AppRoleName,
+		&group{ObjectID: common.BKInnerObjIDApp, GroupID: mCommon.AppRole, GroupName: mCommon.AppRoleName,
 			GroupIndex: 2, OwnerID: ownerID, IsDefault: true},
 
 		// set
-		&metadata.Group{ObjectID: common.BKInnerObjIDSet, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDSet, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
 
 		// module
-		&metadata.Group{ObjectID: common.BKInnerObjIDModule, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDModule, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
 
 		// host
-		&metadata.Group{ObjectID: common.BKInnerObjIDHost, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDHost, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDHost, GroupID: mCommon.HostAutoFields,
+		&group{ObjectID: common.BKInnerObjIDHost, GroupID: mCommon.HostAutoFields,
 			GroupName: mCommon.HostAutoFieldsName, GroupIndex: 3, OwnerID: ownerID, IsDefault: true},
 
 		// proc
-		&metadata.Group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcPort, GroupName: mCommon.ProcPortName,
+		&group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcPort, GroupName: mCommon.ProcPortName,
 			GroupIndex: 2, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcGsekitBaseInfo,
+		&group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcGsekitBaseInfo,
 			GroupName: mCommon.ProcGsekitBaseInfoName, GroupIndex: 3, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcGsekitManageInfo,
+		&group{ObjectID: common.BKInnerObjIDProc, GroupID: mCommon.ProcGsekitManageInfo,
 			GroupName: mCommon.ProcGsekitManageInfoName, GroupIndex: 4, OwnerID: ownerID, IsDefault: true},
 
 		// plat
-		&metadata.Group{ObjectID: common.BKInnerObjIDPlat, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDPlat, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
 
 		// bk_switch
-		&metadata.Group{ObjectID: common.BKInnerObjIDSwitch, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDSwitch, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDRouter, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDRouter, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDBlance, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
+		&group{ObjectID: common.BKInnerObjIDBlance, GroupID: mCommon.BaseInfo, GroupName: mCommon.BaseInfoName,
 			GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
-		&metadata.Group{ObjectID: common.BKInnerObjIDFirewall, GroupID: mCommon.BaseInfo,
+		&group{ObjectID: common.BKInnerObjIDFirewall, GroupID: mCommon.BaseInfo,
 			GroupName: mCommon.BaseInfoName, GroupIndex: 1, OwnerID: ownerID, IsDefault: true},
 	}
 	for objID, kv := range objectIDs {
 		index := int64(1)
 		for id, name := range kv {
-			row := &metadata.Group{ObjectID: objID, GroupID: id, GroupName: name, GroupIndex: index, OwnerID: ownerID,
+			row := &group{ObjectID: objID, GroupID: id, GroupName: name, GroupIndex: index, OwnerID: ownerID,
 				IsDefault: true}
 			dataRows = append(dataRows, row)
 			index++
@@ -322,4 +322,18 @@ var classificationRows = []*metadata.Classification{
 		ClassificationType: "inner", ClassificationIcon: "icon-cc-organization"},
 	&metadata.Classification{ClassificationID: "bk_network", ClassificationName: "网络", ClassificationType: "inner",
 		ClassificationIcon: "icon-cc-network-equipment"},
+}
+
+// Group group metadata definition
+type group struct {
+	BizID      int64  `field:"bk_biz_id" json:"bk_biz_id" bson:"bk_biz_id"`
+	ID         int64  `field:"id" json:"id" bson:"id"`
+	GroupID    string `field:"bk_group_id" json:"bk_group_id" bson:"bk_group_id"`
+	GroupName  string `field:"bk_group_name" json:"bk_group_name" bson:"bk_group_name"`
+	GroupIndex int64  `field:"bk_group_index" json:"bk_group_index" bson:"bk_group_index"`
+	ObjectID   string `field:"bk_obj_id" json:"bk_obj_id" bson:"bk_obj_id"`
+	OwnerID    string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	IsDefault  bool   `field:"bk_isdefault" json:"bk_isdefault" bson:"bk_isdefault"`
+	IsPre      bool   `field:"ispre" json:"ispre" bson:"ispre"`
+	IsCollapse bool   `field:"is_collapse" json:"is_collapse" bson:"is_collapse"`
 }

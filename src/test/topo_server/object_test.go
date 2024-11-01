@@ -675,7 +675,7 @@ var _ = Describe("object test", func() {
 					GroupName:  "1234",
 					GroupIndex: 10,
 					ObjectID:   "cc_obj",
-					OwnerID:    "0",
+					TenantID:   "0",
 				}
 				rsp, err := objectClient.CreatePropertyGroup(context.Background(), header, input)
 				util.RegisterResponseWithRid(rsp, header)
@@ -688,7 +688,7 @@ var _ = Describe("object test", func() {
 				Expect(data.GroupName).To(Equal(input.GroupName))
 				Expect(data.GroupIndex).To(Equal(input.GroupIndex))
 				Expect(data.ObjectID).To(Equal(input.ObjectID))
-				Expect(data.OwnerID).To(Equal(input.OwnerID))
+				Expect(data.TenantID).To(Equal(input.TenantID))
 				groupId = data.ID
 			})
 
@@ -698,7 +698,7 @@ var _ = Describe("object test", func() {
 					GroupName:  "123",
 					GroupIndex: 1,
 					ObjectID:   "cc_obj",
-					OwnerID:    "0",
+					TenantID:   "0",
 				}
 				rsp, err := objectClient.CreatePropertyGroup(context.Background(), header, input)
 				util.RegisterResponseWithRid(rsp, header)
@@ -711,7 +711,7 @@ var _ = Describe("object test", func() {
 				Expect(data.GroupName).To(Equal(input.GroupName))
 				Expect(data.GroupIndex).To(Equal(input.GroupIndex))
 				Expect(data.ObjectID).To(Equal(input.ObjectID))
-				Expect(data.OwnerID).To(Equal(input.OwnerID))
+				Expect(data.TenantID).To(Equal(input.TenantID))
 				group = data
 			})
 
@@ -721,7 +721,7 @@ var _ = Describe("object test", func() {
 					GroupName:  "12345",
 					GroupIndex: 2,
 					ObjectID:   "cc_obj",
-					OwnerID:    "0",
+					TenantID:   "0",
 				}
 				rsp, err := objectClient.CreatePropertyGroup(context.Background(), header, input)
 				util.RegisterResponseWithRid(rsp, header)
@@ -735,7 +735,7 @@ var _ = Describe("object test", func() {
 					GroupName:  "123",
 					GroupIndex: 3,
 					ObjectID:   "cc_obj",
-					OwnerID:    "0",
+					TenantID:   "0",
 				}
 				rsp, err := objectClient.CreatePropertyGroup(context.Background(), header, input)
 				util.RegisterResponseWithRid(rsp, header)
@@ -749,7 +749,7 @@ var _ = Describe("object test", func() {
 					GroupName:  "123456",
 					GroupIndex: 4,
 					ObjectID:   "123456",
-					OwnerID:    "0",
+					TenantID:   "0",
 				}
 				rsp, err := objectClient.CreatePropertyGroup(context.Background(), header, input)
 				util.RegisterResponseWithRid(rsp, header)
@@ -814,7 +814,7 @@ var _ = Describe("object test", func() {
 						Expect(grp.GroupName).To(Equal(group.GroupName))
 						Expect(grp.GroupIndex).To(Equal(group.GroupIndex))
 						Expect(grp.ObjectID).To(Equal(group.ObjectID))
-						Expect(grp.OwnerID).To(Equal(group.OwnerID))
+						Expect(grp.TenantID).To(Equal(group.TenantID))
 					}
 				}
 				Expect(exist).To(Equal(true))

@@ -567,7 +567,7 @@ func (a *attribute) checkAttributeGroupExist(kit *rest.Kit, data *metadata.Attri
 			GroupName:  common.BKBizDefault,
 			GroupID:    common.BKBizDefault,
 			ObjectID:   data.ObjectID,
-			OwnerID:    data.TenantID,
+			TenantID:   data.TenantID,
 			BizID:      data.BizID,
 		}
 
@@ -646,7 +646,7 @@ func (a *attribute) createTableModelAndAttributeGroup(kit *rest.Kit, data *metad
 		GroupName:  "Default",
 		GroupID:    NewGroupID(true),
 		ObjectID:   objID,
-		OwnerID:    obj.OwnerID,
+		TenantID:   obj.OwnerID,
 	}
 
 	_, err = a.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header,
@@ -1699,7 +1699,7 @@ func (a *attribute) upsertObjectAttrBatch(kit *rest.Kit, objID string, attribute
 			} else {
 				grp := metadata.CreateModelAttributeGroup{
 					Data: metadata.Group{GroupName: attr.PropertyGroupName, GroupID: NewGroupID(false), ObjectID: objID,
-						OwnerID: kit.SupplierAccount, BizID: attr.BizID,
+						TenantID: kit.SupplierAccount, BizID: attr.BizID,
 					}}
 
 				_, err := a.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header, objID, grp)

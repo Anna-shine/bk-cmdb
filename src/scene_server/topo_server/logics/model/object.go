@@ -146,7 +146,7 @@ func (o *object) CreateObject(kit *rest.Kit, isMainline bool, data mapstr.MapStr
 		GroupName:  "Default",
 		GroupID:    NewGroupID(true),
 		ObjectID:   obj.ObjectID,
-		OwnerID:    obj.OwnerID,
+		TenantID:   obj.OwnerID,
 	}
 
 	_, err = o.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header,
@@ -1032,7 +1032,7 @@ func (o *object) createObjectAttrGroup(kit *rest.Kit, objID, groupID, groupName 
 		GroupName:  groupName,
 		GroupIndex: groupIndex,
 		ObjectID:   objID,
-		OwnerID:    kit.SupplierAccount,
+		TenantID:   kit.SupplierAccount,
 	}
 	groupParams := metadata.CreateModelAttributeGroup{Data: group}
 	rsp, err := o.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header, objID, groupParams)
