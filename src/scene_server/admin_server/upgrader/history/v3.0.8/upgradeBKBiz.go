@@ -68,7 +68,7 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 		}
 	}
 
-	log := metadata.AuditLog{
+	log := AuditLog{
 		ID:              int64(id),
 		AuditType:       metadata.BusinessType,
 		SupplierAccount: conf.OwnerID,
@@ -143,4 +143,41 @@ func addBKApp(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	}
 
 	return nil
+}
+
+// AuditLog TODO
+type AuditLog struct {
+	ID int64 `json:"id" bson:"id"`
+	// AuditType is a high level abstract of the resource managed by this cmdb.
+	// Each kind of concept, resource must belongs to one of the resource type.
+	AuditType metadata.AuditType `json:"audit_type" bson:"audit_type"`
+	// the supplier account that this resource belongs to.
+	SupplierAccount string `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	// name of the one who triggered this operation.
+	User string `json:"user" bson:"user"`
+	// the operated resource by the user
+	ResourceType metadata.ResourceType `json:"resource_type" bson:"resource_type"`
+	// ActionType represent the user's operation type, like CUD etc.
+	Action metadata.ActionType `json:"action" bson:"action"`
+	// OperateFrom describe which form does this audit come from.
+	OperateFrom metadata.OperateFromType `json:"operate_from" bson:"operate_from"`
+	// OperationDetail describe the details information by a user.
+	// Note: when the ResourceType relevant to Business, then the business id field must
+	// be bk_biz_id, otherwise the user can not search this operation log with business id.
+	OperationDetail metadata.DetailFactory `json:"operation_detail" bson:"operation_detail"`
+	// OperationTime is the time that user do the operation.
+	OperationTime metadata.Time `json:"operation_time" bson:"operation_time"`
+	// the business id of the resource if it belongs to a business.
+	BusinessID int64 `json:"bk_biz_id,omitempty" bson:"bk_biz_id,omitempty"`
+	// ResourceID is the id of the resource instance. which is a unique id, dynamic grouping id is string type.
+	// for service instance audit log,
+	ResourceID interface{} `json:"resource_id" bson:"resource_id"`
+	// ResourceName is the name of the resource, such as a switch model has a name "switch"
+	ResourceName string `json:"resource_name" bson:"resource_name"`
+	// AppCode is the app code of the system where the request comes from
+	AppCode string `json:"code,omitempty" bson:"code,omitempty"`
+	// RequestID is the request id of the request
+	RequestID string `json:"rid,omitempty" bson:"rid,omitempty"`
+	// todo ExtendResourceName for the temporary solution of ipv6
+	ExtendResourceName string `json:"extend_resource_name" bson:"extend_resource_name"`
 }
