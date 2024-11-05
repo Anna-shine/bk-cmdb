@@ -1043,7 +1043,7 @@ type Process struct {
 	User              *string        `field:"user" json:"user" bson:"user" structs:"user" mapstructure:"user"`
 	TimeoutSeconds    *int64         `field:"timeout" json:"timeout" bson:"timeout" structs:"timeout" mapstructure:"timeout"`
 	Description       *string        `field:"description" json:"description" bson:"description" structs:"description" mapstructure:"description"`
-	SupplierAccount   string         `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account" structs:"bk_supplier_account" mapstructure:"bk_supplier_account"`
+	TenantID          string         `field:"tenant_id" json:"tenant_id" bson:"tenant_id" structs:"tenant_id" mapstructure:"tenant_id"`
 	StartParamRegex   *string        `field:"bk_start_param_regex" json:"bk_start_param_regex" bson:"bk_start_param_regex" structs:"bk_start_param_regex" mapstructure:"bk_start_param_regex"`
 	ServiceInstanceID int64          `field:"service_instance_id" json:"service_instance_id" bson:"service_instance_id" mapstructure:"service_instance_id"`
 	BindInfo          []ProcBindInfo `field:"bind_info" json:"bind_info" bson:"bind_info" structs:"bind_info" mapstructure:"bind_info"`
@@ -1074,7 +1074,7 @@ func (p *Process) Map() map[string]interface{} {
 		common.BKUser:                   p.User,
 		common.BKProcTimeOut:            p.TimeoutSeconds,
 		common.BKDescriptionField:       p.Description,
-		common.TenantID:                 p.SupplierAccount,
+		common.TenantID:                 p.TenantID,
 		common.BKStartParamRegex:        p.StartParamRegex,
 		common.BKProcBindInfo:           bindInfoArr,
 		common.CreateTimeField:          p.CreateTime,
@@ -1092,9 +1092,9 @@ type ServiceCategory struct {
 	ID   int64  `field:"id" json:"id" bson:"id"`
 	Name string `field:"name" json:"name" bson:"name"`
 
-	RootID          int64  `field:"bk_root_id" json:"bk_root_id" bson:"bk_root_id"`
-	ParentID        int64  `field:"bk_parent_id" json:"bk_parent_id" bson:"bk_parent_id"`
-	SupplierAccount string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	RootID   int64  `field:"bk_root_id" json:"bk_root_id" bson:"bk_root_id"`
+	ParentID int64  `field:"bk_parent_id" json:"bk_parent_id" bson:"bk_parent_id"`
+	TenantID string `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 
 	// IsBuiltIn indicates internal system service category, which shouldn't be modified.
 	IsBuiltIn bool `field:"is_built_in" json:"is_built_in" bson:"is_built_in"`
@@ -1259,10 +1259,10 @@ func (pt *ProcessTemplate) NewProcess(cErr cErr.DefaultCCErrorIf, bizID, svcInst
 
 	now := time.Now()
 	processInstance := &Process{
-		LastTime:        now,
-		CreateTime:      now,
-		BusinessID:      bizID,
-		SupplierAccount: supplierAccount,
+		LastTime:   now,
+		CreateTime: now,
+		BusinessID: bizID,
+		TenantID:   supplierAccount,
 	}
 
 	property := pt.Property

@@ -27,8 +27,6 @@ const (
 	GroupFieldGroupIndex = "bk_group_index"
 	// GroupFieldObjectID TODO
 	GroupFieldObjectID = "bk_obj_id"
-	// GroupFieldSupplierAccount TODO
-	GroupFieldSupplierAccount = "bk_supplier_account"
 	// GroupFieldIsDefault TODO
 	GroupFieldIsDefault = "bk_isdefault"
 	// GroupFieldIsPre TODO

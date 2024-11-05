@@ -39,8 +39,6 @@ const (
 	ModelFieldIsPaused = "bk_ispaused"
 	// ModelFieldPosition TODO
 	ModelFieldPosition = "position"
-	// ModelFieldOwnerID TODO
-	ModelFieldOwnerID = "bk_supplier_account"
 	// ModelFieldDescription TODO
 	ModelFieldDescription = "description"
 	// ModelFieldCreator TODO

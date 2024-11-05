@@ -58,9 +58,9 @@ type ModuleInst struct {
 
 // BizInst TODO
 type BizInst struct {
-	BizID           int64  `bson:"bk_biz_id" mapstructure:"bk_biz_id"`
-	BizName         string `bson:"bk_biz_name" mapstructure:"bk_biz_name"`
-	SupplierAccount string `bson:"bk_supplier_account" mapstructure:"bk_supplier_account"`
+	BizID    int64  `bson:"bk_biz_id" mapstructure:"bk_biz_id"`
+	BizName  string `bson:"bk_biz_name" mapstructure:"bk_biz_name"`
+	TenantID string `bson:"tenant_id" mapstructure:"tenant_id"`
 }
 
 // BizBasicInfo TODO
@@ -77,7 +77,7 @@ type BizSetInst struct {
 	BizSetMaintainer string      `json:"bk_biz_maintainer" bson:"bk_biz_maintainer"`
 	CreateTime       Time        `json:"create_time" bson:"create_time"`
 	LastTime         Time        `json:"last_time" bson:"last_time"`
-	SupplierAccount  string      `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID         string      `json:"tenant_id" bson:"tenant_id"`
 	Scope            BizSetScope `json:"bk_scope" bson:"bk_scope"`
 	Default          int64       `json:"default" bson:"default"`
 }
@@ -105,7 +105,7 @@ type HostIdentifier struct {
 	CloudID         int64                       `json:"bk_cloud_id" bson:"bk_cloud_id"`
 	InnerIP         StringArrayToString         `json:"bk_host_innerip" bson:"bk_host_innerip"`
 	OSType          string                      `json:"bk_os_type" bson:"bk_os_type"`
-	SupplierAccount string                      `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID        string                      `json:"tenant_id" bson:"tenant_id"`
 	HostIdentModule map[string]*HostIdentModule `json:"associations" bson:"associations"`
 	Process         []HostIdentProcess          `json:"process" bson:"process"`
 	AgentID         string                      `json:"bk_agent_id" bson:"bk_agent_id"`

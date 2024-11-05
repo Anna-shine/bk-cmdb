@@ -151,14 +151,14 @@ func (g *graphics) findAssociationTypeByAsstKindID(kit *rest.Kit, asstKindIDs []
 func (g graphics) genTopoNode(obj metadata.Object, supplierAccount string,
 	graphNodes map[string]*metadata.TopoGraphics) metadata.TopoGraphics {
 	node := metadata.TopoGraphics{
-		ScopeType:       "global",
-		ScopeID:         "0",
-		NodeType:        "obj",
-		ObjID:           obj.ObjectID,
-		IsPre:           obj.IsPre,
-		NodeName:        obj.ObjectName,
-		Icon:            obj.ObjIcon,
-		SupplierAccount: supplierAccount,
+		ScopeType: "global",
+		ScopeID:   "0",
+		NodeType:  "obj",
+		ObjID:     obj.ObjectID,
+		IsPre:     obj.IsPre,
+		NodeName:  obj.ObjectName,
+		Icon:      obj.ObjIcon,
+		TenantID:  supplierAccount,
 	}
 
 	oldNode := graphNodes[node.NodeType+node.ObjID+strconv.Itoa(node.InstID)]

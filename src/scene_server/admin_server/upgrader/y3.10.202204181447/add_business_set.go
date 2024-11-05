@@ -34,7 +34,7 @@ func addDefaultBusinessSet(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 	now := metadata.Time{
 		Time: time.Now(),
 	}
-	defaultBusinessSet := &metadata.BizSetInst{
+	defaultBusinessSet := &BizSetInst{
 		BizSetID:         bizSetID,
 		BizSetName:       bizSetName,
 		BizSetMaintainer: bizSetMaintainer,
@@ -47,7 +47,7 @@ func addDefaultBusinessSet(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 		},
 	}
 
-	result := make([]metadata.BizSetInst, 0)
+	result := make([]BizSetInst, 0)
 	filter := map[string]interface{}{
 		common.BKDBOR: []map[string]interface{}{
 			{
@@ -102,4 +102,17 @@ func addDefaultBusinessSet(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 	}
 
 	return nil
+}
+
+// BizSetInst biz set structure with pre-defined properties
+type BizSetInst struct {
+	BizSetID         int64                `json:"bk_biz_set_id" bson:"bk_biz_set_id"`
+	BizSetName       string               `json:"bk_biz_set_name" bson:"bk_biz_set_name"`
+	Description      string               `json:"bk_biz_set_desc" bson:"bk_biz_set_desc"`
+	BizSetMaintainer string               `json:"bk_biz_maintainer" bson:"bk_biz_maintainer"`
+	CreateTime       metadata.Time        `json:"create_time" bson:"create_time"`
+	LastTime         metadata.Time        `json:"last_time" bson:"last_time"`
+	SupplierAccount  string               `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	Scope            metadata.BizSetScope `json:"bk_scope" bson:"bk_scope"`
+	Default          int64                `json:"default" bson:"default"`
 }

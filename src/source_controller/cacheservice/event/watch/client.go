@@ -605,8 +605,8 @@ func (c *Client) getDetailsByOids(kit *rest.Kit, oids []primitive.ObjectID, fiel
 			if _, ok := objIDOwnerIDInstIDsMap[row.ObjectID]; !ok {
 				objIDOwnerIDInstIDsMap[row.ObjectID] = make(map[string][]int64, 0)
 			}
-			objIDOwnerIDInstIDsMap[row.ObjectID][row.OwnerID] =
-				append(objIDOwnerIDInstIDsMap[row.ObjectID][row.OwnerID], row.ID)
+			objIDOwnerIDInstIDsMap[row.ObjectID][row.TenantID] =
+				append(objIDOwnerIDInstIDsMap[row.ObjectID][row.TenantID], row.ID)
 		}
 
 		for objID, ownerIDInstMap := range objIDOwnerIDInstIDsMap {

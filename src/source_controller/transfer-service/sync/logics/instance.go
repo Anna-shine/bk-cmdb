@@ -76,7 +76,7 @@ func (o *objInstLogics) InsertData(kit *util.Kit, subRes string, data any) error
 		mappings = append(mappings, metadata.ObjectMapping{
 			ID:       info.ID,
 			ObjectID: subRes,
-			OwnerID:  commonutil.GetStrByInterface(info.Data[common.TenantID]),
+			TenantID: commonutil.GetStrByInterface(info.Data[common.TenantID]),
 		})
 	}
 

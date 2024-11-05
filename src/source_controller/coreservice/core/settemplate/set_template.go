@@ -79,14 +79,14 @@ func (p *setTemplateOperation) CreateSetTemplate(kit *rest.Kit, bizID int64,
 	option metadata.CreateSetTemplateOption) (metadata.SetTemplate, errors.CCErrorCoder) {
 	now := time.Now()
 	setTemplate := metadata.SetTemplate{
-		ID:              0,
-		Name:            option.Name,
-		BizID:           bizID,
-		Creator:         kit.User,
-		Modifier:        kit.User,
-		CreateTime:      now,
-		LastTime:        now,
-		SupplierAccount: kit.SupplierAccount,
+		ID:         0,
+		Name:       option.Name,
+		BizID:      bizID,
+		Creator:    kit.User,
+		Modifier:   kit.User,
+		CreateTime: now,
+		LastTime:   now,
+		TenantID:   kit.SupplierAccount,
 	}
 	if key, err := setTemplate.Validate(kit.CCError); err != nil {
 		blog.Errorf("CreateSetTemplate failed, parameter invalid, key: %s, err: %+v, rid: %s", key, err, kit.Rid)

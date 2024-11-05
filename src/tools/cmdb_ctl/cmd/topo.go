@@ -147,7 +147,7 @@ func (s *topoCheckService) searchMainlineInstance() error {
 		_, _ = fmt.Fprintf(os.Stderr, "business id: %d has too many(num = %d) business instances\n",
 			s.bizID, len(bizList))
 	} else {
-		s.supplierAccount = bizList[0].SupplierAccount
+		s.supplierAccount = bizList[0].TenantID
 		s.instanceMap[fmt.Sprintf("%s:%d", common.BKInnerObjIDApp, s.bizID)] = &topoInstance{
 			ObjectID:         common.BKInnerObjIDApp,
 			InstanceID:       s.bizID,

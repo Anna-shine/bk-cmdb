@@ -57,8 +57,8 @@ type APITaskDetail struct {
 	Status APITaskStatus `json:"status,omitempty" bson:"status"`
 	// Detail 子任务详情列表
 	Detail []APISubTaskDetail `json:"detail,omitempty" bson:"detail"`
-	// SupplierAccount 开发商ID
-	SupplierAccount string `json:"bk_supplier_account,omitempty" bson:"bk_supplier_account"`
+	// TenantID 开发商ID
+	TenantID string `json:"tenant_id,omitempty" bson:"tenant_id"`
 	// CreateTime 任务创建时间
 	CreateTime time.Time `json:"create_time,omitempty" bson:"create_time"`
 	// LastTime 任务最后更新时间

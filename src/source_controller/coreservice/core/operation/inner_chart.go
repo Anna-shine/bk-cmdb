@@ -208,7 +208,7 @@ func (m *operationManager) BizHostCountChange(kit *rest.Kit, wg *sync.WaitGroup)
 	firstBizHostChange := metadata.HostChangeChartData{
 		ReportType: common.HostChangeBizChart,
 		Data:       bizHost,
-		OwnerID:    kit.SupplierAccount,
+		TenantID:   kit.SupplierAccount,
 		CreateTime: nowStrFormat,
 	}
 	if err = mongodb.Client().Table(common.BKTableNameChartData).Insert(kit.Ctx, firstBizHostChange); err != nil {
@@ -336,7 +336,7 @@ func (m *operationManager) UpdateInnerChartData(kit *rest.Kit, reportType string
 	chartData := metadata.ChartData{
 		ReportType: reportType,
 		Data:       data,
-		OwnerID:    kit.SupplierAccount,
+		TenantID:   kit.SupplierAccount,
 		LastTime:   time.Now(),
 	}
 	// 此处不用update，因为第一次初始数据的时候会导致数据写不进去

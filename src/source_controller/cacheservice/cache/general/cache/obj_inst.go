@@ -74,6 +74,6 @@ func parseObjInstData(data dataWithTable[mapstr.MapStr]) (*basicInfo, error) {
 	return &basicInfo{
 		id:       instID,
 		subRes:   []string{instObjMappings[0].ObjectID},
-		supplier: instObjMappings[0].OwnerID,
+		supplier: instObjMappings[0].TenantID,
 	}, nil
 }
