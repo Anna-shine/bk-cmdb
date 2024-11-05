@@ -74,7 +74,7 @@ var _ = Describe("object test", func() {
 				"bk_obj_icon":          "icon-cc-business",
 				"bk_obj_id":            "test_object",
 				"bk_obj_name":          "test_object",
-				"bk_supplier_account":  "0",
+				"tenant_id":            "0",
 			}
 			for k, v := range data {
 				Expect(rsp.Data.(map[string]interface{})).To(HaveKeyWithValue(k, v))
@@ -246,7 +246,7 @@ var _ = Describe("object test", func() {
 				"bk_obj_icon":          "icon-cc-business",
 				"bk_obj_id":            "cc_test_object",
 				"bk_obj_name":          "cc_test_object",
-				"bk_supplier_account":  "0",
+				"tenant_id":            "0",
 			}
 			for k, v := range data {
 				Expect(rsp.Data.(map[string]interface{})).To(HaveKeyWithValue(k, v))
@@ -593,8 +593,8 @@ var _ = Describe("object test", func() {
 
 		It("search objects", func() {
 			input := map[string]interface{}{
-				"bk_obj_id":           "test_obj",
-				"bk_supplier_account": "0",
+				"bk_obj_id": "test_obj",
+				"tenant_id": "0",
 			}
 			rsp, err := objectClient.SelectObjectWithParams(context.Background(), header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1154,12 +1154,12 @@ var _ = Describe("object test", func() {
 
 		It("create set bk_biz_id="+bizId+" and bk_parent_id="+childInstId, func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "cc_set",
-				"bk_parent_id":        childInstIdInt,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           bizIdInt,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "cc_set",
+				"bk_parent_id":      childInstIdInt,
+				"tenant_id":         "0",
+				"bk_biz_id":         bizIdInt,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, e := instClient.CreateSet(context.Background(), bizIdInt, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1177,12 +1177,12 @@ var _ = Describe("object test", func() {
 
 		It(fmt.Sprintf("create set bk_biz_id=%s and bk_parent_id=%s", bizId, childInstId), func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test",
-				"bk_parent_id":        childInstIdInt,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           bizIdInt,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test",
+				"bk_parent_id":      childInstIdInt,
+				"tenant_id":         "0",
+				"bk_biz_id":         bizIdInt,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, e := instClient.CreateSet(context.Background(), bizIdInt, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1199,12 +1199,12 @@ var _ = Describe("object test", func() {
 
 		It("create set same bk_biz_id and bk_parent_id and bk_set_name", func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test",
-				"bk_parent_id":        childInstIdInt,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           bizIdInt,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test",
+				"bk_parent_id":      childInstIdInt,
+				"tenant_id":         "0",
+				"bk_biz_id":         bizIdInt,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, err := instClient.CreateSet(context.Background(), bizIdInt, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1213,12 +1213,12 @@ var _ = Describe("object test", func() {
 
 		It("create set invalid bk_biz_id", func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test1",
-				"bk_parent_id":        childInstIdInt,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           1000,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test1",
+				"bk_parent_id":      childInstIdInt,
+				"tenant_id":         "0",
+				"bk_biz_id":         1000,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, err := instClient.CreateSet(context.Background(), 1000, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1227,12 +1227,12 @@ var _ = Describe("object test", func() {
 
 		It("create set invalid bk_parent_id", func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test2",
-				"bk_parent_id":        1000,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           bizIdInt,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test2",
+				"bk_parent_id":      1000,
+				"tenant_id":         "0",
+				"bk_biz_id":         bizIdInt,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, err := instClient.CreateSet(context.Background(), bizIdInt, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1241,11 +1241,11 @@ var _ = Describe("object test", func() {
 
 		It("create set less bk_parent_id", func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test3",
-				"bk_supplier_account": "0",
-				"bk_biz_id":           bizIdInt,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test3",
+				"tenant_id":         "0",
+				"bk_biz_id":         bizIdInt,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, err := instClient.CreateSet(context.Background(), bizIdInt, header, input)
 			util.RegisterResponseWithRid(rsp, header)
@@ -1254,12 +1254,12 @@ var _ = Describe("object test", func() {
 
 		It("create set unmatch bk_biz_id and bk_parent_id", func() {
 			input := mapstr.MapStr{
-				"bk_set_name":         "test4",
-				"bk_parent_id":        childInstIdInt,
-				"bk_supplier_account": "0",
-				"bk_biz_id":           2,
-				"bk_service_status":   "1",
-				"bk_set_env":          "2",
+				"bk_set_name":       "test4",
+				"bk_parent_id":      childInstIdInt,
+				"tenant_id":         "0",
+				"bk_biz_id":         2,
+				"bk_service_status": "1",
+				"bk_set_env":        "2",
 			}
 			rsp, err := instClient.CreateSet(context.Background(), 2, header, input)
 			util.RegisterResponseWithRid(rsp, header)

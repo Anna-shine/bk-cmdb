@@ -164,7 +164,7 @@ func (p *hostApplyRule) CreateHostApplyRule(kit *rest.Kit, bizID int64,
 		Modifier:          kit.User,
 		CreateTime:        now,
 		LastTime:          now,
-		SupplierAccount:   kit.SupplierAccount,
+		TenantID:          kit.SupplierAccount,
 	}
 	if key, err := rule.Validate(); err != nil {
 		blog.Errorf("CreateHostApplyRule failed, parameter invalid, key: %s, err: %+v, rid: %s", key, err, kit.Rid)
@@ -694,7 +694,7 @@ func (p *hostApplyRule) BatchUpdateHostApplyRule(kit *rest.Kit, bizID int64,
 			Modifier:          kit.User,
 			CreateTime:        now,
 			LastTime:          now,
-			SupplierAccount:   kit.SupplierAccount,
+			TenantID:          kit.SupplierAccount,
 		}
 		if err := mongodb.Client().Table(common.BKTableNameHostApplyRule).Insert(kit.Ctx, rule); err != nil {
 			blog.ErrorJSON("BatchUpdateHostApplyRule failed, insert rule failed, doc: %s, err: %s, rid: %s", rule,
