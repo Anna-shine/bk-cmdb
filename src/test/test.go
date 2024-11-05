@@ -249,9 +249,9 @@ func DeleteAllObjects() {
 
 	objIDs := make([]string, len(objects))
 	for i, obj := range objects {
-		err = db.DropTable(ctx, common.GetInstTableName(obj.ObjectID, obj.OwnerID))
+		err = db.DropTable(ctx, common.GetInstTableName(obj.ObjectID, obj.TenantID))
 		Expect(err).NotTo(HaveOccurred())
-		err = db.DropTable(ctx, common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID))
+		err = db.DropTable(ctx, common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID))
 		Expect(err).NotTo(HaveOccurred())
 		objIDs[i] = obj.ObjectID
 	}

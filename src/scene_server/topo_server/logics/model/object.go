@@ -146,7 +146,7 @@ func (o *object) CreateObject(kit *rest.Kit, isMainline bool, data mapstr.MapStr
 		GroupName:  "Default",
 		GroupID:    NewGroupID(true),
 		ObjectID:   obj.ObjectID,
-		TenantID:   obj.OwnerID,
+		TenantID:   obj.TenantID,
 	}
 
 	_, err = o.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header,
@@ -516,9 +516,9 @@ func (o *object) FindObjectTopo(kit *rest.Kit, cond mapstr.MapStr) ([]metadata.O
 		tmp.From.ObjID = objMap[assoc.ObjectID].ObjectID
 		tmp.From.ClassificationID = objMap[assoc.ObjectID].ObjCls
 		tmp.From.Position = objMap[assoc.ObjectID].Position
-		tmp.From.TenantID = objMap[assoc.ObjectID].OwnerID
+		tmp.From.TenantID = objMap[assoc.ObjectID].TenantID
 		tmp.From.ObjName = objMap[assoc.ObjectID].ObjectName
-		tmp.To.TenantID = asstObjMap[assoc.AsstObjID].OwnerID
+		tmp.To.TenantID = asstObjMap[assoc.AsstObjID].TenantID
 		tmp.To.ObjID = asstObjMap[assoc.AsstObjID].ObjectID
 		tmp.To.ClassificationID = asstObjMap[assoc.AsstObjID].ObjCls
 		tmp.To.Position = asstObjMap[assoc.AsstObjID].Position
@@ -645,7 +645,7 @@ func (o *object) isValid(kit *rest.Kit, isUpdate bool, data mapstr.MapStr) (*met
 			fmt.Sprintf("'%s' the built-in object id, please use a new one", obj.ObjectID))
 	}
 
-	obj.OwnerID = kit.SupplierAccount
+	obj.TenantID = kit.SupplierAccount
 	return obj, nil
 }
 

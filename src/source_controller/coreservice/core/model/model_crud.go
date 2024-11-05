@@ -60,7 +60,7 @@ func (m *modelManager) save(kit *rest.Kit, model *metadata.Object) (id uint64, e
 
 	model.ObjSortNumber = sortNum
 	model.ID = int64(id)
-	model.OwnerID = kit.SupplierAccount
+	model.TenantID = kit.SupplierAccount
 
 	now := time.Now()
 	if model.LastTime == nil {

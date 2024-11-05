@@ -627,7 +627,7 @@ func (a *attribute) createTableModelAndAttributeGroup(kit *rest.Kit, data *metad
 		Modifier:   string(metadata.FromCCSystem),
 		CreateTime: &t,
 		LastTime:   &t,
-		OwnerID:    kit.SupplierAccount,
+		TenantID:   kit.SupplierAccount,
 	}
 
 	objRsp, err := a.clientSet.CoreService().Model().CreateTableModel(kit.Ctx, kit.Header,
@@ -646,7 +646,7 @@ func (a *attribute) createTableModelAndAttributeGroup(kit *rest.Kit, data *metad
 		GroupName:  "Default",
 		GroupID:    NewGroupID(true),
 		ObjectID:   objID,
-		TenantID:   obj.OwnerID,
+		TenantID:   obj.TenantID,
 	}
 
 	_, err = a.clientSet.CoreService().Model().CreateAttributeGroup(kit.Ctx, kit.Header,

@@ -37,7 +37,7 @@ var _ = Describe("Transaction Test", func() {
 						ObjectName:  "事务",
 						IsPre:       false,
 						IsPaused:    false,
-						OwnerID:     "0",
+						TenantID:    "0",
 						Description: "",
 						Creator:     "cc_system",
 					},

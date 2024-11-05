@@ -314,8 +314,8 @@ func (dt *dbTable) findSyncIndexesLogicUnique(ctx context.Context) (map[string][
 	for _, obj := range objs {
 		blog.Infof("start object(%s) sharding table rid: %s", obj.ObjectID, dt.rid)
 
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 
 		uniques, err := dt.findObjUniques(ctx, obj.ObjectID)
 		if err != nil {
@@ -420,8 +420,8 @@ func (dt *dbTable) syncModelShardingTable(ctx context.Context) error {
 	for _, obj := range objs {
 		blog.Infof("start object(%s) sharding table rid: %s", obj.ObjectID, dt.rid)
 
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 
 		uniques, err := dt.findObjUniques(ctx, obj.ObjectID)
 		if err != nil {
@@ -526,8 +526,8 @@ func (dt *dbTable) cleanRedundancyTable(ctx context.Context, modelDBTableNameMap
 
 	// 再次确认数据，保证存在模型的的表不被删除
 	for _, obj := range objs {
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 		delete(modelDBTableNameMap, instTable)
 		delete(modelDBTableNameMap, instAsstTable)
 

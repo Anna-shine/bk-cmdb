@@ -257,7 +257,7 @@ func (assoc *association) SearchMainlineAssociationTopo(kit *rest.Kit, targetObj
 		result = append(result, &metadata.MainlineObjectTopo{
 			ObjID:      objID,
 			ObjName:    objMap[objID].ObjectName,
-			TenantID:   objMap[objID].OwnerID,
+			TenantID:   objMap[objID].TenantID,
 			NextObj:    childMap[objID],
 			NextName:   objMap[childMap[objID]].ObjectName,
 			PreObjID:   parentMap[objID],

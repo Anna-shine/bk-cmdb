@@ -60,7 +60,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -87,7 +87,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -104,7 +104,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "xxx",
@@ -121,7 +121,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "",
@@ -138,7 +138,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 			}
@@ -153,7 +153,7 @@ var _ = Describe("object test", func() {
 				Object: metadata.Object{
 					ObjCls:     "bk_biz_topo",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -169,7 +169,7 @@ var _ = Describe("object test", func() {
 				Object: metadata.Object{
 					ObjCls:   "bk_biz_topo",
 					ObjectID: "test_object",
-					OwnerID:  "0",
+					TenantID: "0",
 					ObjIcon:  "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -186,7 +186,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 				},
 				AssociationID: "biz",
 			}
@@ -201,7 +201,7 @@ var _ = Describe("object test", func() {
 				Object: metadata.Object{
 					ObjectID:   "test_object",
 					ObjectName: "test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -232,7 +232,7 @@ var _ = Describe("object test", func() {
 					ObjCls:     "bk_biz_topo",
 					ObjectID:   "cc_test_object",
 					ObjectName: "cc_test_object",
-					OwnerID:    "0",
+					TenantID:   "0",
 					ObjIcon:    "icon-cc-business",
 				},
 				AssociationID: "biz",
@@ -453,7 +453,7 @@ var _ = Describe("object test", func() {
 				ObjIcon:    "icon-cc-business",
 				ObjectID:   "cc_obj",
 				ObjectName: "cc模型",
-				OwnerID:    "0",
+				TenantID:   "0",
 				Creator:    "admin",
 			}
 			rsp, err := objectClient.CreateObject(context.Background(), header, input)
@@ -467,7 +467,7 @@ var _ = Describe("object test", func() {
 			Expect(data.ObjIcon).To(Equal(input.ObjIcon))
 			Expect(data.ObjectID).To(Equal(input.ObjectID))
 			Expect(data.ObjectName).To(Equal(input.ObjectName))
-			Expect(data.OwnerID).To(Equal(input.OwnerID))
+			Expect(data.TenantID).To(Equal(input.TenantID))
 			Expect(data.Creator).To(Equal(input.Creator))
 		})
 
@@ -487,7 +487,7 @@ var _ = Describe("object test", func() {
 				ObjIcon:    "icon-cc-business",
 				ObjectID:   "cc_obj",
 				ObjectName: "cc",
-				OwnerID:    "0",
+				TenantID:   "0",
 				Creator:    "admin",
 			}
 			rsp, err := objectClient.CreateObject(context.Background(), header, input)
@@ -502,7 +502,7 @@ var _ = Describe("object test", func() {
 				ObjIcon:    "icon-cc-business",
 				ObjectID:   "cc",
 				ObjectName: "cc模型",
-				OwnerID:    "0",
+				TenantID:   "0",
 				Creator:    "admin",
 			}
 			rsp, err := objectClient.CreateObject(context.Background(), header, input)
@@ -517,7 +517,7 @@ var _ = Describe("object test", func() {
 				ObjIcon:    "icon-cc-business",
 				ObjectID:   "cc123",
 				ObjectName: "cc123",
-				OwnerID:    "0",
+				TenantID:   "0",
 				Creator:    "admin",
 			}
 			rsp, err := objectClient.CreateObject(context.Background(), header, input)
@@ -532,7 +532,7 @@ var _ = Describe("object test", func() {
 				ObjIcon:    "icon-cc-business",
 				ObjectID:   "test_obj",
 				ObjectName: "test_obj",
-				OwnerID:    "0",
+				TenantID:   "0",
 				Creator:    "admin",
 			}
 			rsp, err := objectClient.CreateObject(context.Background(), header, input)
@@ -546,7 +546,7 @@ var _ = Describe("object test", func() {
 			Expect(data.ObjIcon).To(Equal(input.ObjIcon))
 			Expect(data.ObjectID).To(Equal(input.ObjectID))
 			Expect(data.ObjectName).To(Equal(input.ObjectName))
-			Expect(data.OwnerID).To(Equal(input.OwnerID))
+			Expect(data.TenantID).To(Equal(input.TenantID))
 			Expect(data.Creator).To(Equal(input.Creator))
 			objId = strconv.FormatInt(data.ID, 10)
 		})

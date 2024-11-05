@@ -83,7 +83,7 @@ func (m *operationManager) ModelInstCount(kit *rest.Kit, wg *sync.WaitGroup) err
 
 	for _, modelInfo := range modelInfos {
 
-		tableName := common.GetObjectInstTableName(modelInfo.ObjectID, modelInfo.OwnerID)
+		tableName := common.GetObjectInstTableName(modelInfo.ObjectID, modelInfo.TenantID)
 		condition := mapstr.MapStr{common.BKObjIDField: modelInfo.ObjectID}
 		count, err := mongodb.Client().Table(tableName).Find(condition).Count(kit.Ctx)
 		if err != nil {

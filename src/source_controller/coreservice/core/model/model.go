@@ -126,7 +126,7 @@ func (m *modelManager) CreateTableModel(kit *rest.Kit, inputParam metadata.Creat
 	}
 
 	// create new table model after checking base information and sharding table operation.
-	inputParam.Spec.OwnerID = kit.SupplierAccount
+	inputParam.Spec.TenantID = kit.SupplierAccount
 	id, err := m.save(kit, &inputParam.Spec)
 	if nil != err {
 		blog.Errorf("request(%s): it is failed to save the model (%#v), err: %v", kit.Rid, inputParam.Spec, err)
@@ -238,7 +238,7 @@ func (m *modelManager) CreateModel(kit *rest.Kit, inputParam metadata.CreateMode
 	} */
 
 	// create new model after checking base informations and sharding table operation.
-	inputParam.Spec.OwnerID = kit.SupplierAccount
+	inputParam.Spec.TenantID = kit.SupplierAccount
 	id, err := m.save(kit, &inputParam.Spec)
 	if err != nil {
 		blog.Errorf("request(%s): it is failed to save the model (%#v), error info is %s", kit.Rid, inputParam.Spec,
@@ -301,7 +301,7 @@ func (m *modelManager) SetModel(kit *rest.Kit, inputParam metadata.SetModel) (*m
 		return &metadata.SetDataResult{}, err
 	}
 
-	inputParam.Spec.OwnerID = kit.SupplierAccount
+	inputParam.Spec.TenantID = kit.SupplierAccount
 	// set model spec
 	if exists {
 		updateCondMap := util.SetModOwner(make(map[string]interface{}), kit.SupplierAccount)
@@ -647,10 +647,10 @@ func (m *modelManager) SearchModelWithAttribute(kit *rest.Kit, inputParam metada
 	}
 
 	for _, modelItem := range modelItems {
-		queryAttributeCondMap := util.SetQueryOwner(make(map[string]interface{}), modelItem.OwnerID)
+		queryAttributeCondMap := util.SetQueryOwner(make(map[string]interface{}), modelItem.TenantID)
 		queryAttributeCond, _ := mongo.NewConditionFromMapStr(queryAttributeCondMap)
 		queryAttributeCond.Element(mongo.Field(metadata.AttributeFieldObjectID).Eq(modelItem.ObjectID))
-		queryAttributeCond.Element(mongo.Field(metadata.TenantID).Eq(modelItem.OwnerID))
+		queryAttributeCond.Element(mongo.Field(metadata.TenantID).Eq(modelItem.TenantID))
 		attributeItems, err := m.modelAttribute.search(kit, queryAttributeCond)
 		if nil != err {
 			blog.Errorf("request(%s):it is failed to search the object(%s)'s attributes, error info is %s",

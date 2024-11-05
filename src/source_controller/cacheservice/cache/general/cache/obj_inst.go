@@ -53,7 +53,7 @@ func getObjInstTable(ctx context.Context, filter *types.BasicFilter, rid string)
 		blog.Errorf("get object supplier account by cond(%+v) failed, err: %v, rid: %s", cond, err, rid)
 		return "", err
 	}
-	return common.GetInstTableName(filter.SubRes, obj.OwnerID), nil
+	return common.GetInstTableName(filter.SubRes, obj.TenantID), nil
 }
 
 func parseObjInstData(data dataWithTable[mapstr.MapStr]) (*basicInfo, error) {
