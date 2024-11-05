@@ -172,6 +172,7 @@ func (c *iamClient) GetSystemInfo(ctx context.Context, fields []SystemQueryField
 	return resp, nil
 }
 
+// nicole test git
 // UpdateSystemConfig update system config in IAM
 // Note: can only update provider_config.host field.
 func (c *iamClient) UpdateSystemConfig(ctx context.Context, config *SysConfig) error {
