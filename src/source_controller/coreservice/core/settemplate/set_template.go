@@ -150,7 +150,7 @@ func (p *setTemplateOperation) CreateSetTemplate(kit *rest.Kit, bizID int64,
 				BizID:             setTemplate.BizID,
 				SetTemplateID:     setTemplate.ID,
 				ServiceTemplateID: serviceTemplateID,
-				SupplierAccount:   kit.SupplierAccount,
+				TenantID:          kit.SupplierAccount,
 			})
 		}
 		if err := mongodb.Client().Table(common.BKTableNameSetServiceTemplateRelation).Insert(kit.Ctx,
@@ -243,7 +243,7 @@ func (p *setTemplateOperation) UpdateSetTemplate(kit *rest.Kit, setTemplateID in
 					BizID:             setTemplate.BizID,
 					SetTemplateID:     setTemplate.ID,
 					ServiceTemplateID: serviceTemplateID,
-					SupplierAccount:   kit.SupplierAccount,
+					TenantID:          kit.SupplierAccount,
 				})
 			}
 		}

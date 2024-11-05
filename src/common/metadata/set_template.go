@@ -48,7 +48,7 @@ type SetServiceTemplateRelation struct {
 	BizID             int64  `field:"bk_biz_id" json:"bk_biz_id" bson:"bk_biz_id"`
 	SetTemplateID     int64  `field:"set_template_id" json:"set_template_id" bson:"set_template_id"`
 	ServiceTemplateID int64  `field:"service_template_id" json:"service_template_id" bson:"service_template_id"`
-	SupplierAccount   string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID          string `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 }
 
 // SetTemplateAttr set template attributes, used to generate set, should not include non-editable fields

@@ -115,7 +115,7 @@ type LoginUserInfoResult struct {
 type LoginChangeSupplierResult struct {
 	BaseResp `json:",inline"`
 	Data     struct {
-		ID string `json:"bk_supplier_account"`
+		TenantID string `json:"tenant_id"`
 	} `json:"data"`
 }
 

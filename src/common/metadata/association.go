@@ -495,7 +495,7 @@ func (a *Association) CanUpdate() (field string, can bool) {
 	}
 
 	if len(a.TenantID) != 0 {
-		return "bk_supplier_account", false
+		return "tenant_id", false
 	}
 
 	if len(a.AssociationName) != 0 {

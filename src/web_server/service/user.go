@@ -209,7 +209,7 @@ func (s *Service) UpdateSupplier(c *gin.Context) {
 
 	ret := metadata.LoginChangeSupplierResult{}
 	ret.Result = true
-	ret.Data.ID = ownerID
+	ret.Data.TenantID = ownerID
 
 	c.JSON(200, ret)
 	return
