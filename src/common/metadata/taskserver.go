@@ -94,8 +94,8 @@ type APITaskSyncStatus struct {
 	CreateTime time.Time `json:"create_time,omitempty" bson:"create_time"`
 	// LastTime 任务最后更新时间
 	LastTime time.Time `json:"last_time,omitempty" bson:"last_time"`
-	// SupplierAccount 开发商ID
-	SupplierAccount string `json:"bk_supplier_account,omitempty" bson:"bk_supplier_account"`
+	// TenantID 开发商ID
+	TenantID string `json:"tenant_id,omitempty" bson:"tenant_id"`
 }
 
 // APITaskStatus task status type

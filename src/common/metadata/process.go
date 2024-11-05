@@ -1154,7 +1154,7 @@ type ServiceTemplate struct {
 	Modifier         string    `field:"modifier" json:"modifier" bson:"modifier"`
 	CreateTime       time.Time `field:"create_time" json:"create_time" bson:"create_time"`
 	LastTime         time.Time `field:"last_time" json:"last_time" bson:"last_time"`
-	SupplierAccount  string    `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID         string    `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 	HostApplyEnabled bool      `field:"host_apply_enabled" json:"host_apply_enabled" bson:"host_apply_enabled"`
 }
 
@@ -1176,11 +1176,11 @@ type ServiceTemplateAttr struct {
 	AttributeID       int64       `json:"bk_attribute_id" bson:"bk_attribute_id"`
 	PropertyValue     interface{} `json:"bk_property_value" bson:"bk_property_value"`
 
-	Creator         string    `json:"creator" bson:"creator"`
-	Modifier        string    `json:"modifier" bson:"modifier"`
-	CreateTime      time.Time `json:"create_time" bson:"create_time"`
-	LastTime        time.Time `json:"last_time" bson:"last_time"`
-	SupplierAccount string    `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	Creator    string    `json:"creator" bson:"creator"`
+	Modifier   string    `json:"modifier" bson:"modifier"`
+	CreateTime time.Time `json:"create_time" bson:"create_time"`
+	LastTime   time.Time `json:"last_time" bson:"last_time"`
+	TenantID   string    `json:"tenant_id" bson:"tenant_id"`
 }
 
 // Validate ServiceTemplateAttr
@@ -1226,11 +1226,11 @@ type ProcessTemplate struct {
 	// properties's value.
 	Property *ProcessProperty `field:"property" json:"property" bson:"property"`
 
-	Creator         string    `field:"creator" json:"creator" bson:"creator"`
-	Modifier        string    `field:"modifier" json:"modifier" bson:"modifier"`
-	CreateTime      time.Time `field:"create_time" json:"create_time" bson:"create_time"`
-	LastTime        time.Time `field:"last_time" json:"last_time" bson:"last_time"`
-	SupplierAccount string    `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	Creator    string    `field:"creator" json:"creator" bson:"creator"`
+	Modifier   string    `field:"modifier" json:"modifier" bson:"modifier"`
+	CreateTime time.Time `field:"create_time" json:"create_time" bson:"create_time"`
+	LastTime   time.Time `field:"last_time" json:"last_time" bson:"last_time"`
+	TenantID   string    `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 }
 
 // Validate TODO
@@ -2115,11 +2115,11 @@ type ServiceInstance struct {
 	// the module that this service belongs to.
 	ModuleID int64 `field:"bk_module_id" json:"bk_module_id" bson:"bk_module_id"`
 
-	Creator         string    `field:"creator" json:"creator" bson:"creator"`
-	Modifier        string    `field:"modifier" json:"modifier" bson:"modifier"`
-	CreateTime      time.Time `field:"create_time" json:"create_time" bson:"create_time"`
-	LastTime        time.Time `field:"last_time" json:"last_time" bson:"last_time"`
-	SupplierAccount string    `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	Creator    string    `field:"creator" json:"creator" bson:"creator"`
+	Modifier   string    `field:"modifier" json:"modifier" bson:"modifier"`
+	CreateTime time.Time `field:"create_time" json:"create_time" bson:"create_time"`
+	LastTime   time.Time `field:"last_time" json:"last_time" bson:"last_time"`
+	TenantID   string    `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 }
 
 // Validate TODO
@@ -2160,8 +2160,8 @@ type ProcessInstanceRelation struct {
 	ProcessTemplateID int64 `field:"process_template_id" json:"process_template_id" bson:"process_template_id"`
 
 	// redundant field for accelerating processes by HostID
-	HostID          int64  `field:"bk_host_id" json:"bk_host_id" bson:"bk_host_id"`
-	SupplierAccount string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account"`
+	HostID   int64  `field:"bk_host_id" json:"bk_host_id" bson:"bk_host_id"`
+	TenantID string `field:"tenant_id" json:"tenant_id" bson:"tenant_id"`
 }
 
 // Validate TODO
@@ -2203,10 +2203,10 @@ type ProcessInstanceNG struct {
 
 // Proc2Module TODO
 type Proc2Module struct {
-	BizID           int64  `json:"bk_biz_id"`
-	ModuleName      string `json:"bk_module_name"`
-	ProcessID       int64  `json:"bk_process_id"`
-	SupplierAccount string `json:"bk_supplier_account"`
+	BizID      int64  `json:"bk_biz_id"`
+	ModuleName string `json:"bk_module_name"`
+	ProcessID  int64  `json:"bk_process_id"`
+	TenantID   string `json:"tenant_id"`
 }
 
 // LabelAggregationOption TODO

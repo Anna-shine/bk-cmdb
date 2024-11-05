@@ -42,7 +42,7 @@ type TopoGraphics struct {
 	Position  Position               `json:"position" bson:"position"`
 	Ext       map[string]interface{} `json:"ext,omitempty" bson:"ext,omitempty"`
 	Icon      string                 `json:"bk_obj_icon,omitempty" bson:"bk_obj_icon,omitempty"`
-	TenantID  string                 `json:"tenant_id,omitempty" bson:"tenant_id,omitempty"` // bk_supplier_account
+	TenantID  string                 `json:"tenant_id,omitempty" bson:"tenant_id,omitempty"` // tenant_id
 	Assts     []GraphAsst            `json:"assts,omitempty"`
 }
 

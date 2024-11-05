@@ -369,7 +369,7 @@ func getMetaIdToStr(d interface{}) (string, error) {
 	return fmt.Sprintf("%v", d), nil
 }
 
-// baseDataCleaning  do not need to sync "_id","create_time","last_time","bk_supplier_account".
+// baseDataCleaning  do not need to sync "_id","create_time","last_time","tenant_id".
 func baseDataCleaning(document map[string]interface{}) map[string]interface{} {
 	delete(document, mongoMetaId)
 	delete(document, common.CreateTimeField)

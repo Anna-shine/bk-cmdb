@@ -231,7 +231,7 @@ func (ibt *importerBizTopo) filterBKTopoProc(ctx context.Context, bizID int64) e
 			Modifier:          defaultinitUserName,
 			CreateTime:        time.Now().UTC(),
 			LastTime:          time.Now().UTC(),
-			SupplierAccount:   ibt.opt.OwnerID,
+			TenantID:          ibt.opt.OwnerID,
 			Property:          nil,
 		}
 		var err error
@@ -398,7 +398,7 @@ func (ibt *importerBizTopo) initBKServiceCategory(ctx context.Context, bizID int
 			Modifier:          defaultinitUserName,
 			CreateTime:        time.Now().UTC(),
 			LastTime:          time.Now().UTC(),
-			SupplierAccount:   ibt.opt.OwnerID,
+			TenantID:          ibt.opt.OwnerID,
 		})
 
 		bindProcessLen := len(srvTemp.BindProcess)

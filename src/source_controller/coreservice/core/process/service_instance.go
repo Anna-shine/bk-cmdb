@@ -47,7 +47,7 @@ func (p *processOperation) CreateServiceInstance(kit *rest.Kit, instance *metada
 	instance.Modifier = kit.User
 	instance.CreateTime = time.Now()
 	instance.LastTime = time.Now()
-	instance.SupplierAccount = kit.SupplierAccount
+	instance.TenantID = kit.SupplierAccount
 
 	if err = mongodb.Client().Table(common.BKTableNameServiceInstance).Insert(kit.Ctx, &instance); err != nil {
 		blog.Errorf("create service instance(%+v) failed, err: %v, rid: %s", instance, err, kit.Rid)
@@ -136,7 +136,7 @@ func (p *processOperation) createSvcInstProcesses(kit *rest.Kit, instance *metad
 			ServiceInstanceID: instance.ID,
 			ProcessTemplateID: templateIDs[idx],
 			HostID:            instance.HostID,
-			SupplierAccount:   kit.SupplierAccount,
+			TenantID:          kit.SupplierAccount,
 		}
 		relations[idx] = relation
 	}
@@ -1012,7 +1012,7 @@ func (p *processOperation) generateAutoCreateSvcInstData(kit *rest.Kit, params *
 				Modifier:          kit.User,
 				CreateTime:        now,
 				LastTime:          now,
-				SupplierAccount:   kit.SupplierAccount,
+				TenantID:          kit.SupplierAccount,
 			})
 		}
 	}
@@ -1056,7 +1056,7 @@ func (p *processOperation) generateAutoCreateSvcInstData(kit *rest.Kit, params *
 				ServiceInstanceID: instance.ID,
 				ProcessTemplateID: procTemp.ID,
 				HostID:            instance.HostID,
-				SupplierAccount:   kit.SupplierAccount,
+				TenantID:          kit.SupplierAccount,
 			})
 		}
 

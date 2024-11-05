@@ -565,7 +565,7 @@ func getReadModelResult() string {
 						"position" : "{\"bk_host_manage\":{\"x\":-600,\"y\":-650}}",
 						"bk_classification_id" : "bk_host_manage",
 						"bk_obj_name" : "主机",
-						"bk_supplier_account" : "0",
+						"tenant_id" : "0",
 						"creator" : "cc_system"
 					},
 					"attributes":[{
@@ -573,7 +573,7 @@ func getReadModelResult() string {
 						"unit" : "",
 						"ispre" : true,
 						"bk_property_type" : "singlechar",
-						"bk_supplier_account" : "0",
+						"tenant_id" : "0",
 						"bk_property_id" : "bk_biz_name",
 						"placeholder" : "",
 						"editable" : true,
@@ -610,7 +610,7 @@ func getReadModelClassificationResult() string {
 					"bk_classification_id" : "",
 					"bk_classification_name" : "",
 					"bk_classification_type" : "",
-					"bk_supplier_account" : ""
+					"tenant_id" : ""
 				}
 			 ]
 		}
