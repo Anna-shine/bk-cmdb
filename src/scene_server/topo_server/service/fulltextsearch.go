@@ -379,7 +379,7 @@ func (r *FullTextSearchReq) GenerateESQuery() (elastic.Query, []string, []*FullT
 	query := elastic.NewBoolQuery()
 	queryConditions := make(map[string][]interface{})
 	if len(r.TenantID) != 0 {
-		query.Must(elastic.NewMatchQuery(metadata.IndexPropertyBKSupplierAccount, r.TenantID))
+		query.Must(elastic.NewMatchQuery(metadata.IndexPropertyTenantID, r.TenantID))
 	}
 	if len(r.BizID) != 0 {
 		query.Must(elastic.NewMatchQuery(metadata.IndexPropertyBKBizID, r.BizID))
@@ -411,7 +411,7 @@ func (r *FullTextSearchReq) GenerateESQuery() (elastic.Query, []string, []*FullT
 	for _, condFilter := range filterCond {
 		boolQuery := elastic.NewBoolQuery()
 		if len(r.TenantID) != 0 {
-			boolQuery.Must(elastic.NewMatchQuery(metadata.IndexPropertyBKSupplierAccount, r.TenantID))
+			boolQuery.Must(elastic.NewMatchQuery(metadata.IndexPropertyTenantID, r.TenantID))
 		}
 		if len(r.BizID) != 0 {
 			boolQuery.Must(elastic.NewMatchQuery(metadata.IndexPropertyBKBizID, r.BizID))

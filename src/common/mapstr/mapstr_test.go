@@ -323,7 +323,7 @@ func TestEmbedMap(t *testing.T) {
 	}
 
 	testData := `{
-		"bk_supplier_account": "0",
+		"tenant_id": "0",
 		"bk_classification_id": "test",
 		"bk_classification_name": "test",
 		"metadata": {

@@ -230,7 +230,7 @@ func newESIndexMetadata(config extraConfig) *meta.ESIndexMetadata {
 				meta.IndexPropertyBKObjID: {
 					PropertyType: meta.IndexPropertyTypeKeyword,
 				},
-				meta.IndexPropertyBKSupplierAccount: {
+				meta.IndexPropertyTenantID: {
 					PropertyType: meta.IndexPropertyTypeKeyword,
 				},
 				meta.IndexPropertyBKBizID: {
@@ -585,12 +585,12 @@ func outputDocument(input *monstachemap.MapperPluginInput, output *monstachemap.
 
 	// build elastic document.
 	document := map[string]interface{}{
-		meta.IndexPropertyID:                id,
-		meta.IndexPropertyDataKind:          meta.DataKindInstance,
-		meta.IndexPropertyBKObjID:           objID,
-		meta.IndexPropertyBKSupplierAccount: oId,
-		meta.IndexPropertyBKBizID:           bizId,
-		meta.IndexPropertyKeywords:          keywords,
+		meta.IndexPropertyID:       id,
+		meta.IndexPropertyDataKind: meta.DataKindInstance,
+		meta.IndexPropertyBKObjID:  objID,
+		meta.IndexPropertyTenantID: oId,
+		meta.IndexPropertyBKBizID:  bizId,
+		meta.IndexPropertyKeywords: keywords,
 	}
 
 	documentID, ok := metaId.(primitive.ObjectID)
@@ -763,12 +763,12 @@ func indexingModel(input *monstachemap.MapperPluginInput, output *monstachemap.M
 	// build elastic document.
 	document := map[string]interface{}{
 		// model scene,we use meta_bk_obj_id to search mongo,this id set null.
-		meta.IndexPropertyID:                nullMetaId,
-		meta.IndexPropertyDataKind:          meta.DataKindModel,
-		meta.IndexPropertyBKObjID:           objectID,
-		meta.IndexPropertyBKSupplierAccount: oId,
-		meta.IndexPropertyBKBizID:           bizId,
-		meta.IndexPropertyKeywords:          compressKeywords(keywords),
+		meta.IndexPropertyID:       nullMetaId,
+		meta.IndexPropertyDataKind: meta.DataKindModel,
+		meta.IndexPropertyBKObjID:  objectID,
+		meta.IndexPropertyTenantID: oId,
+		meta.IndexPropertyBKBizID:  bizId,
+		meta.IndexPropertyKeywords: compressKeywords(keywords),
 	}
 	err = updateModelTableProperties(document, tableAttrs)
 	if err != nil {
@@ -798,12 +798,12 @@ func indexingObjectInstance(input *monstachemap.MapperPluginInput, output *monst
 
 	// build elastic document.
 	document := map[string]interface{}{
-		meta.IndexPropertyID:                id,
-		meta.IndexPropertyDataKind:          meta.DataKindInstance,
-		meta.IndexPropertyBKObjID:           objId,
-		meta.IndexPropertyBKSupplierAccount: oId,
-		meta.IndexPropertyBKBizID:           bizId,
-		meta.IndexPropertyKeywords:          keywords,
+		meta.IndexPropertyID:       id,
+		meta.IndexPropertyDataKind: meta.DataKindInstance,
+		meta.IndexPropertyBKObjID:  objId,
+		meta.IndexPropertyTenantID: oId,
+		meta.IndexPropertyBKBizID:  bizId,
+		meta.IndexPropertyKeywords: keywords,
 	}
 
 	documentID, ok := metaId.(primitive.ObjectID)
