@@ -32,10 +32,10 @@ type SetInst struct {
 	ParentID      int64  `bson:"bk_parent_id" json:"bk_parent_id" mapstructure:"bk_parent_id"`
 	Default       int    `bson:"default" json:"default" field:"default" mapstructure:"default"`
 
-	Creator         string `field:"creator" json:"creator,omitempty" bson:"creator" mapstructure:"creator"`
-	CreateTime      Time   `field:"create_time" json:"create_time,omitempty" bson:"create_time" mapstructure:"create_time"`
-	LastTime        Time   `field:"last_time" json:"last_time,omitempty" bson:"last_time" mapstructure:"last_time"`
-	SupplierAccount string `field:"bk_supplier_account" json:"bk_supplier_account,omitempty" bson:"bk_supplier_account" mapstructure:"bk_supplier_account"`
+	Creator    string `field:"creator" json:"creator,omitempty" bson:"creator" mapstructure:"creator"`
+	CreateTime Time   `field:"create_time" json:"create_time,omitempty" bson:"create_time" mapstructure:"create_time"`
+	LastTime   Time   `field:"last_time" json:"last_time,omitempty" bson:"last_time" mapstructure:"last_time"`
+	TenantID   string `field:"tenant_id" json:"tenant_id,omitempty" bson:"tenant_id" mapstructure:"tenant_id"`
 }
 
 // ModuleInst contains partial fields of a real module
