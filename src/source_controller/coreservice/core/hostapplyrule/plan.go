@@ -170,10 +170,13 @@ func (p *hostApplyRule) GenerateApplyPlan(kit *rest.Kit, bizID int64, option met
 func isOrganizationEqual(expectValue interface{}, propertyValue interface{}) (bool, errors.CCErrorCoder) {
 	eValue, ok := expectValue.(primitive.A)
 	if !ok {
+		blog.Errorf("expect value type is not primitive.A, type: %T, value: %v", expectValue, expectValue)
 		return false, errors.New(common.CCErrCommUnexpectedFieldType, "expect value type error")
 	}
 	pValue, ok := propertyValue.([]interface{})
 	if !ok {
+		blog.Errorf("property value type is not []interface{}, type: %T, value: %v", propertyValue,
+			propertyValue)
 		return false, errors.New(common.CCErrCommUnexpectedFieldType, "property value type error")
 	}
 
@@ -201,11 +204,17 @@ func isOrganizationEqual(expectValue interface{}, propertyValue interface{}) (bo
 func isEnumMultiEqual(expectValue interface{}, propertyValue interface{}) (bool, errors.CCErrorCoder) {
 	eValue, ok := expectValue.(primitive.A)
 	if !ok {
+		blog.Errorf("expect value type is not primitive.A, type: %T, value: %v", expectValue, expectValue)
 		return false, errors.New(common.CCErrCommUnexpectedFieldType, "expect value type error")
 	}
 	pValue, ok := propertyValue.([]interface{})
 	if !ok {
-		return false, errors.New(common.CCErrCommUnexpectedFieldType, "property value type error")
+		pValue, ok = expectValue.(primitive.A)
+		if !ok {
+			blog.Errorf("property value type is not primitive.A or []interface{}, type: %T, value: %v", propertyValue,
+				propertyValue)
+			return false, errors.New(common.CCErrCommUnexpectedFieldType, "property value type error")
+		}
 	}
 
 	expectValueList, err := util.SliceInterfaceToString(eValue)
