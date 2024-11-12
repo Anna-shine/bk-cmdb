@@ -173,11 +173,11 @@ func isOrganizationEqual(expectValue interface{}, propertyValue interface{}) (bo
 		blog.Errorf("expect value type is not primitive.A, type: %T, value: %v", expectValue, expectValue)
 		return false, errors.New(common.CCErrCommUnexpectedFieldType, "expect value type error")
 	}
-	pValue, ok := propertyValue.([]interface{})
-	if !ok {
-		blog.Errorf("property value type is not []interface{}, type: %T, value: %v", propertyValue,
+	pValue, ccErr := metadata.CheckInterfaceSliceType(propertyValue)
+	if ccErr != nil {
+		blog.Errorf("propertyValue value type is not primitive.A or []interface{}, type: %T, value: %v", propertyValue,
 			propertyValue)
-		return false, errors.New(common.CCErrCommUnexpectedFieldType, "property value type error")
+		return false, ccErr
 	}
 
 	expectValueList := make([]int, 0)
@@ -207,14 +207,12 @@ func isEnumMultiEqual(expectValue interface{}, propertyValue interface{}) (bool,
 		blog.Errorf("expect value type is not primitive.A, type: %T, value: %v", expectValue, expectValue)
 		return false, errors.New(common.CCErrCommUnexpectedFieldType, "expect value type error")
 	}
-	pValue, ok := propertyValue.([]interface{})
-	if !ok {
-		pValue, ok = expectValue.(primitive.A)
-		if !ok {
-			blog.Errorf("property value type is not primitive.A or []interface{}, type: %T, value: %v", propertyValue,
-				propertyValue)
-			return false, errors.New(common.CCErrCommUnexpectedFieldType, "property value type error")
-		}
+
+	pValue, ccErr := metadata.CheckInterfaceSliceType(propertyValue)
+	if ccErr != nil {
+		blog.Errorf("propertyValue value type is not primitive.A or []interface{}, type: %T, value: %v", propertyValue,
+			propertyValue)
+		return false, ccErr
 	}
 
 	expectValueList, err := util.SliceInterfaceToString(eValue)
