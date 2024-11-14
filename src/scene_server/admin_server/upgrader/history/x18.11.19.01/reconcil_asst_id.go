@@ -30,7 +30,7 @@ package x18_11_19_01
 // 	type HostInst struct {
 // 		HostID  uint64 `bson:"bk_host_id"`
 // 		AssetID string `bson:"bk_asset_id"`
-// 		OwnerID string `bson:"bk_supplier_account"`
+// 		"bk_supplier_account" string `bson:"bk_supplier_account"`
 // 	}
 
 // 	cond := condition.CreateCondition()
@@ -55,7 +55,7 @@ package x18_11_19_01
 // 				}
 // 				updateCond := condition.CreateCondition()
 // 				updateCond.Field(common.BKHostIDField).Eq(hosts[index].HostID)
-// 				updateCond.Field(common.BKOwnerIDField).Eq(hosts[index].OwnerID)
+// 				updateCond.Field(common.BKOwnerIDField).Eq(hosts[index]."bk_supplier_account")
 
 // 				if err := db.Table(common.BKTableNameBaseHost).
 // 					Update(ctx, updateCond.ToMapStr(), data); err != nil {

@@ -233,7 +233,7 @@ func (s *Service) savePlatformSettingUpdateAudit(preConf, curConf *metadata.Plat
 	audit := metadata.AuditLog{
 		ID:              int64(id),
 		AuditType:       metadata.PlatformSetting,
-		SupplierAccount: httpheader.GetSupplierAccount(header),
+		TenantID:        httpheader.GetTenantID(header),
 		User:            httpheader.GetUser(header),
 		ResourceType:    metadata.PlatformSettingRes,
 		Action:          metadata.AuditUpdate,

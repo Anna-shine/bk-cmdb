@@ -22,8 +22,8 @@ import (
 // InitFunc TODO
 func (o *OperationServer) InitFunc() {
 	header := make(http.Header, 0)
-	if "" == httpheader.GetSupplierAccount(header) {
-		httpheader.SetSupplierAccount(header, common.BKSuperOwnerID)
+	if "" == httpheader.GetTenantID(header) {
+		httpheader.SetTenantID(header, common.BKSuperTenantID)
 		httpheader.SetUser(header, common.BKProcInstanceOpUser)
 	}
 

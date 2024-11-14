@@ -99,18 +99,23 @@ func (ps *ProcServer) CreateProcessInstances(ctx *rest.Contexts) {
 	ctx.RespEntity(processIDs)
 }
 
-func (ps *ProcServer) createProcessInstances(ctx *rest.Contexts, input *metadata.CreateRawProcessInstanceInput) ([]int64, errors.CCErrorCoder) {
-	serviceInstance, err := ps.CoreAPI.CoreService().Process().GetServiceInstance(ctx.Kit.Ctx, ctx.Kit.Header, input.ServiceInstanceID)
+func (ps *ProcServer) createProcessInstances(ctx *rest.Contexts,
+	input *metadata.CreateRawProcessInstanceInput) ([]int64, errors.CCErrorCoder) {
+	serviceInstance, err := ps.CoreAPI.CoreService().Process().GetServiceInstance(ctx.Kit.Ctx, ctx.Kit.Header,
+		input.ServiceInstanceID)
 	if err != nil {
-		blog.Errorf("create process instance failed, get service instance by id failed, serviceInstanceID: %d, err: %v, rid: %s", input.ServiceInstanceID, err, ctx.Kit.Rid)
+		blog.Errorf("create process instance failed, get service instance by id failed, serviceInstanceID: %d, err: %v, rid: %s",
+			input.ServiceInstanceID, err, ctx.Kit.Rid)
 		return nil, err
 	}
 	if serviceInstance.BizID != input.BizID {
-		blog.Errorf("create process instance with raw, biz id from input not equal with service instance, rid: %s", ctx.Kit.Rid)
+		blog.Errorf("create process instance with raw, biz id from input not equal with service instance, rid: %s",
+			ctx.Kit.Rid)
 		return nil, ctx.Kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKAppIDField)
 	}
 	if serviceInstance.ServiceTemplateID != common.ServiceTemplateIDNotSet {
-		blog.Errorf("create process instance failed, create process instance on service instance initialized by template forbidden, serviceInstanceID: %d, err: %v, rid: %s", input.ServiceInstanceID, err, ctx.Kit.Rid)
+		blog.Errorf("create process instance failed, create process instance on service instance initialized by template forbidden, serviceInstanceID: %d, err: %v, rid: %s",
+			input.ServiceInstanceID, err, ctx.Kit.Rid)
 		return nil, ctx.Kit.CCError.CCError(common.CCErrProcEditProcessInstanceCreateByTemplateForbidden)
 	}
 
@@ -120,7 +125,7 @@ func (ps *ProcServer) createProcessInstances(ctx *rest.Contexts, input *metadata
 		now := time.Now()
 		item.ProcessData[common.BKProcessIDField] = int64(0)
 		item.ProcessData[common.BKAppIDField] = input.BizID
-		item.ProcessData[common.BkSupplierAccount] = ctx.Kit.SupplierAccount
+		item.ProcessData[common.TenantID] = ctx.Kit.TenantID
 		item.ProcessData[common.CreateTimeField] = now
 		item.ProcessData[common.LastTimeField] = now
 		item.ProcessData[common.BKServiceInstanceIDField] = input.ServiceInstanceID
@@ -130,7 +135,8 @@ func (ps *ProcServer) createProcessInstances(ctx *rest.Contexts, input *metadata
 
 	processIDs, err = ps.Logic.CreateProcessInstances(ctx.Kit, processDatas)
 	if err != nil {
-		blog.Errorf("create process instance failed, create process failed, serviceInstanceID: %d, processDatas: %+v, err: %v, rid: %s", input.ServiceInstanceID, processDatas, err, ctx.Kit.Rid)
+		blog.Errorf("create process instance failed, create process failed, serviceInstanceID: %d, processDatas: %+v, err: %v, rid: %s",
+			input.ServiceInstanceID, processDatas, err, ctx.Kit.Rid)
 		return nil, err
 	}
 
@@ -147,7 +153,8 @@ func (ps *ProcServer) createProcessInstances(ctx *rest.Contexts, input *metadata
 	}
 	_, err = ps.CoreAPI.CoreService().Process().CreateProcessInstanceRelations(ctx.Kit.Ctx, ctx.Kit.Header, relations)
 	if err != nil {
-		blog.ErrorJSON("create service instance relations, CreateProcessInstanceRelations err: %s, relations:%s, rid: %s", err, relations, ctx.Kit.Rid)
+		blog.ErrorJSON("create service instance relations, CreateProcessInstanceRelations err: %s, relations:%s, rid: %s",
+			err, relations, ctx.Kit.Rid)
 		return nil, err
 	}
 
@@ -384,7 +391,8 @@ func (ps *ProcServer) generateUpdateProcessAudit(kit *rest.Kit, input metadata.U
 	return auditLogs, nil
 }
 
-func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.UpdateRawProcessInstanceInput) ([]int64, errors.CCErrorCoder) {
+func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.UpdateRawProcessInstanceInput) ([]int64,
+	errors.CCErrorCoder) {
 	rid := ctx.Kit.Rid
 	bizID := input.BizID
 
@@ -393,7 +401,8 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 	for _, pData := range input.Raw {
 		process := metadata.Process{}
 		if err := mapstr.DecodeFromMapStr(&process, pData); err != nil {
-			blog.ErrorJSON("update process instance failed, unmarshal request body failed, data: %s, err: %s, rid: %s", pData, err.Error(), rid)
+			blog.ErrorJSON("update process instance failed, unmarshal request body failed, data: %s, err: %s, rid: %s",
+				pData, err.Error(), rid)
 			return nil, ctx.Kit.CCError.CCError(common.CCErrCommJSONUnmarshalFailed)
 		}
 		input.Processes = append(input.Processes, process)
@@ -410,9 +419,11 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 		ProcessIDs: processIDs,
 		Page:       metadata.BasePage{Limit: common.BKNoLimit},
 	}
-	relations, err := ps.CoreAPI.CoreService().Process().ListProcessInstanceRelation(ctx.Kit.Ctx, ctx.Kit.Header, option)
+	relations, err := ps.CoreAPI.CoreService().Process().ListProcessInstanceRelation(ctx.Kit.Ctx, ctx.Kit.Header,
+		option)
 	if err != nil {
-		blog.ErrorJSON("update process instance failed, search process instance relation failed, option: %s, err: %+v, rid: %s", option, err, rid)
+		blog.ErrorJSON("update process instance failed, search process instance relation failed, option: %s, err: %+v, rid: %s",
+			option, err, rid)
 		return nil, err
 	}
 
@@ -446,9 +457,11 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 		if _, exist := processTemplateMap[relation.ProcessTemplateID]; exist {
 			continue
 		}
-		processTemplate, err := ps.CoreAPI.CoreService().Process().GetProcessTemplate(ctx.Kit.Ctx, ctx.Kit.Header, relation.ProcessTemplateID)
+		processTemplate, err := ps.CoreAPI.CoreService().Process().GetProcessTemplate(ctx.Kit.Ctx, ctx.Kit.Header,
+			relation.ProcessTemplateID)
 		if err != nil {
-			blog.ErrorJSON("update process instance failed, get process template failed, processTemplateID: %d, err: %s, rid: %s", relation.ProcessTemplateID, err, rid)
+			blog.ErrorJSON("update process instance failed, get process template failed, processTemplateID: %d, err: %s, rid: %s",
+				relation.ProcessTemplateID, err, rid)
 			return nil, err
 		}
 		processTemplateMap[relation.ProcessTemplateID] = processTemplate
@@ -479,7 +492,8 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 		relation, exist := process2ServiceInstanceMap[process.ProcessID]
 		if !exist {
 			err := ctx.Kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKProcessIDField)
-			blog.ErrorJSON("update process instance failed, process related service instance not found, process: %s, err: %s, rid: %s", process, err, rid)
+			blog.ErrorJSON("update process instance failed, process related service instance not found, process: %s, err: %s, rid: %s",
+				process, err, rid)
 			return nil, err
 		}
 
@@ -489,7 +503,8 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 			var err error
 			processData, err = mapstruct.Struct2Map(process)
 			if nil != err {
-				blog.Errorf("UpdateProcessInstances failed, json Unmarshal process failed, processData: %s, err: %+v, rid: %s", processData, err, ctx.Kit.Rid)
+				blog.Errorf("UpdateProcessInstances failed, json Unmarshal process failed, processData: %s, err: %+v, rid: %s",
+					processData, err, ctx.Kit.Rid)
 				return nil, ctx.Kit.CCError.CCError(common.CCErrCommJsonDecode)
 			}
 			delete(processData, common.BKProcessIDField)
@@ -500,7 +515,8 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 			processTemplate, exist := processTemplateMap[relation.ProcessTemplateID]
 			if !exist {
 				err := ctx.Kit.CCError.CCError(common.CCErrCommNotFound)
-				blog.Errorf("update process instance failed, process related template not found, relation: %+v, err: %v, rid: %s", relation, err, rid)
+				blog.Errorf("update process instance failed, process related template not found, relation: %+v, err: %v, rid: %s",
+					relation, err, rid)
 				return nil, err
 			}
 			var compareErr error
@@ -534,7 +550,8 @@ func (ps *ProcServer) updateProcessInstances(ctx *rest.Contexts, input metadata.
 
 			err := ps.Logic.UpdateProcessInstance(ctx.Kit, processID, processData)
 			if err != nil {
-				blog.ErrorJSON("UpdateProcessInstance failed, processID: %s, process: %s, err: %s, rid: %s", processID, processData, err, rid)
+				blog.ErrorJSON("UpdateProcessInstance failed, processID: %s, process: %s, err: %s, rid: %s", processID,
+					processData, err, rid)
 				if firstErr == nil {
 					firstErr = err
 				}

@@ -24,18 +24,19 @@ import (
 
 func addswitchAssociation(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	falseVar := false
-	switchAsst := metadata.Association{
-		OwnerID:         conf.OwnerID,
-		AsstKindID:      "connect",
-		ObjectID:        "bk_switch",
-		AsstObjID:       "host",
-		AssociationName: "bk_switch_connect_host",
-		Mapping:         metadata.OneToManyMapping,
-		OnDelete:        metadata.NoAction,
-		IsPre:           &falseVar,
+	switchAsst := map[string]interface{}{
+		"bk_supplier_account": conf.OwnerID,
+		"bk_asst_id":          "connect",
+		"bk_obj_id":           "bk_switch",               // "bk_obj_id"
+		"bk_asst_obj_id":      "host",                    // "bk_asst_obj_id"
+		"bk_obj_asst_id":      "bk_switch_connect_host",  // "bk_obj_asst_id"
+		"mapping":             metadata.OneToManyMapping, // "mapping"
+		"on_delete":           metadata.NoAction,         // "on_delete"
+		"ispre":               &falseVar,                 // "ispre"
 	}
 
-	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAsst, switchAsst, "id", []string{"bk_obj_id", "bk_asst_obj_id"}, []string{"id"})
+	_, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAsst, switchAsst, "id",
+		[]string{"bk_obj_id", "bk_asst_obj_id"}, []string{"id"})
 	if err != nil {
 		return err
 	}

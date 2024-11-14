@@ -92,7 +92,7 @@ func (m *operationManager) SearchInstCount(kit *rest.Kit, inputParam map[string]
 		objectCounts := []metadata.ObjectIDCount{}
 
 		// sharding table name.
-		tableName := common.GetObjectInstTableName(object.ObjID, kit.SupplierAccount)
+		tableName := common.GetObjectInstTableName(object.ObjID, kit.TenantID)
 
 		if err := mongodb.Client().Table(tableName).AggregateAll(kit.Ctx, objectFilter, &objectCounts); err != nil {
 			blog.Errorf("get object %s instances count failed, err: %+v, rid: %s", object.ObjID, err, kit.Rid)
@@ -221,7 +221,7 @@ func getCountGroupByField(kit *rest.Kit, inputParam metadata.ChartConfig) ([]met
 		return groupCountArr, nil
 	}
 
-	instCount, err = mongodb.Client().Table(common.GetObjectInstTableName(inputParam.ObjID, kit.SupplierAccount)).
+	instCount, err = mongodb.Client().Table(common.GetObjectInstTableName(inputParam.ObjID, kit.TenantID)).
 		Find(cond).Count(kit.Ctx)
 
 	if err != nil {
@@ -241,7 +241,7 @@ func getCountGroupByField(kit *rest.Kit, inputParam metadata.ChartConfig) ([]met
 		}
 
 		err := mongodb.Client().
-			Table(common.GetObjectInstTableName(inputParam.ObjID, kit.SupplierAccount)).
+			Table(common.GetObjectInstTableName(inputParam.ObjID, kit.TenantID)).
 			AggregateAll(kit.Ctx, pipeline, &groupCountArr)
 
 		if err != nil {

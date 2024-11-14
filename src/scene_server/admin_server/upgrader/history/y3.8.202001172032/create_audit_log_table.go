@@ -47,7 +47,7 @@ func addAuditLogTableIndex(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 	}
 
 	createIdxArr := []types.Index{
-		{Name: "index_bk_supplier_account", Keys: bson.D{{common.BkSupplierAccount, 1}}, Background: true},
+		{Name: "index_bk_supplier_account", Keys: bson.D{{"bk_supplier_account", 1}}, Background: true},
 		{Name: "index_audit_type", Keys: bson.D{{common.BKAuditTypeField, 1}}, Background: true},
 		{Name: "index_action", Keys: bson.D{{common.BKActionField, 1}}, Background: true},
 	}
@@ -63,7 +63,8 @@ func addAuditLogTableIndex(ctx context.Context, db dal.RDB, conf *upgrader.Confi
 			continue
 		}
 		if err := db.Table(common.BKTableNameAuditLog).CreateIndex(ctx, idx); err != nil && !db.IsDuplicatedError(err) {
-			blog.ErrorJSON("create index to BKTableNameAuditLog error, err:%s, current index:%s, all create index:%s", err.Error(), idx, createIdxArr)
+			blog.ErrorJSON("create index to BKTableNameAuditLog error, err:%s, current index:%s, all create index:%s",
+				err.Error(), idx, createIdxArr)
 			return err
 		}
 

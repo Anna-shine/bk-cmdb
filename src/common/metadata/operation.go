@@ -24,7 +24,7 @@ type ChartConfig struct {
 	ReportType string `json:"report_type" bson:"report_type"`
 	Name       string `json:"name" bson:"name"`
 	CreateTime Time   `json:"create_time" bson:"create_time"`
-	OwnerID    string `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID   string `json:"tenant_id" bson:"tenant_id"`
 	ObjID      string `json:"bk_obj_id" bson:"bk_obj_id"`
 	Width      string `json:"width" bson:"width"`
 	ChartType  string `json:"chart_type" bson:"chart_type"`
@@ -36,7 +36,7 @@ type ChartConfig struct {
 type ChartPosition struct {
 	BizID    int64        `json:"bk_biz_id" bson:"bk_biz_id"`
 	Position PositionInfo `json:"position" bson:"position"`
-	OwnerID  string       `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID string       `json:"tenant_id" bson:"tenant_id"`
 }
 
 // PositionInfo TODO
@@ -111,7 +111,7 @@ type UpdateID struct {
 type HostChangeChartData struct {
 	ReportType string          `json:"report_type" bson:"report_type"`
 	Data       []StringIDCount `json:"data" bson:"data"`
-	OwnerID    string          `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID   string          `json:"tenant_id" bson:"tenant_id"`
 	CreateTime string          `json:"create_time" bson:"create_time"`
 }
 
@@ -119,7 +119,7 @@ type HostChangeChartData struct {
 type ChartData struct {
 	ReportType string      `json:"report_type" bson:"report_type"`
 	Data       interface{} `json:"data" data:"data"`
-	OwnerID    string      `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID   string      `json:"tenant_id" bson:"tenant_id"`
 	LastTime   time.Time   `json:"last_time" bson:"last_time"`
 }
 
@@ -127,7 +127,7 @@ type ChartData struct {
 type ModelInstChartData struct {
 	ReportType string          `json:"report_type" bson:"report_type"`
 	Data       []StringIDCount `json:"data" data:"data"`
-	OwnerID    string          `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID   string          `json:"tenant_id" bson:"tenant_id"`
 	LastTime   time.Time       `json:"last_time" bson:"last_time"`
 }
 
@@ -160,7 +160,7 @@ type CloudMapping struct {
 	CreateTime Time   `json:"create_time" bson:"create_time"`
 	LastTime   Time   `json:"last_time" bson:"lsat_time"`
 	CloudName  string `json:"bk_cloud_name" bson:"bk_cloud_name"`
-	OwnerID    string `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	TenantID   string `json:"tenant_id" bson:"tenant_id"`
 	CloudID    int64  `json:"bk_cloud_id" bson:"bk_cloud_id"`
 }
 

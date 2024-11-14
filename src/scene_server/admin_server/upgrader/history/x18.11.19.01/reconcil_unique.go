@@ -118,7 +118,7 @@ func reconcilUnique(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 		// 		},
 		// 	},
 		// 	Ispre:    true,
-		// 	OwnerID:  conf.OwnerID,
+		// 	"bk_supplier_account":  conf."bk_supplier_account",
 		// 	LastTime: metadata.Now(),
 		// },
 		{
@@ -317,7 +317,7 @@ func isUniqueExists(ctx context.Context, db dal.RDB, conf *upgrader.Config, uniq
 	keyhash := unique.KeysHash()
 	uniqueCond := condition.CreateCondition()
 	uniqueCond.Field(common.BKObjIDField).Eq(unique.ObjID)
-	uniqueCond.Field(common.BKOwnerIDField).Eq(conf.OwnerID)
+	uniqueCond.Field("bk_supplier_account").Eq(conf.OwnerID)
 	existUniques := []objectUnique{}
 
 	err := db.Table(common.BKTableNameObjUnique).Find(uniqueCond.ToMapStr()).All(ctx, &existUniques)

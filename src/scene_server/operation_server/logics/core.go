@@ -31,7 +31,7 @@ type Logics struct {
 	ErrHandle   errors.DefaultCCErrorIf
 	header      http.Header
 	rid         string
-	ownerID     string
+	tenantID    string
 	user        string
 	ccErr       errors.DefaultCCErrorIf
 	ccLang      language.DefaultCCLanguageIf
@@ -49,7 +49,7 @@ func NewLogics(b *backbone.Engine, header http.Header, authManager *extensions.A
 		ccErr:       b.CCErr.CreateDefaultCCErrorIf(lang),
 		ccLang:      b.Language.CreateDefaultCCLanguageIf(lang),
 		user:        httpheader.GetUser(header),
-		ownerID:     httpheader.GetSupplierAccount(header),
+		tenantID:    httpheader.GetTenantID(header),
 		AuthManager: authManager,
 		timerSpec:   spec,
 	}
@@ -73,7 +73,7 @@ func (lgc *Logics) NewFromHeader(header http.Header) *Logics {
 		rid:       rid,
 		esbServ:   lgc.esbServ,
 		user:      httpheader.GetUser(header),
-		ownerID:   httpheader.GetSupplierAccount(header),
+		tenantID:  httpheader.GetTenantID(header),
 		timerSpec: lgc.timerSpec,
 	}
 	// if language not exist, use old language

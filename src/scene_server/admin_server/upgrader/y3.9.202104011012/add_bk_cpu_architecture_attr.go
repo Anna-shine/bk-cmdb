@@ -29,7 +29,7 @@ func addHostBkCPUArchitectureAttr(ctx context.Context, db dal.RDB, conf *upgrade
 	attrFilter := map[string]interface{}{
 		common.BKObjIDField:      common.BKInnerObjIDHost,
 		common.BKPropertyIDField: "bk_cpu_architecture",
-		common.BkSupplierAccount: conf.OwnerID,
+		"bk_supplier_account":    conf.OwnerID,
 	}
 
 	cnt, err := db.Table(common.BKTableNameObjAttDes).Find(attrFilter).Count(ctx)

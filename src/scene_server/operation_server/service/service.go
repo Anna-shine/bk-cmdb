@@ -50,7 +50,7 @@ type srvComm struct {
 	ctx           context.Context
 	ctxCancelFunc context.CancelFunc
 	user          string
-	ownerID       string
+	tenantID      string
 	lgc           *logics.Logics
 }
 
@@ -76,7 +76,7 @@ func (o *OperationServer) newSrvComm(header http.Header) *srvComm {
 		ctx:           ctx,
 		ctxCancelFunc: cancel,
 		user:          httpheader.GetUser(header),
-		ownerID:       httpheader.GetSupplierAccount(header),
+		tenantID:      httpheader.GetTenantID(header),
 		lgc:           logics.NewLogics(o.Engine, header, o.AuthManager, o.Config.Timer),
 	}
 }

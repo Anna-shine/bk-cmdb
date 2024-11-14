@@ -35,12 +35,12 @@ import (
 
 // Kit TODO
 type Kit struct {
-	Rid             string
-	Header          http.Header
-	Ctx             context.Context
-	CCError         errors.DefaultCCErrorIf
-	User            string
-	SupplierAccount string
+	Rid      string
+	Header   http.Header
+	Ctx      context.Context
+	CCError  errors.DefaultCCErrorIf
+	User     string
+	TenantID string
 }
 
 // Contexts TODO
@@ -502,11 +502,11 @@ func (kit *Kit) NewHeader() http.Header {
 // NewKitFromHeader generate a new kit from http header.
 func NewKitFromHeader(header http.Header, errorIf errors.CCErrorIf) *Kit {
 	return &Kit{
-		Rid:             httpheader.GetRid(header),
-		Header:          header,
-		Ctx:             util.NewContextFromHTTPHeader(header),
-		CCError:         errorIf.CreateDefaultCCErrorIf(httpheader.GetLanguage(header)),
-		User:            httpheader.GetUser(header),
-		SupplierAccount: httpheader.GetSupplierAccount(header),
+		Rid:      httpheader.GetRid(header),
+		Header:   header,
+		Ctx:      util.NewContextFromHTTPHeader(header),
+		CCError:  errorIf.CreateDefaultCCErrorIf(httpheader.GetLanguage(header)),
+		User:     httpheader.GetUser(header),
+		TenantID: httpheader.GetTenantID(header),
 	}
 }

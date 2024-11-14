@@ -41,7 +41,7 @@ func addProcEnablePortProperty(ctx context.Context, db dal.RDB, conf *upgrader.C
 	}
 
 	addPortEnable := Attribute{
-		OwnerID:       common.BKDefaultOwnerID,
+		OwnerID:       "0",
 		ObjectID:      common.BKInnerObjIDProc,
 		PropertyID:    common.BKProcPortEnable,
 		PropertyName:  "启用端口",
@@ -63,7 +63,7 @@ func addProcEnablePortProperty(ctx context.Context, db dal.RDB, conf *upgrader.C
 		LastTime:      time.Now(),
 	}
 
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	if err := upgrader.Insert(ctx, db, common.BKTableNameObjAttDes, addPortEnable, "id", uniqueFields); err != nil {
 		blog.ErrorJSON("addProcEnablePortProperty failed, Insert err: %s, attribute: %#v, ", err, addPortEnable)
 		return err
@@ -89,8 +89,10 @@ func addProcTemplatePortEnableProperty(ctx context.Context, db dal.RDB, conf *up
 	}
 
 	if err := db.Table(common.BKTableNameProcessTemplate).Update(ctx, updateCond, doc); err != nil {
-		blog.ErrorJSON("add process template proerpty id:%v. db operator error. condition:%s, doc:%s, err:%s", common.BKProcPortEnable, updateCond, doc, err.Error())
-		return fmt.Errorf("dd process template  proerpty id:%v, db operator error. err:%s", common.BKProcPortEnable, err.Error())
+		blog.ErrorJSON("add process template proerpty id:%v. db operator error. condition:%s, doc:%s, err:%s",
+			common.BKProcPortEnable, updateCond, doc, err.Error())
+		return fmt.Errorf("dd process template  proerpty id:%v, db operator error. err:%s", common.BKProcPortEnable,
+			err.Error())
 	}
 
 	return nil
@@ -108,8 +110,10 @@ func setProcInfoProtEnableDefaultValue(ctx context.Context, db dal.RDB, conf *up
 		},
 	}
 	if err := db.Table(common.BKTableNameBaseProcess).Update(ctx, updateCond, doc); err != nil {
-		blog.ErrorJSON("set process information id %s default value. db operator error. condition:%s, doc:%s, err:%s", common.BKProcPortEnable, updateCond, doc, err.Error())
-		return fmt.Errorf("set process information id %s default value. db operator error. err:%s", common.BKProcPortEnable, err.Error())
+		blog.ErrorJSON("set process information id %s default value. db operator error. condition:%s, doc:%s, err:%s",
+			common.BKProcPortEnable, updateCond, doc, err.Error())
+		return fmt.Errorf("set process information id %s default value. db operator error. err:%s",
+			common.BKProcPortEnable, err.Error())
 	}
 	return nil
 }

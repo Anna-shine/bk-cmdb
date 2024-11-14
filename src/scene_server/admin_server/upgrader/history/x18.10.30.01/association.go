@@ -71,7 +71,8 @@ func createInstanceAssociationIndex(ctx context.Context, db dal.RDB, conf *upgra
 			continue
 		}
 		if err := db.Table(common.BKTableNameInstAsst).CreateIndex(ctx, idx); err != nil && !db.IsDuplicatedError(err) {
-			blog.ErrorJSON("create index to cc_InstAsst error, err:%s, current index:%s, all create index:%s", err.Error(), idx, createIdxArr)
+			blog.ErrorJSON("create index to cc_InstAsst error, err:%s, current index:%s, all create index:%s",
+				err.Error(), idx, createIdxArr)
 			return err
 		}
 
@@ -84,60 +85,60 @@ func createInstanceAssociationIndex(ctx context.Context, db dal.RDB, conf *upgra
 func addPresetAssociationType(ctx context.Context, db dal.RDB, conf *upgrader.Config) error {
 	tablename := common.BKTableNameAsstDes
 
-	asstTypes := []metadata.AssociationKind{
+	asstTypes := []map[string]interface{}{
 		{
-			AssociationKindID:       "belong",
-			AssociationKindName:     "",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "属于",
-			DestinationToSourceNote: "包含",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "belong",
+			"bk_asst_name":        "",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "属于",
+			"dest_des":            "包含",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 		{
-			AssociationKindID:       "group",
-			AssociationKindName:     "",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "组成",
-			DestinationToSourceNote: "组成于",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "group",
+			"bk_asst_name":        "",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "组成",
+			"dest_des":            "组成于",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 		{
-			AssociationKindID:       "bk_mainline",
-			AssociationKindName:     "",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "组成",
-			DestinationToSourceNote: "组成于",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "bk_mainline",
+			"bk_asst_name":        "",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "组成",
+			"dest_des":            "组成于",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 		{
-			AssociationKindID:       "run",
-			AssociationKindName:     "",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "运行于",
-			DestinationToSourceNote: "运行",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "run",
+			"bk_asst_name":        "",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "运行于",
+			"dest_des":            "运行",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 		{
-			AssociationKindID:       "connect",
-			AssociationKindName:     "",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "上联",
-			DestinationToSourceNote: "下联",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "connect",
+			"bk_asst_name":        "",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "上联",
+			"dest_des":            "下联",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 		{
-			AssociationKindID:       "default",
-			AssociationKindName:     "默认关联",
-			OwnerID:                 conf.OwnerID,
-			SourceToDestinationNote: "关联",
-			DestinationToSourceNote: "被关联",
-			Direction:               metadata.DestinationToSource,
-			IsPre:                   ptrue(),
+			"bk_asst_id":          "default",
+			"bk_asst_name":        "默认关联",
+			"bk_supplier_account": conf.OwnerID,
+			"src_des":             "关联",
+			"dest_des":            "被关联",
+			"direction":           metadata.DestinationToSource,
+			"ispre":               ptrue(),
 		},
 	}
 
@@ -173,7 +174,10 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 	}
 
 	properyMap := map[string]metadata.ObjAttDes{}
-	buildObjPropertyMapKey := func(objID string, propertyID string) string { return fmt.Sprintf("%s:%s", objID, propertyID) }
+	buildObjPropertyMapKey := func(objID string, propertyID string) string {
+		return fmt.Sprintf("%s:%s", objID,
+			propertyID)
+	}
 	for _, property := range propertys {
 		properyMap[buildObjPropertyMapKey(property.ObjectID, property.PropertyID)] = property
 		blog.Infof("key %s: %+v", buildObjPropertyMapKey(property.ObjectID, property.PropertyID), property)
@@ -219,7 +223,8 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 			case "multiasst":
 				asst.Mapping = metadata.ManyToManyMapping
 			default:
-				blog.Warnf("property: %+v, asst: %+v, for key: %v", property, asst, buildObjPropertyMapKey(asst.ObjectID, asst.ObjectAttID))
+				blog.Warnf("property: %+v, asst: %+v, for key: %v", property, asst,
+					buildObjPropertyMapKey(asst.ObjectID, asst.ObjectAttID))
 				asst.Mapping = metadata.ManyToManyMapping
 			}
 			// 交换 源<->目标
@@ -248,12 +253,15 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 				page += 1
 				// update ObjAsst
 				instAssts := []metadata.InstAsst{}
-				blog.InfoJSON("find  data from table:%s, page:%s, cond:%s", common.BKTableNameInstAsst, page, instCond.ToMapStr())
-				if err = db.Table(common.BKTableNameInstAsst).Find(instCond.ToMapStr()).Limit(pageSize).All(ctx, &instAssts); err != nil {
+				blog.InfoJSON("find  data from table:%s, page:%s, cond:%s", common.BKTableNameInstAsst, page,
+					instCond.ToMapStr())
+				if err = db.Table(common.BKTableNameInstAsst).Find(instCond.ToMapStr()).Limit(pageSize).All(ctx,
+					&instAssts); err != nil {
 					return err
 				}
 
-				blog.InfoJSON("find  data from table:%s, cond:%s, result count:%s", common.BKTableNameInstAsst, instCond.ToMapStr(), len(instAssts))
+				blog.InfoJSON("find  data from table:%s, cond:%s, result count:%s", common.BKTableNameInstAsst,
+					instCond.ToMapStr(), len(instAssts))
 				if len(instAssts) == 0 {
 					break
 				}
@@ -303,13 +311,15 @@ func reconcilAsstData(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 	deleteHostCloudAssociation := condition.CreateCondition()
 	deleteHostCloudAssociation.Field("bk_obj_id").Eq(common.BKInnerObjIDHost)
 	deleteHostCloudAssociation.Field("bk_asst_obj_id").Eq(common.BKInnerObjIDPlat)
-	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAsst, deleteHostCloudAssociation.ToMapStr())
+	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAsst,
+		deleteHostCloudAssociation.ToMapStr())
 	err = db.Table(common.BKTableNameObjAsst).Delete(ctx, deleteHostCloudAssociation.ToMapStr())
 	if err != nil {
 		return err
 	}
 
-	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAttDes, propertyCond.ToMapStr())
+	blog.InfoJSON("delete host cloud association table:%s, cond:%s", common.BKTableNameObjAttDes,
+		propertyCond.ToMapStr())
 	// drop outdate propertys
 	err = db.Table(common.BKTableNameObjAttDes).Delete(ctx, propertyCond.ToMapStr())
 	if err != nil {
@@ -354,7 +364,8 @@ func dropFlagColumn(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 	pageSize := uint64(2000)
 	for startIdx := uint64(0); startIdx < cnt; startIdx += pageSize {
 		insts := make([]map[string]int64, 0)
-		if err := db.Table(common.BKTableNameInstAsst).Find(flagFilter).Fields(common.BKFieldID).Start(startIdx).Limit(pageSize).All(ctx, &insts); err != nil {
+		if err := db.Table(common.BKTableNameInstAsst).Find(flagFilter).Fields(common.BKFieldID).Start(startIdx).Limit(pageSize).All(ctx,
+			&insts); err != nil {
 			blog.Errorf("find insts failed, Find err: %s", err.Error())
 			return err
 		}

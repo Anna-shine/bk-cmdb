@@ -123,8 +123,8 @@ func (s *Service) UserInfo(c *gin.Context) {
 	if ok {
 		resultData.Data.AvatarUrl = avatarUrl
 	}
-	iultiSupplier, ok := session.Get(common.WEBSessionMultiSupplierKey).(string)
-	if ok && common.LoginSystemMultiSupplierTrue == iultiSupplier {
+	iultiSupplier, ok := session.Get(common.WEBSessionMultiTenantKey).(string)
+	if ok && common.LoginSystemMultiTenantTrue == iultiSupplier {
 		resultData.Data.MultiSupplier = true // true
 	} else {
 		resultData.Data.MultiSupplier = false // true
@@ -134,8 +134,8 @@ func (s *Service) UserInfo(c *gin.Context) {
 	return
 }
 
-// UpdateSupplier TODO
-func (s *Service) UpdateSupplier(c *gin.Context) {
+// UpdateTenant TODO
+func (s *Service) UpdateTenant(c *gin.Context) {
 
 	rid := httpheader.GetRid(c.Request.Header)
 	session := sessions.Default(c)
@@ -165,14 +165,14 @@ func (s *Service) UpdateSupplier(c *gin.Context) {
 	}
 
 	ownerID := c.Param("id")
-	var supplier *metadata.LoginUserInfoOwnerUinList
+	var tenant *metadata.LoginUserInfoOwnerUinList
 	for idx, row := range ownerUinList {
 		if row.OwnerID == ownerID {
-			supplier = &ownerUinList[idx]
+			tenant = &ownerUinList[idx]
 		}
 	}
 
-	if nil == supplier {
+	if nil == tenant {
 		blog.ErrorJSON("session not owner info. owner:%s, ownerlist:%s, rid:%s", ownerID, ownerUinList, rid)
 		c.JSON(http.StatusBadRequest, metadata.BaseResp{
 			Result: false,
@@ -181,8 +181,8 @@ func (s *Service) UpdateSupplier(c *gin.Context) {
 		})
 		return
 	}
-	session.Set(common.WEBSessionOwnerUinKey, supplier.OwnerID)
-	session.Set(common.WEBSessionRoleKey, strconv.FormatInt(supplier.Role, 10))
+	session.Set(common.WEBSessionOwnerUinKey, tenant.OwnerID)
+	session.Set(common.WEBSessionRoleKey, strconv.FormatInt(tenant.Role, 10))
 	if err := session.Save(); err != nil {
 		blog.Errorf("save session failed, err: %+v, rid: %s", err, rid)
 	}
@@ -191,7 +191,7 @@ func (s *Service) UpdateSupplier(c *gin.Context) {
 	uin, _ := session.Get(common.WEBSessionUinKey).(string)
 	language := webcom.GetLanguageByHTTPRequest(c)
 
-	ownerM := user.NewOwnerManager(uin, supplier.OwnerID, language)
+	ownerM := user.NewOwnerManager(uin, tenant.OwnerID, language)
 	ownerM.CacheCli = s.CacheCli
 	ownerM.Engine = s.Engine
 	ownerM.ApiCli = s.ApiCli
@@ -209,7 +209,7 @@ func (s *Service) UpdateSupplier(c *gin.Context) {
 
 	ret := metadata.LoginChangeSupplierResult{}
 	ret.Result = true
-	ret.Data.ID = ownerID
+	ret.Data.TenantID = ownerID
 
 	c.JSON(200, ret)
 	return

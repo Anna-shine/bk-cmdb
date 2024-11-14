@@ -28,7 +28,7 @@ func addHostOuterIPUnique(ctx context.Context, db dal.RDB, conf *upgrader.Config
 	attrCond := condition.CreateCondition()
 	attrCond.Field(common.BKObjIDField).Eq(common.BKInnerObjIDHost)
 	attrCond.Field(common.BKPropertyIDField).Eq(common.BKHostOuterIPField)
-	attrCond.Field(common.BKOwnerIDField).Eq(conf.OwnerID)
+	attrCond.Field("bk_supplier_account").Eq(conf.OwnerID)
 	attr := new(metadata.Attribute)
 	err := db.Table(common.BKTableNameObjAttDes).Find(attrCond.ToMapStr()).One(ctx, attr)
 	if err != nil {
@@ -39,7 +39,7 @@ func addHostOuterIPUnique(ctx context.Context, db dal.RDB, conf *upgrader.Config
 	// check if this unique exists
 	uniqueCond := condition.CreateCondition()
 	uniqueCond.Field(common.BKObjIDField).Eq(common.BKInnerObjIDHost)
-	uniqueCond.Field(common.BKOwnerIDField).Eq(conf.OwnerID)
+	uniqueCond.Field("bk_supplier_account").Eq(conf.OwnerID)
 	existUniques := make([]objectUnique, 0)
 	err = db.Table(common.BKTableNameObjUnique).Find(uniqueCond.ToMapStr()).All(ctx, &existUniques)
 	if err != nil {

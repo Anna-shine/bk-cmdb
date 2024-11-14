@@ -28,10 +28,12 @@ import (
 )
 
 // CreateServiceTemplate TODO
-func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadata.ServiceTemplate) (*metadata.ServiceTemplate, errors.CCErrorCoder) {
+func (p *processOperation) CreateServiceTemplate(kit *rest.Kit,
+	template metadata.ServiceTemplate) (*metadata.ServiceTemplate, errors.CCErrorCoder) {
 	// base attribute validate
 	if field, err := template.Validate(kit.CCError); err != nil {
-		blog.Errorf("CreateServiceTemplate failed, validation failed, code: %d, err: %+v, rid: %s", common.CCErrCommParamsInvalid, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, validation failed, code: %d, err: %+v, rid: %s",
+			common.CCErrCommParamsInvalid, err, kit.Rid)
 		err := kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, field)
 		return nil, err
 	}
@@ -39,7 +41,8 @@ func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadat
 	var bizID int64
 	var err error
 	if bizID, err = p.validateBizID(kit, template.BizID); err != nil {
-		blog.Errorf("CreateServiceTemplate failed, validation failed, code: %d, err: %+v, rid: %s", common.CCErrCommParamsInvalid, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, validation failed, code: %d, err: %+v, rid: %s",
+			common.CCErrCommParamsInvalid, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKAppIDField)
 	}
 
@@ -49,7 +52,8 @@ func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadat
 	// validate service category id field
 	category, err := p.GetServiceCategory(kit, template.ServiceCategoryID)
 	if err != nil {
-		blog.Errorf("CreateServiceTemplate failed, category id invalid, code: %d, err: %+v, rid: %s", common.CCErrCommParamsInvalid, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, category id invalid, code: %d, err: %+v, rid: %s",
+			common.CCErrCommParamsInvalid, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, "service_category_id")
 	}
 	isLeafNode, ccErr := p.IsServiceCategoryLeafNode(kit, category.ID)
@@ -64,7 +68,8 @@ func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadat
 	// make sure biz id identical with category
 	// categoryBizID 0 and 1 is default category
 	if bizID != category.BizID && category.BizID != 0 {
-		blog.Errorf("CreateServiceTemplate failed, validation failed, input bizID:%d not equal category bizID:%d, rid: %s", bizID, category.BizID, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, validation failed, input bizID:%d not equal category bizID:%d, rid: %s",
+			bizID, category.BizID, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKAppIDField)
 	}
 
@@ -75,11 +80,13 @@ func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadat
 	}
 	count, err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(nameUniqueFilter).Count(kit.Ctx)
 	if err != nil {
-		blog.Errorf("CreateServiceTemplate failed, count same name instance failed, filter: %+v, err: %+v, rid: %s", nameUniqueFilter, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, count same name instance failed, filter: %+v, err: %+v, rid: %s",
+			nameUniqueFilter, err, kit.Rid)
 		return nil, kit.CCError.CCError(common.CCErrCommDBSelectFailed)
 	}
 	if count > 0 {
-		blog.Errorf("CreateServiceTemplate failed, service instance name duplicated, code: %d, err: %+v, rid: %s", common.CCErrCommParamsInvalid, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, service instance name duplicated, code: %d, err: %+v, rid: %s",
+			common.CCErrCommParamsInvalid, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommDuplicateItem, common.BKFieldName)
 	}
 
@@ -95,22 +102,26 @@ func (p *processOperation) CreateServiceTemplate(kit *rest.Kit, template metadat
 	template.Modifier = kit.User
 	template.CreateTime = time.Now()
 	template.LastTime = time.Now()
-	template.SupplierAccount = kit.SupplierAccount
+	template.TenantID = kit.TenantID
 
 	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Insert(kit.Ctx, &template); nil != err {
-		blog.Errorf("CreateServiceTemplate failed, mongodb failed, table: %s, template: %+v, err: %+v, rid: %s", common.BKTableNameServiceTemplate, template, err, kit.Rid)
+		blog.Errorf("CreateServiceTemplate failed, mongodb failed, table: %s, template: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceTemplate, template, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommDBInsertFailed)
 	}
 	return &template, nil
 }
 
 // GetServiceTemplate TODO
-func (p *processOperation) GetServiceTemplate(kit *rest.Kit, templateID int64) (*metadata.ServiceTemplate, errors.CCErrorCoder) {
+func (p *processOperation) GetServiceTemplate(kit *rest.Kit, templateID int64) (*metadata.ServiceTemplate,
+	errors.CCErrorCoder) {
 	template := metadata.ServiceTemplate{}
 
 	filter := map[string]int64{common.BKFieldID: templateID}
-	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(filter).One(kit.Ctx, &template); nil != err {
-		blog.Errorf("GetServiceTemplate failed, mongodb failed, table: %s, filter: %+v, template: %+v, err: %+v, rid: %s", common.BKTableNameServiceTemplate, filter, template, err, kit.Rid)
+	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(filter).One(kit.Ctx,
+		&template); nil != err {
+		blog.Errorf("GetServiceTemplate failed, mongodb failed, table: %s, filter: %+v, template: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceTemplate, filter, template, err, kit.Rid)
 		if mongodb.Client().IsNotFoundError(err) {
 			return nil, kit.CCError.CCError(common.CCErrCommNotFound)
 		}
@@ -308,7 +319,7 @@ func (p *processOperation) ListServiceTemplates(kit *rest.Kit, option metadata.L
 	*metadata.MultipleServiceTemplate, errors.CCErrorCoder) {
 
 	filter := map[string]interface{}{}
-	
+
 	if option.BusinessID != 0 {
 		filter[common.BKAppIDField] = option.BusinessID
 	}
@@ -362,7 +373,8 @@ func (p *processOperation) ListServiceTemplates(kit *rest.Kit, option metadata.L
 	var total uint64
 	var err error
 	if total, err = mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(filter).Count(kit.Ctx); nil != err {
-		blog.Errorf("ListServiceTemplates failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameServiceTemplate, filter, err, kit.Rid)
+		blog.Errorf("ListServiceTemplates failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceTemplate, filter, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 
@@ -371,8 +383,10 @@ func (p *processOperation) ListServiceTemplates(kit *rest.Kit, option metadata.L
 		sort = option.Page.Sort
 	}
 	templates := make([]metadata.ServiceTemplate, 0)
-	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(filter).Start(uint64(option.Page.Start)).Limit(uint64(option.Page.Limit)).Sort(sort).All(kit.Ctx, &templates); nil != err {
-		blog.Errorf("ListServiceTemplates failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s", common.BKTableNameServiceTemplate, filter, err, kit.Rid)
+	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Find(filter).Start(uint64(option.Page.Start)).Limit(uint64(option.Page.Limit)).Sort(sort).All(kit.Ctx,
+		&templates); nil != err {
+		blog.Errorf("ListServiceTemplates failed, mongodb failed, table: %s, filter: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceTemplate, filter, err, kit.Rid)
 		return nil, kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 
@@ -387,7 +401,8 @@ func (p *processOperation) ListServiceTemplates(kit *rest.Kit, option metadata.L
 func (p *processOperation) DeleteServiceTemplate(kit *rest.Kit, serviceTemplateID int64) errors.CCErrorCoder {
 	template, err := p.GetServiceTemplate(kit, serviceTemplateID)
 	if err != nil {
-		blog.Errorf("DeleteServiceTemplate failed, GetServiceTemplate failed, templateID: %d, err: %+v, rid: %s", serviceTemplateID, err, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, GetServiceTemplate failed, templateID: %d, err: %+v, rid: %s",
+			serviceTemplateID, err, kit.Rid)
 		return err
 	}
 
@@ -397,11 +412,13 @@ func (p *processOperation) DeleteServiceTemplate(kit *rest.Kit, serviceTemplateI
 	}
 	usageCount, e := mongodb.Client().Table(common.BKTableNameServiceInstance).Find(usageFilter).Count(kit.Ctx)
 	if nil != e {
-		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, process template usageFilter: %+v, err: %+v, rid: %s", common.BKTableNameServiceInstance, usageFilter, e, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, process template usageFilter: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceInstance, usageFilter, e, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 	if usageCount > 0 {
-		blog.Errorf("DeleteServiceTemplate failed, forbidden delete service template be referenced, code: %d, rid: %s", common.CCErrCommRemoveRecordHasChildrenForbidden, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, forbidden delete service template be referenced, code: %d, rid: %s",
+			common.CCErrCommRemoveRecordHasChildrenForbidden, kit.Rid)
 		err := kit.CCError.CCError(common.CCErrCommRemoveReferencedRecordForbidden)
 		return err
 	}
@@ -409,11 +426,13 @@ func (p *processOperation) DeleteServiceTemplate(kit *rest.Kit, serviceTemplateI
 	// service template that referenced by module shouldn't be removed
 	usageCount, e = mongodb.Client().Table(common.BKTableNameBaseModule).Find(usageFilter).Count(kit.Ctx)
 	if nil != e {
-		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, module usageFilter: %+v, err: %+v, rid: %s", common.BKTableNameServiceInstance, usageFilter, e, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, module usageFilter: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceInstance, usageFilter, e, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBSelectFailed)
 	}
 	if usageCount > 0 {
-		blog.Errorf("DeleteServiceTemplate failed, forbidden delete service template be referenced, code: %d, rid: %s", common.CCErrCommRemoveRecordHasChildrenForbidden, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, forbidden delete service template be referenced, code: %d, rid: %s",
+			common.CCErrCommRemoveRecordHasChildrenForbidden, kit.Rid)
 		err := kit.CCError.CCError(common.CCErrCommRemoveReferencedRecordForbidden)
 		return err
 	}
@@ -426,7 +445,8 @@ func (p *processOperation) DeleteServiceTemplate(kit *rest.Kit, serviceTemplateI
 
 	deleteFilter := map[string]int64{common.BKFieldID: template.ID}
 	if err := mongodb.Client().Table(common.BKTableNameServiceTemplate).Delete(kit.Ctx, deleteFilter); nil != err {
-		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, deleteFilter: %+v, err: %+v, rid: %s", common.BKTableNameServiceTemplate, deleteFilter, err, kit.Rid)
+		blog.Errorf("DeleteServiceTemplate failed, mongodb failed, table: %s, deleteFilter: %+v, err: %+v, rid: %s",
+			common.BKTableNameServiceTemplate, deleteFilter, err, kit.Rid)
 		return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 	}
 	return nil

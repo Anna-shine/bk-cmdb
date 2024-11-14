@@ -43,7 +43,7 @@ func (m *publicUser) LoginUser(c *gin.Context) bool {
 	loginSuccess := false
 	var userInfo *metadata.LoginUserInfo
 	multipleOwner := m.config.Session.MultipleOwner
-	if common.LoginSystemMultiSupplierTrue == multipleOwner {
+	if common.LoginSystemMultiTenantTrue == multipleOwner {
 		isMultiOwner = true
 	}
 
@@ -82,9 +82,9 @@ func (m *publicUser) LoginUser(c *gin.Context) bool {
 	session.Set(common.WEBSessionAvatarUrlKey, userInfo.AvatarUrl)
 	session.Set(common.WEBSessionOwnerUinListeKey, string(strOwnerUinList))
 	if userInfo.MultiSupplier {
-		session.Set(common.WEBSessionMultiSupplierKey, common.LoginSystemMultiSupplierTrue)
+		session.Set(common.WEBSessionMultiTenantKey, common.LoginSystemMultiTenantTrue)
 	} else {
-		session.Set(common.WEBSessionMultiSupplierKey, common.LoginSystemMultiSupplierFalse)
+		session.Set(common.WEBSessionMultiTenantKey, common.LoginSystemMultiTenantFalse)
 	}
 
 	if err := session.Save(); err != nil {

@@ -334,7 +334,7 @@ func (dt *dbTable) countQuotedWithDestModel(ctx context.Context, destModel strin
 func (dt *dbTable) findSyncIndexesLogicUnique(ctx context.Context) (map[string][]types.Index, error) {
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		return nil, err
 	}
@@ -343,8 +343,8 @@ func (dt *dbTable) findSyncIndexesLogicUnique(ctx context.Context) (map[string][
 	for _, obj := range objs {
 		blog.Infof("start object(%s) sharding table rid: %s", obj.ObjectID, dt.rid)
 
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 
 		uniques, err := dt.findObjUniques(ctx, obj.ObjectID)
 		if err != nil {
@@ -441,7 +441,7 @@ func (dt *dbTable) syncModelShardingTable(ctx context.Context) error {
 
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		return err
 	}
@@ -449,8 +449,8 @@ func (dt *dbTable) syncModelShardingTable(ctx context.Context) error {
 	for _, obj := range objs {
 		blog.Infof("start object(%s) sharding table rid: %s", obj.ObjectID, dt.rid)
 
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 
 		uniques, err := dt.findObjUniques(ctx, obj.ObjectID)
 		if err != nil {
@@ -547,7 +547,7 @@ func (dt *dbTable) createTable(ctx context.Context, obj metadata.Object, modelDB
 func (dt *dbTable) cleanRedundancyTable(ctx context.Context, modelDBTableNameMap map[string]struct{}) error {
 	objs := make([]metadata.Object, 0)
 	if err := dt.db.Table(common.BKTableNameObjDes).Find(nil).Fields(common.BKObjIDField,
-		common.BKIsPre, common.BKOwnerIDField).All(ctx, &objs); err != nil {
+		common.BKIsPre, common.TenantID).All(ctx, &objs); err != nil {
 		blog.Errorf("get all common object id  error. err: %s, rid: %s", err.Error(), dt.rid)
 		// NOTICE: 错误直接忽略不行后需功能
 		return err
@@ -555,8 +555,8 @@ func (dt *dbTable) cleanRedundancyTable(ctx context.Context, modelDBTableNameMap
 
 	// 再次确认数据，保证存在模型的的表不被删除
 	for _, obj := range objs {
-		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.OwnerID)
-		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.OwnerID)
+		instTable := common.GetObjectInstTableName(obj.ObjectID, obj.TenantID)
+		instAsstTable := common.GetObjectInstAsstTableName(obj.ObjectID, obj.TenantID)
 		delete(modelDBTableNameMap, instTable)
 		delete(modelDBTableNameMap, instAsstTable)
 

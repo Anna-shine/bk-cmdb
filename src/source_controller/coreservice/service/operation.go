@@ -83,9 +83,9 @@ func (s *coreService) CreateOperationChart(ctx *rest.Contexts) {
 		return
 	}
 
-	ownerID := httpheader.GetSupplierAccount(ctx.Kit.Header)
+	tenantID := httpheader.GetTenantID(ctx.Kit.Header)
 	chartConfig.CreateTime.Time = time.Now()
-	chartConfig.OwnerID = ownerID
+	chartConfig.TenantID = tenantID
 	result, err := s.core.StatisticOperation().CreateOperationChart(ctx.Kit, chartConfig)
 	if err != nil {
 		blog.Errorf("create chart fail, err: %v, rid: %v", err, ctx.Kit.Rid)

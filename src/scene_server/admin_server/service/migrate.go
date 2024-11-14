@@ -42,7 +42,7 @@ func (s *Service) migrate(req *restful.Request, resp *restful.Response) {
 	rHeader := req.Request.Header
 	rid := httpheader.GetRid(rHeader)
 	defErr := s.CCErr.CreateDefaultCCErrorIf(httpheader.GetLanguage(rHeader))
-	ownerID := common.BKDefaultOwnerID
+	ownerID := common.BKDefaultTenantID
 	updateCfg := &upgrader.Config{
 		OwnerID: ownerID,
 		User:    common.CCSystemOperatorUserName,
@@ -252,7 +252,7 @@ func (s *Service) migrateSpecifyVersion(req *restful.Request, resp *restful.Resp
 	rHeader := req.Request.Header
 	rid := httpheader.GetRid(rHeader)
 	defErr := s.CCErr.CreateDefaultCCErrorIf(httpheader.GetLanguage(rHeader))
-	ownerID := common.BKDefaultOwnerID
+	ownerID := common.BKDefaultTenantID
 	updateCfg := &upgrader.Config{
 		OwnerID: ownerID,
 		User:    common.CCSystemOperatorUserName,

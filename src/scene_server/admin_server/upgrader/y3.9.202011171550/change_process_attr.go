@@ -118,7 +118,7 @@ func addProcessAttr(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 		CreateTime:        &now,
 		LastTime:          &now,
 	}
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
 	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, row, "id", uniqueFields,
 		[]string{}); err != nil {
 		blog.ErrorJSON("addCloudHostAttr failed, Upsert err: %s, attribute: %#v, ", err, row)

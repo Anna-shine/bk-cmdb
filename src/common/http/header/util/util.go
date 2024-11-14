@@ -35,7 +35,7 @@ func CCHeader(header http.Header) http.Header {
 	httpheader.SetUserToken(newHeader, httpheader.GetUserToken(header))
 	httpheader.SetUserTicket(newHeader, httpheader.GetUserTicket(header))
 	httpheader.SetLanguage(newHeader, httpheader.GetLanguage(header))
-	httpheader.SetSupplierAccount(newHeader, httpheader.GetSupplierAccount(header))
+	httpheader.SetTenantID(newHeader, httpheader.GetTenantID(header))
 	httpheader.SetAppCode(newHeader, httpheader.GetAppCode(header))
 	httpheader.SetReqRealIP(newHeader, httpheader.GetReqRealIP(header))
 	if httpheader.IsReqFromWeb(header) {
@@ -56,7 +56,7 @@ func GenCommonHeader(user, supplierAccount, rid string) http.Header {
 	}
 
 	if supplierAccount == "" {
-		supplierAccount = common.BKDefaultOwnerID
+		supplierAccount = common.BKDefaultTenantID
 	}
 
 	if rid == "" {
@@ -64,7 +64,7 @@ func GenCommonHeader(user, supplierAccount, rid string) http.Header {
 	}
 
 	httpheader.SetUser(header, user)
-	httpheader.SetSupplierAccount(header, supplierAccount)
+	httpheader.SetTenantID(header, supplierAccount)
 	httpheader.SetRid(header, rid)
 	return header
 }
@@ -81,7 +81,7 @@ func NewHeader(header http.Header) http.Header {
 
 	httpheader.SetUser(newHeader, httpheader.GetUser(header))
 
-	httpheader.SetSupplierAccount(newHeader, httpheader.GetSupplierAccount(header))
+	httpheader.SetTenantID(newHeader, httpheader.GetTenantID(header))
 
 	httpheader.SetRid(newHeader, httpheader.GetRid(header))
 
@@ -108,12 +108,12 @@ func ConvertLegacyHeader(header http.Header) http.Header {
 		httpheader.SetUser(newHeader, header.Get(httpheader.BKHTTPHeaderUser))
 	}
 
-	if httpheader.GetSupplierAccount(header) == "" {
+	if httpheader.GetTenantID(header) == "" {
 		supplierAccount := header.Get(httpheader.BKHTTPOwner)
 		if supplierAccount == "" {
 			supplierAccount = header.Get(httpheader.BKHTTPOwnerID)
 		}
-		httpheader.SetSupplierAccount(newHeader, supplierAccount)
+		httpheader.SetTenantID(newHeader, supplierAccount)
 	}
 
 	if httpheader.GetRid(header) == "" {

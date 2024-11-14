@@ -45,7 +45,8 @@ func AddRecycleModule(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 	start := uint64(0)
 	limit := uint64(50)
 	for {
-		if err := db.Table(common.BKTableNameBaseApp).Find(bizFilter).Start(start).Limit(limit).All(ctx, &businessList); err != nil {
+		if err := db.Table(common.BKTableNameBaseApp).Find(bizFilter).Start(start).Limit(limit).All(ctx,
+			&businessList); err != nil {
 			blog.ErrorJSON("AddRecycleModule failed, find businesses failed, filter: %s, err: %s", bizFilter, err)
 			return fmt.Errorf("find businesses failed, err: %s", err.Error())
 		}
@@ -56,7 +57,8 @@ func AddRecycleModule(ctx context.Context, db dal.RDB, conf *upgrader.Config) er
 
 		for _, biz := range businessList {
 			if err := ensureRecycleModuleForBiz(ctx, db, conf, biz, defaultServiceCategoryID); err != nil {
-				blog.ErrorJSON("AddRecycleModule failed, ensureRecycleModuleForBiz failed, biz: %s, defaultServiceCategoryID: %s, err: %s", biz, defaultServiceCategoryID, err)
+				blog.ErrorJSON("AddRecycleModule failed, ensureRecycleModuleForBiz failed, biz: %s, defaultServiceCategoryID: %s, err: %s",
+					biz, defaultServiceCategoryID, err)
 				return fmt.Errorf("ensureRecycleModuleForBiz failed, err: %s", err.Error())
 			}
 		}
@@ -77,13 +79,15 @@ func getDefaultServiceCategoryID(ctx context.Context, db dal.RDB, conf *upgrader
 		},
 	}
 	if err := db.Table(common.BKTableNameServiceCategory).Find(filter).One(ctx, &serviceCategory); err != nil {
-		blog.ErrorJSON("getDefaultServiceCategoryID failed, find service category failed, filter: %s, err: %s", filter, err.Error())
+		blog.ErrorJSON("getDefaultServiceCategoryID failed, find service category failed, filter: %s, err: %s", filter,
+			err.Error())
 		return 0, fmt.Errorf("get default service category failed, err: %s", err)
 	}
 	return serviceCategory.ID, nil
 }
 
-func ensureRecycleModuleForBiz(ctx context.Context, db dal.RDB, conf *upgrader.Config, biz BizSimplify, defaultServiceCategoryID int64) error {
+func ensureRecycleModuleForBiz(ctx context.Context, db dal.RDB, conf *upgrader.Config, biz BizSimplify,
+	defaultServiceCategoryID int64) error {
 	moduleFilter := map[string]interface{}{
 		common.BKDefaultField: common.DefaultRecycleModuleFlag,
 		common.BKAppIDField:   biz.BKAppIDField,
@@ -99,7 +103,8 @@ func ensureRecycleModuleForBiz(ctx context.Context, db dal.RDB, conf *upgrader.C
 
 	resourcePoolSetID, err := getResourceSetID(ctx, db, conf, biz)
 	if err != nil {
-		blog.Errorf("ensureRecycleModuleForBiz failed, getResourceSetID failed, bizID: %s, err: %s", biz.BKAppIDField, err.Error())
+		blog.Errorf("ensureRecycleModuleForBiz failed, getResourceSetID failed, bizID: %s, err: %s", biz.BKAppIDField,
+			err.Error())
 		return fmt.Errorf("get resource pool set failed, bizID: %d, err: %s", biz.BKAppIDField, err.Error())
 	}
 
@@ -114,7 +119,7 @@ func ensureRecycleModuleForBiz(ctx context.Context, db dal.RDB, conf *upgrader.C
 	doc := map[string]interface{}{
 		common.BKSetIDField:             resourcePoolSetID,
 		common.BKParentIDField:          resourcePoolSetID,
-		common.BkSupplierAccount:        conf.OwnerID,
+		"bk_supplier_account":           conf.OwnerID,
 		common.CreateTimeField:          now,
 		common.LastTimeField:            now,
 		"bk_childid":                    nil,

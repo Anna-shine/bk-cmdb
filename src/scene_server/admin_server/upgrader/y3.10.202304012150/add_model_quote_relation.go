@@ -82,7 +82,7 @@ func addHiddenClassification(ctx context.Context, db dal.RDB, conf *upgrader.Con
 		return err
 	}
 
-	classification := metadata.Classification{
+	classification := Classification{
 		ID:                 int64(id),
 		OwnerID:            conf.OwnerID,
 		ClassificationType: metadata.HiddenType,
@@ -102,7 +102,7 @@ func addModelQuoteRelationIndex(ctx context.Context, db dal.RDB) error {
 			Name: common.CCLogicIndexNamePrefix + "destModel_bkSupplierAccount",
 			Keys: bson.D{
 				{common.BKDestModelField, 1},
-				{common.BKOwnerIDField, 1},
+				{"bk_supplier_account", 1},
 			},
 			Background: true,
 		},
@@ -111,7 +111,7 @@ func addModelQuoteRelationIndex(ctx context.Context, db dal.RDB) error {
 			Keys: bson.D{
 				{common.BKSrcModelField, 1},
 				{common.BKPropertyIDField, 1},
-				{common.BKOwnerIDField, 1},
+				{"bk_supplier_account", 1},
 			},
 			Background: true,
 		},
@@ -119,7 +119,7 @@ func addModelQuoteRelationIndex(ctx context.Context, db dal.RDB) error {
 			Name: common.CCLogicIndexNamePrefix + "srcModel_bkSupplierAccount",
 			Keys: bson.D{
 				{common.BKSrcModelField, 1},
-				{common.BKOwnerIDField, 1},
+				{"bk_supplier_account", 1},
 			},
 			Background: true,
 		},
@@ -157,4 +157,14 @@ func addModelQuoteRelationIndex(ctx context.Context, db dal.RDB) error {
 		}
 	}
 	return nil
+}
+
+// Classification the classification metadata definition
+type Classification struct {
+	ID                 int64  `field:"id" json:"id" bson:"id" mapstructure:"id"     `
+	ClassificationID   string `field:"bk_classification_id"  json:"bk_classification_id" bson:"bk_classification_id" mapstructure:"bk_classification_id"             `
+	ClassificationName string `field:"bk_classification_name" json:"bk_classification_name" bson:"bk_classification_name" mapstructure:"bk_classification_name"`
+	ClassificationType string `field:"bk_classification_type" json:"bk_classification_type" bson:"bk_classification_type" mapstructure:"bk_classification_type"`
+	ClassificationIcon string `field:"bk_classification_icon" json:"bk_classification_icon" bson:"bk_classification_icon" mapstructure:"bk_classification_icon"`
+	OwnerID            string `field:"bk_supplier_account" json:"bk_supplier_account" bson:"bk_supplier_account" mapstructure:"bk_supplier_account" `
 }

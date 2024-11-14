@@ -73,11 +73,11 @@ const (
 	// BKInstParentStr the inst parent name
 	BKInstParentStr = "bk_parent_id"
 
-	// BKDefaultOwnerID the default owner value
-	BKDefaultOwnerID = "0"
+	// BKDefaultTenantID the default owner value
+	BKDefaultTenantID = "0"
 
-	// BKSuperOwnerID the super owner value
-	BKSuperOwnerID = "superadmin"
+	// BKSuperTenantID the super owner value
+	BKSuperTenantID = "superadmin"
 
 	// BKDefaultDirSubArea the default dir subarea
 	BKDefaultDirSubArea = 0
@@ -303,8 +303,8 @@ const (
 	// BKDefaultField the default field
 	BKDefaultField = "default"
 
-	// BKOwnerIDField the owner field
-	BKOwnerIDField = "bk_supplier_account"
+	// TenantID the owner field
+	TenantID = "tenant_id"
 
 	// BKAppIDField the appid field
 	BKAppIDField = "bk_biz_id"
@@ -1382,8 +1382,8 @@ const (
 	HTTPCookieBKTicket = "bk_ticket"
 	// HTTPCookieLanguage is the blueking language cookie name
 	HTTPCookieLanguage = "blueking_language"
-	// HTTPCookieSupplierAccount is the supplier account cookie name
-	HTTPCookieSupplierAccount = "HTTP_BLUEKING_SUPPLIER_ID"
+	// HTTPCookieTenantAccount is the supplier account cookie name
+	HTTPCookieTenantAccount = "HTTP_BLUEKING_SUPPLIER_ID"
 
 	// WEBSessionUinKey TODO
 	WEBSessionUinKey = "username"
@@ -1401,13 +1401,13 @@ const (
 	WEBSessionOwnerUinListeKey = "owner_uin_list"
 	// WEBSessionAvatarUrlKey TODO
 	WEBSessionAvatarUrlKey = "avatar_url"
-	// WEBSessionMultiSupplierKey TODO
-	WEBSessionMultiSupplierKey = "multisupplier"
+	// WEBSessionMultiTenantKey TODO
+	WEBSessionMultiTenantKey = "multisupplier"
 
-	// LoginSystemMultiSupplierTrue TODO
-	LoginSystemMultiSupplierTrue = "1"
-	// LoginSystemMultiSupplierFalse TODO
-	LoginSystemMultiSupplierFalse = "0"
+	// LoginSystemMultiTenantTrue TODO
+	LoginSystemMultiTenantTrue = "1"
+	// LoginSystemMultiTenantFalse TODO
+	LoginSystemMultiTenantFalse = "0"
 
 	// LogoutHTTPSchemeCookieKey TODO
 	LogoutHTTPSchemeCookieKey = "http_scheme"

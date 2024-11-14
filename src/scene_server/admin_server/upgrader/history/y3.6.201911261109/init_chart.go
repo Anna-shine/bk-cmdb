@@ -30,17 +30,18 @@ func initInnerChart(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 		return fmt.Errorf("get next sequences failed, tableName: %s, err: %+v", common.BKTableNameChartConfig, err)
 	}
 
-	for index, chart := range metadata.InnerChartsArr {
-		innerChart := metadata.InnerChartsMap[chart]
+	for index, chart := range InnerChartsArr {
+		innerChart := InnerChartsMap[chart]
 		innerChart.ConfigID = idArr[index]
 		innerChart.CreateTime.Time = time.Now()
 		innerChart.OwnerID = conf.OwnerID
 		if err := db.Table(common.BKTableNameChartConfig).Insert(ctx, innerChart); err != nil {
-			return fmt.Errorf("insert chart config failed, tableName: %s, chart: %+v, err: %+v", common.BKTableNameChartConfig, innerChart, err)
+			return fmt.Errorf("insert chart config failed, tableName: %s, chart: %+v, err: %+v",
+				common.BKTableNameChartConfig, innerChart, err)
 		}
 	}
 
-	position := metadata.ChartPosition{
+	position := ChartPosition{
 		BizID: 0,
 		Position: metadata.PositionInfo{
 			Host: idArr[2:6],
@@ -50,8 +51,124 @@ func initInnerChart(ctx context.Context, db dal.RDB, conf *upgrader.Config) erro
 	}
 
 	if err := db.Table(common.BKTableNameChartPosition).Insert(ctx, position); err != nil {
-		return fmt.Errorf("insert cahrt position data failed, table: %s, position: %+v, err: %s", common.BKTableNameChartPosition, position, err)
+		return fmt.Errorf("insert cahrt position data failed, table: %s, position: %+v, err: %s",
+			common.BKTableNameChartPosition, position, err)
 	}
 
 	return nil
+}
+
+// ChartConfig TODO
+type ChartConfig struct {
+	ConfigID   uint64        `json:"config_id" bson:"config_id"`
+	ReportType string        `json:"report_type" bson:"report_type"`
+	Name       string        `json:"name" bson:"name"`
+	CreateTime metadata.Time `json:"create_time" bson:"create_time"`
+	OwnerID    string        `json:"bk_supplier_account" bson:"bk_supplier_account"`
+	ObjID      string        `json:"bk_obj_id" bson:"bk_obj_id"`
+	Width      string        `json:"width" bson:"width"`
+	ChartType  string        `json:"chart_type" bson:"chart_type"`
+	Field      string        `json:"field" bson:"field"`
+	XAxisCount int64         `json:"x_axis_count" bson:"x_axis_count"`
+}
+
+var (
+	// BizModuleHostChart TODO
+	BizModuleHostChart = ChartConfig{
+		ReportType: common.BizModuleHostChart,
+	}
+
+	// HostOsChart TODO
+	HostOsChart = ChartConfig{
+		ReportType: common.HostOSChart,
+		Name:       "按操作系统类型统计",
+		ObjID:      "host",
+		Width:      "50",
+		ChartType:  "pie",
+		Field:      "bk_os_type",
+		XAxisCount: 10,
+	}
+
+	// HostBizChart TODO
+	HostBizChart = ChartConfig{
+		ReportType: common.HostBizChart,
+		Name:       "按业务统计",
+		ObjID:      "host",
+		Width:      "50",
+		ChartType:  "bar",
+		XAxisCount: 10,
+	}
+
+	// HostCloudChart TODO
+	HostCloudChart = ChartConfig{
+		ReportType: common.HostCloudChart,
+		Name:       "按管控区域统计",
+		Width:      "100",
+		ObjID:      "host",
+		ChartType:  "bar",
+		Field:      common.BKCloudIDField,
+		XAxisCount: 20,
+	}
+
+	// HostChangeBizChart TODO
+	HostChangeBizChart = ChartConfig{
+		ReportType: common.HostChangeBizChart,
+		Name:       "主机数量变化趋势",
+		Width:      "100",
+		XAxisCount: 20,
+	}
+
+	// ModelAndInstCountChart TODO
+	ModelAndInstCountChart = ChartConfig{
+		ReportType: common.ModelAndInstCount,
+	}
+
+	// ModelInstChart TODO
+	ModelInstChart = ChartConfig{
+		ReportType: common.ModelInstChart,
+		Name:       "实例数量统计",
+		Width:      "50",
+		ChartType:  "bar",
+		XAxisCount: 10,
+	}
+
+	// ModelInstChangeChart TODO
+	ModelInstChangeChart = ChartConfig{
+		ReportType: common.ModelInstChangeChart,
+		Name:       "实例变更统计",
+		Width:      "50",
+		ChartType:  "bar",
+		XAxisCount: 10,
+	}
+
+	// InnerChartsMap TODO
+	InnerChartsMap = map[string]ChartConfig{
+		common.BizModuleHostChart:   BizModuleHostChart,
+		common.ModelAndInstCount:    ModelAndInstCountChart,
+		common.HostOSChart:          HostOsChart,
+		common.HostBizChart:         HostBizChart,
+		common.HostCloudChart:       HostCloudChart,
+		common.HostChangeBizChart:   HostChangeBizChart,
+		common.ModelInstChart:       ModelInstChart,
+		common.ModelInstChangeChart: ModelInstChangeChart,
+	}
+
+	// InnerChartsArr TODO
+	InnerChartsArr = []string{
+		common.BizModuleHostChart,
+		common.ModelAndInstCount,
+		common.HostOSChart,
+		common.HostBizChart,
+		common.HostCloudChart,
+		common.HostChangeBizChart,
+		common.ModelInstChart,
+		common.ModelInstChangeChart,
+	}
+)
+
+// ChartPosition TODO
+type ChartPosition struct {
+	BizID    int64                 `json:"bk_biz_id" bson:"bk_biz_id"`
+	Position metadata.PositionInfo `json:"position" bson:"position"`
+	OwnerID  string                `json:"bk_supplier_account" bson:"bk_supplier_account"`
 }

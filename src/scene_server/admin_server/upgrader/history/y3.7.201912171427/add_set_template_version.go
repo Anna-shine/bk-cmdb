@@ -72,35 +72,36 @@ func addSetVersionField(ctx context.Context, db dal.RDB, conf *upgrader.Config) 
 	}
 
 	now := metadata.Now()
-	attribute := metadata.Attribute{
-		ID:                int64(id),
-		OwnerID:           conf.OwnerID,
-		ObjectID:          common.BKInnerObjIDSet,
-		PropertyID:        "set_template_version",
-		PropertyName:      "集群模板",
-		PropertyGroup:     "default",
-		PropertyGroupName: "default",
-		PropertyIndex:     0,
-		Unit:              "",
-		Placeholder:       "",
-		IsEditable:        true,
-		IsPre:             true,
-		IsRequired:        false,
-		IsReadOnly:        true,
-		IsOnly:            false,
+	attribute := map[string]interface{}{
+		"id":                     int64(id),
+		"bk_supplier_account":    conf.OwnerID,
+		"bk_obj_id":              common.BKInnerObjIDSet,
+		"bk_property_id":         "set_template_version",
+		"bk_property_name":       "集群模板",
+		"bk_property_group":      "default",
+		"bk_property_group_name": "default",
+		"bk_property_index":      0,
+		"unit":                   "",
+		"placeholder":            "",
+		"editable":               true,
+		"ispre":                  true,
+		"isrequired":             false,
+		"isreadonly":             true,
+		"isonly":                 false,
 		// IsSystem = true 时，字段标记系统内部使用的字段，不会返回到前端
-		IsSystem: true,
+		"bk_issystem": true,
 		// IsAPI = true 时，字段对页面不可见
-		IsAPI:        true,
-		PropertyType: "int",
-		Option:       "",
-		Description:  "集群版本，从通集群模板同步",
-		Creator:      conf.User,
-		CreateTime:   &now,
-		LastTime:     &now,
+		"bk_isapi":         true,
+		"bk_property_type": "int",
+		"option":           "",
+		"description":      "集群版本，从通集群模板同步",
+		"creator":          conf.User,
+		"create_time":      &now,
+		"last_time":        &now,
 	}
-	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, common.BKOwnerIDField}
-	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, attribute, "id", uniqueFields, []string{}); err != nil {
+	uniqueFields := []string{common.BKObjIDField, common.BKPropertyIDField, "bk_supplier_account"}
+	if _, _, err := upgrader.Upsert(ctx, db, common.BKTableNameObjAttDes, attribute, "id", uniqueFields,
+		[]string{}); err != nil {
 		blog.Errorf("addSetVersionField failed, add set_template_version attribute failed, err: %+v", err)
 		return fmt.Errorf("add set_template_version attribute failed, err: %+v", err)
 	}

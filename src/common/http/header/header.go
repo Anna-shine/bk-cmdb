@@ -62,8 +62,8 @@ const (
 	// LanguageHeader is the language http header key, its value is from common.HTTPCookieLanguage cookie
 	LanguageHeader = "X-Bkcmdb-Language"
 
-	// SupplierAccountHeader is supplier account http header key
-	SupplierAccountHeader = "X-Bkcmdb-Supplier-Account"
+	// TenantHeader is supplier account http header key
+	TenantHeader = "X-Bkcmdb-Supplier-Account"
 
 	// ReqFromWebHeader is the http header key that represents if request is from web server
 	ReqFromWebHeader = "X-Bkcmdb-Request-From-Web"
