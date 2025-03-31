@@ -698,7 +698,6 @@ func (m *instanceManager) validInstIDs(kit *rest.Kit, property metadata.Attribut
 		}
 		return nil
 	}
-
 	if property.IsMultiple == nil {
 		return kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, common.BKIsMultipleField)
 	}
@@ -714,7 +713,6 @@ func (m *instanceManager) validInstIDs(kit *rest.Kit, property metadata.Attribut
 			blog.Errorf("get valEnumID failed, valID type is %T, err: %v, rid: %s", valID, err, kit.Rid)
 			return err
 		}
-
 		if valEnumID == 0 {
 			return fmt.Errorf("enum quote instID is %d, it is illegal", valEnumID)
 		}

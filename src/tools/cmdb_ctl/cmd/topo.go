@@ -277,14 +277,7 @@ func (s *topoCheckService) checkMainlineInstanceTopo() {
 		if instance.ParentInstanceID == 0 {
 			continue
 		}
-		var parentKey string
-		if instance.ObjectID == common.BKInnerObjIDSet && instance.Default == 1 {
-			// `空闲机池` 是一种特殊的set，它用来包含空闲机和故障机两个模块，它的父节点直接是业务（不论是否有自定义层级）
-			parentKey = fmt.Sprintf("%s:%d", common.BKInnerObjIDApp, instance.ParentInstanceID)
-		} else {
-			parentObjectID := s.objectParentMap[instance.ObjectID]
-			parentKey = fmt.Sprintf("%s:%d", parentObjectID, instance.ParentInstanceID)
-		}
+		parentKey := s.getParentKey(instance)
 		// check whether parent instance exist, if not, try to get it at best.
 		_, exist := s.instanceMap[parentKey]
 		if exist {
@@ -344,4 +337,16 @@ func (s *topoCheckService) checkMainlineInstanceTopo() {
 			Default:          defaultFieldValue,
 		}
 	}
+}
+
+func (s *topoCheckService) getParentKey(instance *topoInstance) string {
+	var parentKey string
+	if instance.ObjectID == common.BKInnerObjIDSet && instance.Default == 1 {
+		// `空闲机池` 是一种特殊的set，它用来包含空闲机和故障机两个模块，它的父节点直接是业务（不论是否有自定义层级）
+		parentKey = fmt.Sprintf("%s:%d", common.BKInnerObjIDApp, instance.ParentInstanceID)
+	} else {
+		parentObjectID := s.objectParentMap[instance.ObjectID]
+		parentKey = fmt.Sprintf("%s:%d", parentObjectID, instance.ParentInstanceID)
+	}
+	return parentKey
 }

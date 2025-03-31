@@ -794,11 +794,10 @@ func (o *object) createDefaultAttrs(kit *rest.Kit, isMainline bool, obj *metadat
 
 // CreateObjectByImport create object by import yaml
 func (o *object) CreateObjectByImport(kit *rest.Kit, data []metadata.YamlObject) ([]metadata.Object, error) {
-
 	assts := make([]metadata.AsstWithAsstObjInfo, 0)
 	objs := make([]metadata.Object, 0)
-	for _, objInfo := range data {
 
+	for _, objInfo := range data {
 		if err := objInfo.Validate(); err.ErrCode != 0 {
 			blog.Errorf("validate object info failed, objectinfo: %+v, rid: %s", objInfo, kit.Rid)
 			return nil, err.ToCCError(kit.CCError)
@@ -872,7 +871,6 @@ func (o *object) CreateObjectByImport(kit *rest.Kit, data []metadata.YamlObject)
 		blog.Errorf("create object associations failed, err: %v, rid: %s", err, kit.Rid)
 		return nil, err
 	}
-
 	return objs, nil
 }
 

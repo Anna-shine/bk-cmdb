@@ -124,7 +124,6 @@ func (m *modelAttribute) save(kit *rest.Kit, attribute metadata.Attribute) (id u
 	attribute.PropertyIndex = index
 	attribute.ID = int64(id)
 	attribute.OwnerID = kit.SupplierAccount
-
 	if attribute.CreateTime == nil {
 		attribute.CreateTime = &metadata.Time{}
 		attribute.CreateTime.Time = time.Now()
@@ -150,7 +149,6 @@ func (m *modelAttribute) save(kit *rest.Kit, attribute metadata.Attribute) (id u
 	// 对于枚举，枚举多选，枚举引用字段, 默认值是放在option中的，需要将default置为nil
 	if attribute.Default != nil && (attribute.PropertyType == common.FieldTypeEnum ||
 		attribute.PropertyType == common.FieldTypeEnumMulti || attribute.PropertyType == common.FieldTypeEnumQuote) {
-
 		attribute.Default = nil
 	}
 	if err = m.saveCheck(kit, attribute); err != nil {

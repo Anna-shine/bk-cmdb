@@ -115,7 +115,6 @@ func RunSyncDBTableIndex(ctx context.Context, e *backbone.Engine, db dal.RDB,
 				}
 				blog.Infof("end sync table rid: %s", rid)
 				time.Sleep(time.Second * time.Duration(options.ShardingTable.TableInterval))
-
 			} else {
 				blog.Infof("start table common index rid: %s", rid)
 				if err := dt.syncIndexes(ctx); err != nil {
@@ -124,7 +123,6 @@ func RunSyncDBTableIndex(ctx context.Context, e *backbone.Engine, db dal.RDB,
 				blog.Infof("end sync table index rid: %s", rid)
 				time.Sleep(time.Minute * time.Duration(options.ShardingTable.IndexesInterval))
 			}
-
 		}
 	}
 
@@ -132,7 +130,6 @@ func RunSyncDBTableIndex(ctx context.Context, e *backbone.Engine, db dal.RDB,
 	go syncWorker(dtTable, true)
 	dtIndex := &dbTable{db: db, rid: rid, options: options}
 	go syncWorker(dtIndex, false)
-
 }
 
 // RunSyncDBIndex TODO

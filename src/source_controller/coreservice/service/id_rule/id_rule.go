@@ -41,8 +41,7 @@ func (s *service) UpdateInstIDRule(ctx *rest.Contexts) {
 		return
 	}
 
-	cond := mapstr.MapStr{common.BKObjIDField: opt.ObjID}
-	cond = util.SetQueryOwner(cond, ctx.Kit.SupplierAccount)
+	cond := util.SetQueryOwner(mapstr.MapStr{common.BKObjIDField: opt.ObjID}, ctx.Kit.SupplierAccount)
 	allAttr := make([]metadata.Attribute, 0)
 	if err := mongodb.Client().Table(common.BKTableNameObjAttDes).Find(cond).All(ctx.Kit.Ctx, &allAttr); err != nil {
 		blog.Errorf("find attribute failed, cond: %+v, err: %v, rid: %s", cond, err, ctx.Kit.Rid)
@@ -65,14 +64,24 @@ func (s *service) UpdateInstIDRule(ctx *rest.Contexts) {
 		return
 	}
 
+	if err := updateInsts(ctx, opt, attr, attrTypeMap); err != nil {
+		blog.Errorf("update instances id rule failed, err: %v, rid: %s", err, ctx.Kit.Rid)
+		return
+	}
+	ctx.RespEntity(nil)
+}
+
+func updateInsts(ctx *rest.Contexts, opt *metadata.UpdateInstIDRuleOption, attr metadata.Attribute,
+	attrTypeMap map[string]string) error {
+
 	idField := common.GetInstIDField(opt.ObjID)
-	cond = mapstr.MapStr{common.BKObjIDField: opt.ObjID, idField: mapstr.MapStr{common.BKDBIN: opt.IDs}}
+	cond := mapstr.MapStr{common.BKObjIDField: opt.ObjID, idField: mapstr.MapStr{common.BKDBIN: opt.IDs}}
 	table := common.GetInstTableName(opt.ObjID, ctx.Kit.SupplierAccount)
 	insts := make([]mapstr.MapStr, 0)
 	if err := mongodb.Client().Table(table).Find(cond).All(ctx.Kit.Ctx, &insts); err != nil {
 		blog.Errorf("find instances failed, cond: %+v, err: %v, rid: %s", cond, err, ctx.Kit.Rid)
 		ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrCommDBSelectFailed))
-		return
+		return err
 	}
 
 	for _, inst := range insts {
@@ -85,20 +94,20 @@ func (s *service) UpdateInstIDRule(ctx *rest.Contexts) {
 		if err != nil {
 			blog.Errorf("get id rule val failed, inst: %+v, attr: %+v, err: %v, rid: %s", inst, attr, err, ctx.Kit.Rid)
 			ctx.RespAutoError(ctx.Kit.CCError.CCErrorf(common.CCErrCommParamsIsInvalid, err.Error()))
-			return
+			return err
 		}
 
 		id, exist := inst.Get(idField)
 		if !exist {
 			blog.Errorf("get instance %s value failed, inst: %+v, rid: %s", idField, inst, ctx.Kit.Rid)
 			ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrCommDBSelectFailed))
-			return
+			return err
 		}
 		idInt64, err := util.GetInt64ByInterface(id)
 		if err != nil {
 			blog.Errorf("get instance %s value failed, inst: %+v, err: %v, rid: %s", idField, inst, err, ctx.Kit.Rid)
 			ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrCommDBSelectFailed))
-			return
+			return err
 		}
 
 		cond = mapstr.MapStr{common.BKObjIDField: opt.ObjID, idField: idInt64}
@@ -106,8 +115,8 @@ func (s *service) UpdateInstIDRule(ctx *rest.Contexts) {
 		if err = mongodb.Client().Table(table).Update(ctx.Kit.Ctx, cond, data); err != nil {
 			blog.Errorf("update instance failed, cond: %+v, data: %+v, err: %v, rid: %s", cond, data, err, ctx.Kit.Rid)
 			ctx.RespAutoError(ctx.Kit.CCError.CCError(common.CCErrCommDBUpdateFailed))
-			return
+			return err
 		}
 	}
-	ctx.RespEntity(nil)
+	return nil
 }
