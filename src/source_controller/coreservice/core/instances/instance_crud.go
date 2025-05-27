@@ -105,6 +105,25 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 	return ids, nil
 }
 
+func testDB(kit *rest.Kit) error {
+	hostInfo := mapstr.MapStr{
+		"bk_host_innerip": "127.0.0.1",
+		"bk_host_id":      12,
+	}
+
+	err := mongodb.Shard(kit.ShardOpts()).Table(common.BKTableNameBaseHost).Insert(kit.Ctx, hostInfo)
+	if err != nil {
+		blog.Errorf("insert host failed, err: %v", err)
+		cnt, err := mongodb.Shard(kit.ShardOpts()).Table(common.BKTableNameBaseHost).Find(mapstr.MapStr{"bk_host_id": 12}).Count(kit.Ctx)
+		if err != nil {
+			blog.Errorf("find host failed, err: %v", err)
+			return err
+		}
+		blog.Errorf("find host success, cnt: %v", cnt)
+	}
+	return nil
+}
+
 func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.MapStr) (uint64, error) {
 	instTableName := common.GetInstTableName(objID, kit.TenantID)
 	ids, err := getSequences(kit, instTableName, 1)
@@ -119,10 +138,16 @@ func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.Ma
 			return 0, err
 		}
 
-		if err = m.validDefaultAreaHost(kit, objID, inputParam, int64(ids[0]), 3); err != nil {
-			blog.Errorf("valid default area host failed, err: %v, rid: %s", err, kit.Rid)
+		if err := testDB(kit); err != nil {
 			return 0, err
 		}
+		/*
+			if err = m.validDefaultAreaHost(kit, objID, inputParam, int64(ids[0]), 3); err != nil {
+				blog.Errorf("valid default area host failed, err: %v, rid: %s", err, kit.Rid)
+				return 0, err
+			}
+
+		*/
 	}
 
 	// build new object instance data.

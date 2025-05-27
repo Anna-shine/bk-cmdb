@@ -96,6 +96,10 @@ func Run(ctx context.Context, cancel context.CancelFunc, op *options.ServerOptio
 		return fmt.Errorf("init txn manager failed, err: %v", initErr)
 	}
 
+	if err = service.BackgroundTask(engine); err != nil {
+		return err
+	}
+
 	service.Engine = engine
 	service.Config = taskSrv.Config
 	service.CacheDB = cacheDB

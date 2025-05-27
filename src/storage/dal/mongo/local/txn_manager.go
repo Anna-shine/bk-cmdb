@@ -231,7 +231,7 @@ func (t *TxnManager) getTxnSessionID(cap *txnCapableInfo) (string, error) {
 	}
 
 	sessionID, exists := sessionIDMap[t.dbID]
-	blog.Errorf("6666777 %s", t.dbID)
+	blog.Errorf("dbID %s", t.dbID)
 	if exists {
 		return sessionID, nil
 	}
@@ -404,7 +404,6 @@ func (t *TxnManager) parseTxnInfoFromCtx(txnCtx context.Context) (*txnCapableInf
 
 // AutoRunWithTxn auto run with transaction
 func (t *TxnManager) AutoRunWithTxn(ctx context.Context, cli *mongo.Client, cmd func(ctx context.Context) error) error {
-	blog.Errorf("6666 %v", ctx)
 	cap, useTxn, err := t.parseTxnInfoFromCtx(ctx)
 	if err != nil {
 		return err

@@ -26,6 +26,7 @@ import (
 	"configcenter/src/common/blog"
 	"configcenter/src/common/errors"
 	httpheader "configcenter/src/common/http/header"
+	headerutil "configcenter/src/common/http/header/util"
 	"configcenter/src/common/http/rest"
 	"configcenter/src/common/mapstr"
 	"configcenter/src/common/metadata"
@@ -35,6 +36,7 @@ import (
 	"configcenter/src/common/webservice/restfulservice"
 	"configcenter/src/scene_server/task_server/app/options"
 	"configcenter/src/scene_server/task_server/logics"
+	"configcenter/src/storage/dal/mongo/sharding"
 	"configcenter/src/storage/dal/redis"
 	"configcenter/src/storage/driver/mongodb"
 	"configcenter/src/thirdparty/logplatform/opentelemetry"
@@ -176,4 +178,106 @@ func (s *Service) RefreshTenants(req *restful.Request, resp *restful.Response) {
 	tenant.SetTenant(tenants)
 
 	resp.WriteEntity(metadata.NewSuccessResp(tenants))
+}
+
+// BackgroundTask background task
+func (s *Service) BackgroundTask(engine *backbone.Engine) error {
+
+	kit := rest.NewKitFromHeader(headerutil.GenDefaultHeader(), engine.CCErr)
+	cond := map[string]any{common.MongoMetaID: common.ShardingDBConfID}
+	conf := new(sharding.ShardingDBConf)
+	err := mongodb.Shard(kit.SysShardOpts()).Table(common.BKTableNameSystem).Find(cond).One(kit.Ctx, &conf)
+	if err != nil {
+		blog.Errorf("get sharding db config failed, err: %v, rid: %s", err, kit.Rid)
+		return kit.CCError.CCError(common.CCErrCommDBSelectFailed)
+	}
+
+	if len(conf.SlaveDB) == 0 {
+		blog.Info("no slave db, skip default area host compare background task")
+		return nil
+	}
+
+	/*	go func() {
+			for {
+				time.Sleep(20 * time.Minute)
+				if err := s.removeRedundantHosts(kit); err != nil {
+					blog.Errorf("refresh tenant info failed, err: %v", err)
+					continue
+				}
+			}
+		}()
+	*/
+	return nil
+}
+
+func (s *Service) removeRedundantHosts(kit *rest.Kit) error {
+
+	allTenants := tenant.GetAllTenants()
+	for _, tenant := range allTenants {
+		newTenantKit := kit.NewKit().WithTenant(tenant.TenantID)
+		tenantCond := mapstr.MapStr{
+			common.TenantID: newTenantKit.TenantID,
+		}
+		count, err := mongodb.Shard(newTenantKit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Find(
+			tenantCond).Count(newTenantKit.Ctx)
+		if err != nil {
+			blog.Errorf("failed to get host count, err: %v, rid: %s", err, kit.Rid)
+			return err
+		}
+
+		for start := 0; start < int(count); start += common.BKMaxLimitSize {
+			host := make([]metadata.DefaultAreaHost, 0)
+			err = mongodb.Shard(newTenantKit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Find(tenantCond).
+				Start(uint64(start)).Limit(common.BKMaxLimitSize).Sort(common.BKFieldDBID).All(kit.Ctx, &host)
+			if err != nil {
+				blog.Errorf("failed to get host, err: %v, rid: %s", err, newTenantKit.Rid)
+				return err
+			}
+
+			hostIds := make([]int64, 0)
+			hostIdMap := make(map[int64]struct{})
+			for _, h := range host {
+				hostIds = append(hostIds, h.HostID)
+				hostIdMap[h.HostID] = struct{}{}
+			}
+			cond := mapstr.MapStr{
+				common.BKHostIDField: mapstr.MapStr{
+					common.BKDBIN: hostIds,
+				},
+			}
+
+			existHosts := make([]metadata.HostBriefInfo, 0)
+			err = mongodb.Shard(newTenantKit.ShardOpts()).Table(common.BKTableNameBaseHost).Find(cond).Fields(
+				common.BKHostIDField).All(kit.Ctx, &existHosts)
+			if err != nil {
+				blog.Errorf("failed to get exist hosts, err: %v, rid: %s", err, newTenantKit.Rid)
+				return err
+			}
+			existHostMap := map[int64]struct{}{}
+			for _, h := range existHosts {
+				existHostMap[h.HostID] = struct{}{}
+			}
+
+			redundantHost := make([]int64, 0)
+			for hostID := range hostIdMap {
+				if _, ok := existHostMap[hostID]; !ok {
+					redundantHost = append(redundantHost, hostID)
+				}
+			}
+
+			cond = mapstr.MapStr{
+				common.BKHostIDField: mapstr.MapStr{
+					common.BKDBIN: redundantHost,
+				},
+			}
+			err = mongodb.Shard(newTenantKit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Delete(
+				newTenantKit.Ctx, cond)
+			if err != nil {
+				blog.Errorf("failed to delete redundant host, err: %v, rid: %s", err, newTenantKit.Rid)
+				return err
+			}
+		}
+
+	}
+	return nil
 }
