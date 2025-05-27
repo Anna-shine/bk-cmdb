@@ -935,6 +935,9 @@ const DefaultAppName string = "资源池"
 // DefaultCloudName default area
 const DefaultCloudName string = "Default Area"
 
+// DefaultAreaCloudID the default area cloud id
+const DefaultAreaCloudID int = 0
+
 // DefaultInstName TODO
 const DefaultInstName string = "实例名"
 

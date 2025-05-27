@@ -51,6 +51,7 @@ func CCHeader(header http.Header) http.Header {
 func GenCommonHeader(user, tenantID, rid string) http.Header {
 	header := make(http.Header)
 	header.Set("Content-Type", "application/json")
+	header.Set("language", "1")
 
 	if user == "" {
 		user = common.CCSystemOperatorUserName

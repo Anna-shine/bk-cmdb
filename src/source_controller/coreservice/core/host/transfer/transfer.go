@@ -164,6 +164,24 @@ func (t *genericTransfer) DeleteHosts(kit *rest.Kit, hostIDs []int64) error {
 		return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
 	}
 
+	return removeDefaultAreaHost(kit, hostIDs, 3)
+}
+
+// removeDefaultAreaHost remove default area host with retryTime
+func removeDefaultAreaHost(kit *rest.Kit, hostIDs []int64, retryTime int) error {
+	if retryTime <= 0 {
+		blog.Errorf("retry delete host from default area failed, rid: %s", kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommDBDeleteFailed)
+	}
+
+	hostCond := map[string]interface{}{common.BKHostIDField: map[string]interface{}{common.BKDBIN: hostIDs}}
+	err := mongodb.Shard(kit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Delete(kit.Ctx, hostCond)
+	if err != nil {
+		blog.Errorf("delete host failed from default area, err: %s, host ID: %+v, rid: %s", err, hostIDs,
+			kit.Rid)
+		return removeDefaultAreaHost(kit, hostIDs, retryTime-1)
+	}
+
 	return nil
 }
 

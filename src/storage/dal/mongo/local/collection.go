@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"configcenter/src/common"
+	"configcenter/src/common/blog"
 	"configcenter/src/common/util"
 	"configcenter/src/storage/dal/types"
 	dtype "configcenter/src/storage/types"
@@ -242,6 +243,7 @@ func (c *Collection) DeleteMany(ctx context.Context, filter types.Filter) (uint6
 
 	var deleteCount uint64
 	err = c.tm.AutoRunWithTxn(ctx, c.cli.Client(), func(ctx context.Context) error {
+		blog.Errorf("dele %s", c.collName)
 		deleteRet, err := c.cli.Database().Collection(c.collName).DeleteMany(ctx, filter)
 		if err != nil {
 			mtc.collectErrorCount(c.collName, deleteOper)

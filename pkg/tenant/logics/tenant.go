@@ -26,6 +26,7 @@ import (
 	"configcenter/pkg/tenant"
 	"configcenter/pkg/tenant/types"
 	"configcenter/src/apimachinery"
+	"configcenter/src/common"
 	"configcenter/src/common/blog"
 	"configcenter/src/common/http/header/util"
 	commontypes "configcenter/src/common/types"

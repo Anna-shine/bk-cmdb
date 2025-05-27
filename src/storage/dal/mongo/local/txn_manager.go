@@ -172,7 +172,7 @@ func (t *TxnManager) GenTxnSessionInfo(cap *txnCapableInfo) (*SessionInfo, error
 		return nil, err
 	}
 	key := sessionKey(sessionID).genTxnNumKey()
-
+	blog.Errorf("nicole test: key: %s", key)
 	pip := t.cache.Pipeline()
 	defer pip.Close()
 
@@ -185,6 +185,7 @@ func (t *TxnManager) GenTxnSessionInfo(cap *txnCapableInfo) (*SessionInfo, error
 		return nil, err
 	}
 	num := incrBy.Val()
+	blog.Errorf("nicole test: num: %d", num)
 
 	// value of (num - num/2 +1) is the real transaction number
 	// in a distribute session.
@@ -230,6 +231,7 @@ func (t *TxnManager) getTxnSessionID(cap *txnCapableInfo) (string, error) {
 	}
 
 	sessionID, exists := sessionIDMap[t.dbID]
+	blog.Errorf("6666777 %s", t.dbID)
 	if exists {
 		return sessionID, nil
 	}
@@ -402,6 +404,7 @@ func (t *TxnManager) parseTxnInfoFromCtx(txnCtx context.Context) (*txnCapableInf
 
 // AutoRunWithTxn auto run with transaction
 func (t *TxnManager) AutoRunWithTxn(ctx context.Context, cli *mongo.Client, cmd func(ctx context.Context) error) error {
+	blog.Errorf("6666 %v", ctx)
 	cap, useTxn, err := t.parseTxnInfoFromCtx(ctx)
 	if err != nil {
 		return err

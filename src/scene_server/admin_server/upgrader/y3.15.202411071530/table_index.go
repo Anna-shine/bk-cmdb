@@ -94,10 +94,11 @@ var tableIndexMap = map[string][]daltypes.Index{
 }
 
 var platTableIndexesArr = map[string][]daltypes.Index{
-	common.BKTableNameSystem:         nil,
-	common.BKTableNameIDgenerator:    nil,
-	common.BKTableNameTenantTemplate: templateIndexes,
-	common.BKTableNameTenant:         tenantIndexes,
+	common.BKTableNameSystem:          nil,
+	common.BKTableNameIDgenerator:     nil,
+	common.BKTableNameTenantTemplate:  templateIndexes,
+	common.BKTableNameTenant:          tenantIndexes,
+	common.BKTableNameDefaultAreaHost: defaultAreaHostIndexes,
 }
 
 var tableInstAsstArr = []string{

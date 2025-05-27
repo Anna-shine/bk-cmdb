@@ -13,8 +13,10 @@
 package instances
 
 import (
+	"fmt"
 	"time"
 
+	"configcenter/pkg/tenant"
 	"configcenter/src/common"
 	"configcenter/src/common/blog"
 	"configcenter/src/common/errors"
@@ -41,6 +43,11 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 			params[idx], err = metadata.ConvertHostSpecialStringToArray(params[idx])
 			if err != nil {
 				blog.Errorf("convert host special string to array failed, err: %v, rid: %s", err, kit.Rid)
+				return nil, err
+			}
+
+			if err = m.validDefaultAreaHost(kit, objID, params[idx], int64(ids[idx]), 3); err != nil {
+				blog.Errorf("valid default area host failed, err: %v, rid: %s", err, kit.Rid)
 				return nil, err
 			}
 		}
@@ -81,6 +88,14 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 	if err != nil {
 		blog.Errorf("save instances failed, err: %v, objID: %s, instances: %v, rid: %s", err, objID, params,
 			kit.Rid)
+
+		if objID == common.BKInnerObjIDHost {
+			if err = m.DelRedundantHost(kit, objID, ids); err != nil {
+				blog.Errorf("delete default area host failed, err: %v, rid: %s", err, kit.Rid)
+				return nil, err
+			}
+		}
+
 		if mongodb.IsDuplicatedError(err) {
 			return nil, kit.CCError.CCErrorf(common.CCErrCommDuplicateItem, mongodb.GetDuplicateKey(err))
 		}
@@ -91,18 +106,23 @@ func (m *instanceManager) batchSave(kit *rest.Kit, objID string, params []mapstr
 }
 
 func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.MapStr) (uint64, error) {
+	instTableName := common.GetInstTableName(objID, kit.TenantID)
+	ids, err := getSequences(kit, instTableName, 1)
+	if err != nil {
+		return 0, err
+	}
+
 	if objID == common.BKInnerObjIDHost {
 		var err error
 		inputParam, err = metadata.ConvertHostSpecialStringToArray(inputParam)
 		if err != nil {
 			return 0, err
 		}
-	}
 
-	instTableName := common.GetInstTableName(objID, kit.TenantID)
-	ids, err := getSequences(kit, instTableName, 1)
-	if err != nil {
-		return 0, err
+		if err = m.validDefaultAreaHost(kit, objID, inputParam, int64(ids[0]), 3); err != nil {
+			blog.Errorf("valid default area host failed, err: %v, rid: %s", err, kit.Rid)
+			return 0, err
+		}
 	}
 
 	// build new object instance data.
@@ -137,6 +157,14 @@ func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.Ma
 	if err != nil {
 		blog.Errorf("save instance error. err: %v, objID: %s, instance: %+v, rid: %s", err, objID, inputParam,
 			kit.Rid)
+
+		if objID == common.BKInnerObjIDHost {
+			if err = m.DelRedundantHost(kit, objID, ids); err != nil {
+				blog.Errorf("delete default area host failed, err: %v, rid: %s", err, kit.Rid)
+				return 0, err
+			}
+		}
+
 		if mongodb.IsDuplicatedError(err) {
 			return ids[0], kit.CCError.CCErrorf(common.CCErrCommDuplicateItem, mongodb.GetDuplicateKey(err))
 		}
@@ -144,6 +172,25 @@ func (m *instanceManager) save(kit *rest.Kit, objID string, inputParam mapstr.Ma
 	}
 
 	return ids[0], nil
+}
+
+// DelRedundantHost delete redundant host for default area.
+func (m *instanceManager) DelRedundantHost(kit *rest.Kit, objID string, instIDs []uint64) error {
+
+	if objID != common.BKInnerObjIDHost {
+		return nil
+	}
+
+	err := mongodb.Shard(kit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Delete(kit.Ctx, mapstr.MapStr{
+		common.BKHostIDField: map[string]interface{}{
+			common.BKDBIN: instIDs,
+		},
+	})
+	if err != nil {
+		blog.Errorf("delete default area host failed, err: %v, instID: %s, rid: %s", err, instIDs, kit.Rid)
+		return err
+	}
+	return nil
 }
 
 func getSequences(kit *rest.Kit, table string, count int) ([]uint64, error) {
@@ -253,4 +300,84 @@ func (m *instanceManager) countInstance(kit *rest.Kit, objID string, cond mapstr
 	count, err = mongodb.Shard(kit.ShardOpts()).Table(tableName).Find(cond).Count(kit.Ctx)
 
 	return count, err
+}
+
+// validDefaultAreaHost valid the default area host, ip is not allowed to be duplicated
+func (m *instanceManager) validDefaultAreaHost(kit *rest.Kit, objID string, instanceData mapstr.MapStr,
+	hostID int64, retryTime int) error {
+
+	if objID != common.BKInnerObjIDHost {
+		return nil
+	}
+
+	if retryTime <= 0 {
+		blog.Errorf("can not delete redundant host in default area, rid: %s", kit.Rid)
+		return fmt.Errorf("can not delete redundant host in default area")
+	}
+
+	addressType, isExist := instanceData[common.BKAddressingField]
+	if !isExist || addressType == common.BKAddressingDynamic {
+		return nil
+	}
+
+	ip, isIPExist := instanceData[common.BKHostInnerIPField]
+
+	ipv6, isIPV6Exist := instanceData[common.BKHostInnerIPv6Field]
+
+	if !isIPExist && !isIPV6Exist {
+		blog.Errorf("invalid default area host, ip and ipv6 is not exist, rid: %s", kit.Rid)
+		return kit.CCError.CCErrorf(common.CCErrCommParamsInvalid, "bk_host_innerip", "bk_host_innerip_v6")
+	}
+
+	insertData := mapstr.MapStr{
+		common.BKHostIDField:        hostID,
+		common.BKCloudIDField:       common.DefaultAreaCloudID,
+		common.BKHostInnerIPField:   ip,
+		common.BKHostInnerIPv6Field: ipv6,
+		common.TenantID:             kit.TenantID,
+	}
+
+	blog.Errorf("here is master db")
+	err := mongodb.Shard(kit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Insert(kit.Ctx, insertData)
+	blog.Errorf("here is master db")
+	if err != nil {
+		if mongodb.IsDuplicatedError(err) {
+			cond := mapstr.MapStr{
+				common.BKCloudIDField:       common.DefaultAreaCloudID,
+				common.BKHostInnerIPField:   ip,
+				common.BKHostInnerIPv6Field: ipv6,
+			}
+			blog.Errorf("222transaction id: %s %v", kit.Header.Get("Cc_transaction_id_string"), kit.Ctx)
+			err = tenant.ExecForAllTenants(func(tenantID string) error {
+				newTenantKit := kit.NewKit().WithTenant(tenantID)
+				blog.Errorf("111transaction id: %s %v", newTenantKit.Header.Get("Cc_transaction_id_string"), kit.Ctx)
+				count, err := mongodb.Shard(kit.ShardOpts()).Table(common.BKTableNameBaseHost).Find(cond).
+					Count(newTenantKit.Ctx)
+				if err != nil {
+					blog.Errorf("get default area host count failed, err: %v, cond: %+v, tenantID: %s, rid: %s", err,
+						cond, tenantID, kit.Rid)
+					return kit.CCError.CCError(common.CCErrCommDBSelectFailed)
+				}
+				if count > 0 {
+					blog.Errorf("ip is exist, ip: %s, ipv6: %s, rid: %s", ip, ipv6, kit.Rid)
+					return fmt.Errorf("ip is exist for default area")
+				}
+				return nil
+			})
+			if err != nil {
+				blog.Errorf("host valid failed, err: %v, rid: %s", err, kit.Rid)
+				return kit.CCError.CCError(common.CCErrDefaultAreaHostIPExist)
+			}
+			blog.Errorf("333transaction id: %s %v", kit.Header.Get("Cc_transaction_id_string"), kit.Ctx)
+			err = mongodb.Shard(kit.SysShardOpts()).Table(common.BKTableNameDefaultAreaHost).Delete(kit.Ctx, cond)
+			if err != nil {
+				blog.Errorf("delete default area host failed, err: %v, cond: %+v, rid: %s", err, cond, kit.Rid)
+				return kit.CCError.CCError(common.CCErrCommDBDeleteFailed)
+			}
+			return m.validDefaultAreaHost(kit, objID, instanceData, hostID, retryTime-1)
+		}
+		blog.Errorf("insert default area host failed, err: %v, rid: %s", err, kit.Rid)
+		return kit.CCError.CCError(common.CCErrCommDBInsertFailed)
+	}
+	return nil
 }

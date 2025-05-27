@@ -30,8 +30,8 @@ type SyncIdentifierResult struct {
 
 // HostBriefInfo get sync host identifier task result option
 type HostBriefInfo struct {
-	HostID         int64  `json:"bk_host_id"`
-	Identification string `json:"identification"`
+	HostID         int64  `json:"bk_host_id" bson:"bk_host_id"`
+	Identification string `json:"identification" bson:"identification"`
 }
 
 // GetTaskResultOption get sync host identifier task result option
