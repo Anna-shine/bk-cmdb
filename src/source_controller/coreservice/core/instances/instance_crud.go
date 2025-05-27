@@ -349,7 +349,8 @@ func (m *instanceManager) validDefaultAreaHost(kit *rest.Kit, objID string, inst
 			}
 			blog.Errorf("222transaction id: %s %v", kit.Header.Get("Cc_transaction_id_string"), kit.Ctx)
 			err = tenant.ExecForAllTenants(func(tenantID string) error {
-				newTenantKit := kit.NewKit().WithTenant(tenantID)
+				newTenantKit := *kit
+				newTenantKit.TenantID = tenantID
 				blog.Errorf("111transaction id: %s %v", newTenantKit.Header.Get("Cc_transaction_id_string"), kit.Ctx)
 				count, err := mongodb.Shard(kit.ShardOpts()).Table(common.BKTableNameBaseHost).Find(cond).
 					Count(newTenantKit.Ctx)
